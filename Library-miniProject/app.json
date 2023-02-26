@@ -1,0 +1,44 @@
+{
+    "pages": [
+        "pages/index/index",
+        "pages/logs/logs",
+        "pages/center/center",
+        "pages/function/function",
+        "pages/notify/notify",
+        "pages/notifyItem/notifyItem"
+    ],
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#fff",
+        "navigationBarTitleText": "我的小程序",
+        "navigationBarTextStyle": "black"
+    },
+    "tabBar": {
+        "selectedColor": "#707070",
+        "list": [
+            {
+                "pagePath": "pages/index/index",
+                "text": "首页",
+                "iconPath": "./resources/images/tabBar/index.png",
+                "selectedIconPath": "./resources/images/tabBar/_index.png"
+            },
+            {
+                "pagePath": "pages/function/function",
+                "text": "预约",
+                "iconPath": "./resources/images/tabBar/function.png",
+                "selectedIconPath": "./resources/images/tabBar/_function.png"
+            },
+            {
+                "pagePath": "pages/center/center",
+                "text": "个人中心",
+                "iconPath": "./resources/images/tabBar/center.png",
+                "selectedIconPath": "./resources/images/tabBar/_center.png"
+            }
+        ]
+    },
+    "style": "v2",
+    "sitemapLocation": "sitemap.json",
+    "usingComponents": {
+        "card": "/commponents/card/card"
+    }
+}

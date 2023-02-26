@@ -1,0 +1,18 @@
+
+    <view class="view-container">
+        <view wx:if="{{id === null}}">
+            对不起,你的页面已过时
+        </view>
+        <view class="notifyCard" wx:else>
+                <view class="notify-title">
+                    {{notifyText.title}}
+                </view>
+                <view class="notify-more">
+                    {{notifyText.time}} · {{notifyText.view}} 已读
+                </view>
+                <view class="notify-context">
+                    <text>{{notifyText.context}}</text>
+                </view>
+
+        </view>
+    </view>

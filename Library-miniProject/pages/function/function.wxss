@@ -1,0 +1,29 @@
+/* pages/function/function.wxss */
+
+.top-notify {
+    margin: 0 20rpx 0;
+    height: 80rpx;
+    color: rgb(224, 103, 123);
+}
+
+
+.main {
+    margin: auto;
+    width: 80%;
+}
+
+.book {
+    margin: auto;
+    display: inline-block;
+
+}
+
+.card-button {
+    display: inline-block;
+    margin: 10rpx;
+    padding: 20rpx 40rpx;
+    box-shadow: 0 0 10rpx #ccc;
+    border-radius: 10rpx;
+    text-align: center;
+    background-color: #fff;
+}

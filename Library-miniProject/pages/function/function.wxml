@@ -1,0 +1,29 @@
+<!--pages/function/function.wxml-->
+
+<view class="top-notify">
+        你有一个快速预约，点击查看
+    </view>
+
+<view class="main">
+    <view class="book">
+        <view class="card-button" style="float:left; height: 240rpx; line-height: 260rpx;">
+            一般预约
+        </view>
+        <view style="display: inline-block; height: 300rpx;">
+            <view class="card-button" style="display: block;">
+                快速预约
+            </view>
+            <view class="card-button" style="height: 140rpx; line-height: 140rpx;">
+                就座或离开
+            </view>
+
+        </view>
+        <view>
+            待办事项
+        </view>
+
+    </view>
+
+
+
+</view>

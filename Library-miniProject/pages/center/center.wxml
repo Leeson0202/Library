@@ -1,0 +1,70 @@
+<!--pages/center/center.wxml-->
+
+<view style="height: 1120rpx; ">
+    <view id="background-image-view">
+        <image id="background-image" src="http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1010/13/c6/5494373_5494373_1286955435968.jpg" mode="widthFix" />
+    </view>
+    <view style="position: relative; top: -60rpx;">
+
+        <view class="contents">
+            <!-- 头像-->
+            <view class="avater-block-main">
+                <view class="avater-block" bindtap="getUserInfo">
+                    <image wx:if="{{hasUserInfo}}" src="{{userInfo.avatarUrl}}" mode="widthFix" />
+
+                </view>
+                <view class="user-name-block">
+                    <text wx:if="{{hasUserInfo}}">{{userInfo.nickName}}</text>
+                    <text wx:else bindtap="getUserInfo">点击获取用户信息</text>
+                    <image wx:if="{{hasUserInfo}}" class="user-name-image" src="../../resources/images/Author/level.svg" mode="aspectFit" />
+                </view>
+
+            </view>
+            <!-- 昵称及标志 -->
+            <view class="user-info">
+                <view class="user-info-bliock">
+                    <view class="user-info-num">100</view>
+                    <view>学习时长</view>
+                </view>
+                <view class="user-info-bliock" style="border-left: 0.5rpx solid #ccc; border-right: 0.5rpx solid #ccc; ">
+                    <view class="user-info-num">100</view>
+                    <view>排名</view>
+                </view>
+                <view class="user-info-bliock">
+                    <view class="user-info-num">8</view>
+                    <view>单日最长</view>
+                </view>
+
+            </view>
+        </view>
+        <card class="info-block-a">
+            <view class="info-block" slot="content">
+                <view>
+                    <image src="../../resources/images/Author/authorInfo.svg" mode="heightFix" />
+                    个人资料
+                </view>
+                <view>
+                    <image src="../../resources/images/Author/credit.svg" mode="heightFix" />
+                    我的信用
+                </view>
+                <view>
+                    <image src="../../resources/images/Author/message.svg" mode="heightFix" />
+                    我的消息
+                </view>
+                <view>
+                    <image src="../../resources/images/Author/learnCount.svg" mode="heightFix" />
+                    学习统计
+                </view>
+
+                <view>
+                    <image src="../../resources/images/Author/setting.svg" mode="heightFix" />
+                    设置
+                </view>
+            </view>
+        </card>
+        <view style="position: relative; margin-top: 100rpx;">
+            <button class="recall">信息反馈</button>
+        </view>
+
+    </view>
+</view>

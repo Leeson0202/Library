@@ -1,0 +1,11 @@
+/* commponents/card/card.wxss */
+.card{
+    margin: auto;
+    padding: 15rpx;
+    position: relative;
+    width: calc(90% - 30rpx);
+    /* min-height: 20rpx; */
+    border-radius: 10rpx;
+    box-shadow: 0 0 20rpx #eee;
+    background-color: #fff;
+}

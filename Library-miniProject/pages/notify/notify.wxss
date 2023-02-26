@@ -1,0 +1,45 @@
+/* pages/notify/notify.wxss */
+.notify-item {
+    margin: 0 0 10rpx;
+    padding: 10rpx 20rpx;
+    height: 140rpx;
+    width: calc(100% - 40rpx);
+    /* background-color: #eee; */
+    border-bottom: 1rpx solid #f2f2f2;
+}
+
+.notify-title {
+    margin-top: 10rpx;
+    margin-left: 10rpx;
+    letter-spacing: 1rpx;
+    height: 50rpx;
+    font-size: 30rpx;
+}
+
+.notify-more {
+    margin: 0;
+    height: 80rpx;
+    overflow: hidden;
+}
+
+.notify-context {
+    margin: 0 0 0 20rpx;
+    height: 32rpx;
+    overflow: hidden;
+    font-size: 26rpx;
+    font-weight: 300;
+}
+
+.item-more {
+    margin-top: 14rpx;
+    font-size: 20rpx;
+
+}
+
+.notify-time {
+    letter-spacing: 1rpx;
+    margin-right: 20rpx;
+    float: right;
+    /* font-weight: 200; */
+}
+

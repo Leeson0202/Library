@@ -1,0 +1,18 @@
+<!--pages/notify/notify.wxml-->
+
+<view class="main">
+    <view class="notify-item" 
+    wx:for="{{notifyTexts}}" wx:key="index"
+    bindtap="notifyItemHandel" data-index="{{index}}">
+        <view class="notify-title">
+            {{item.title}}
+        </view>
+        <view class="notify-more">
+            <view class="notify-context">{{item.context}}</view>
+            <view class="item-more">
+                <text class="notify-time">{{item.time}}</text>
+            </view>
+        </view>
+
+    </view>
+</view>
