@@ -1,0 +1,19 @@
+<!--pages/login/login.wxml-->
+
+
+<view>
+    <view class="wx-block" wx:if="{{tag==0}}">
+        <view>
+            <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+                <image class="avatar" src="{{avatarUrl}}" mode="heightFix"></image>
+            </button>
+        </view>
+        <view class="nick-name-block">
+            <view class="nick-pre" style="display: inline-block;">昵称</view><input type="nickname" class="weui-input" model:value="{{nickname}}" placeholder="请输入昵称" />
+
+        </view>
+        <button class="load-submit" bindtap="submit">登陆</button>
+
+    </view>
+
+</view>
