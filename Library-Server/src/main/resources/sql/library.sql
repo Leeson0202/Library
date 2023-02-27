@@ -14,6 +14,7 @@ create table user
     email     varchar(200) unique comment '邮件',
     pwd       varchar(30) comment '密码',
     openid   varchar(100) unique comment '微信id'
+
 );
 
 -- user_info 用户信息

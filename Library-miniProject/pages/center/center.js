@@ -6,6 +6,7 @@ import {
 import {
     store
 } from '../../store/store'
+const app = getApp();
 Page({
 
     /**
@@ -13,6 +14,12 @@ Page({
      */
     data: {
 
+    },
+    //进入登陆页面
+    loginHandel() {
+        wx.navigateTo({
+            url: '/pages/login/login',
+        })
     },
     getUserInfo(e) {
         if (this.data.hasUserInfo == undefined || this.data.hasUserInfo === false) {
@@ -28,7 +35,7 @@ Page({
             store,
             fields: ['userInfo', 'hasUserInfo'],
             actions: ['GetUserInfo']
-        })
+        });
 
     },
 
@@ -36,6 +43,13 @@ Page({
      * 生命周期函数--监听页面初次渲染完成
      */
     onReady() {
+        console.log("this.data.hasUserInfo", this.data.hasUserInfo);
+        if (this.data.hasUserInfo === false || this.data.hasUserInfo === undefined) {
+            console.log('onShow');
+            wx.navigateTo({
+                url: '/pages/login/login',
+            })
+        }
 
     },
 

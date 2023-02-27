@@ -12,27 +12,83 @@ import {
 } from 'mobx-miniprogram'
 
 export const store = observable({
+    baseUrl: "http://localhost:8080",
     userInfo: {},
     hasUserInfo: false,
     // 计算属性
     get avatarUrl() {
-        return hasUserInfo == true ? this.userInfo.avatarUrl : null;
+        return hasUserInfo == true ? this.userInfo.avatarUrl : "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132";
     },
     get nickName() {
-        return hasUserInfo == true ? this.userInfo.nickName : null;
+        return hasUserInfo == true ? this.userInfo.nickName : '微信用户';
     },
+    Logout: action(function () {
+        this.userInfo = {};
+        this.hasUserInfo = false;
+        wx.removeStorageSync("userInfo");
+    }),
 
-    // actions 方式，用来修改store中的数据
-    GetUserInfo: action(function () {
-        // console.log('GetUserInfo: action');
-        wx.getUserProfile({
-            desc: '展示用户信息',
-            success: (res) => {
-                // console.log("store.js" + res.userInfo)
-                this.userInfo = res.userInfo
-                this.hasUserInfo = true
+    WxLogin: action(function (res) {
+        let that = this;
+        const tempUserInfo = res;
+        wx.showLoading({
+            title: '正在登陆',
+        });
+        // 向微信服务器发送请求 code
+        wx.login({
+            success: ({
+                code
+            }) => {
+                // 拿到code后，向开发者服务器请求,返回openid
+                wx.request({
+                    url: that.baseUrl + '/wx/login',
+                    data: {
+                        code: code
+                    },
+                    method: "POST",
+                    header: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    success: function (res) {
+                        let openid = res.data.data
+                        // 储存全局变量
+                        that.hasUserInfo = true;
+                        that.userInfo = tempUserInfo;
+                        that.userInfo.openid = openid;// 保存缓冲
+                        wx.setStorageSync('userInfo', that.userInfo)
+                        that.hasUserInfo = true;
+                         // 关闭弹窗并返回上一页
+                        wx.hideLoading();
+                        wx.navigateBack();
+                    },
+                    fail: function () {
+                        // 关闭弹窗
+                        // wx.hideLoading();
+                        wx.showToast({
+                            title: '登陆失败，请联系管理',
+                            icon: 'error'
+                        })
+                    }
+                })
+
+            },
+            fail() {
+                wx.showToast({
+                    title: '请检查网络',
+                    icon: 'error'
+                })
             }
         })
+
     }),
+    Launch: action(function () {
+        console.log('Launching');
+        const userInfo = wx.getStorageSync('userInfo');
+        console.log('userInfo:', userInfo);
+        if (userInfo !== null && userInfo !== undefined && userInfo !== '') {
+            this.userInfo = userInfo;
+            this.hasUserInfo = true;
+        }
+    })
 
 })

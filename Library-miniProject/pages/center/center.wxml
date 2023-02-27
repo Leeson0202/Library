@@ -9,13 +9,17 @@
         <view class="contents">
             <!-- 头像-->
             <view class="avater-block-main">
-                <view class="avater-block" bindtap="getUserInfo">
+                <view class="avater-block">
+                    <!-- 进入个人资料-->
                     <image wx:if="{{hasUserInfo}}" src="{{userInfo.avatarUrl}}" mode="widthFix" />
+                    <!--进入登陆页面-->
+                    <image wx:if="{{!hasUserInfo}}" bindtap="loginHandel"  src="https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132" mode="widthFix" />
+
 
                 </view>
                 <view class="user-name-block">
-                    <text wx:if="{{hasUserInfo}}">{{userInfo.nickName}}</text>
-                    <text wx:else bindtap="getUserInfo">点击获取用户信息</text>
+                    <text wx:if="{{hasUserInfo}}">{{userInfo.nickname}}</text>
+                    <text wx:else bindtap="getUserInfo">点击登陆</text>
                     <image wx:if="{{hasUserInfo}}" class="user-name-image" src="../../resources/images/Author/level.svg" mode="aspectFit" />
                 </view>
 

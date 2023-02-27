@@ -3,5 +3,7 @@
     <view class="top-notify flex-row" bindtap="notifyHandel">
         <text class="r" direction="left">{{notifyText}}</text>
     </view>
+    <button bindtap="qus">请求
+    </button>
 
 </view>

@@ -1,4 +1,5 @@
 // index.js
+import api from '../../utils/api'
 // 获取应用实例
 const app = getApp()
 
@@ -9,7 +10,14 @@ Page({
     },
     notifyHandel() {
         wx.navigateTo({
-          url: '../notify/notify',
+            url: '../notify/notify',
+        })
+    },
+    qus() {
+        api.wxLogin({
+            "code": "dhcaks"
+        }).then((res) => {
+            console.log(res);
         })
     },
     onLoad() {}

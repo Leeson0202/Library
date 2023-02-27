@@ -5,7 +5,9 @@
         "pages/center/center",
         "pages/function/function",
         "pages/notify/notify",
-        "pages/notifyItem/notifyItem"
+        "pages/notifyItem/notifyItem",
+        "pages/login/login",
+        "pages/wxLogin/wxLogin"
     ],
     "window": {
         "backgroundTextStyle": "light",
