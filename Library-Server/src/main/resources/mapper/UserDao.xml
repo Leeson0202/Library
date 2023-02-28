@@ -21,6 +21,18 @@
         where user_id = #{userId}
     </select>
 
+
+    <!--查询单个-->
+    <select id="queryByOpenid" resultMap="UserMap">
+        select user_id,
+               phone_num,
+               email,
+               pwd,
+               openid
+        from user
+        where openid = #{openid}
+    </select>
+
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="UserMap">
         select

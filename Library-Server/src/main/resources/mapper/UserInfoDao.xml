@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cool.leeson.library.dao.UserInfoDao">
+
+    <resultMap type="cool.leeson.library.entity.UserInfo" id="UserInfoMap">
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="openid" column="openid" jdbcType="VARCHAR"/>
+        <result property="sessionKey" column="session_key" jdbcType="VARCHAR"/>
+        <result property="avatarUrl" column="avatar_url" jdbcType="VARCHAR"/>
+        <result property="city" column="city" jdbcType="VARCHAR"/>
+        <result property="province" column="province" jdbcType="VARCHAR"/>
+        <result property="country" column="country" jdbcType="VARCHAR"/>
+        <result property="gender" column="gender" jdbcType="VARCHAR"/>
+        <result property="language" column="language" jdbcType="VARCHAR"/>
+        <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+        <result property="realName" column="real_name" jdbcType="VARCHAR"/>
+        <result property="age" column="age" jdbcType="SMALLINT"/>
+        <result property="stuId" column="stu_id" jdbcType="INTEGER"/>
+        <result property="background" column="background" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个 userId-->
+    <select id="queryById" resultMap="UserInfoMap">
+        select
+          user_id, openid, session_key, avatar_url, city, province, country, gender, language, nick_name, real_name, age, stu_id, background
+        from user_info
+        where user_id = #{userId}
+    </select>
+    <!--查询单个 openid-->
+    <select id="queryByOpenid" resultMap="UserInfoMap">
+        select
+          user_id, openid, session_key, avatar_url, city, province, country, gender, language, nick_name, real_name, age, stu_id, background
+        from user_info
+        where openid = #{openid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserInfoMap">
+        select
+          user_id, openid, session_key, avatar_url, city, province, country, gender, language, nick_name, real_name, age, stu_id, background
+        from user_info
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="openid != null and openid != ''">
+                and openid = #{openid}
+            </if>
+            <if test="sessionKey != null and sessionKey != ''">
+                and session_key = #{sessionKey}
+            </if>
+            <if test="avatarUrl != null and avatarUrl != ''">
+                and avatar_url = #{avatarUrl}
+            </if>
+            <if test="city != null and city != ''">
+                and city = #{city}
+            </if>
+            <if test="province != null and province != ''">
+                and province = #{province}
+            </if>
+            <if test="country != null and country != ''">
+                and country = #{country}
+            </if>
+            <if test="gender != null">
+                and gender = #{gender}
+            </if>
+            <if test="language != null and language != ''">
+                and language = #{language}
+            </if>
+            <if test="nickName != null and nickName != ''">
+                and nick_name = #{nickName}
+            </if>
+            <if test="realName != null and realName != ''">
+                and real_name = #{realName}
+            </if>
+            <if test="age != null">
+                and age = #{age}
+            </if>
+            <if test="stuId != null and stuId != ''">
+                and stu_id = #{stuId}
+            </if>
+            <if test="background != null and background != ''">
+                and background = #{background}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from user_info
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="openid != null and openid != ''">
+                and openid = #{openid}
+            </if>
+            <if test="sessionKey != null and sessionKey != ''">
+                and session_key = #{sessionKey}
+            </if>
+            <if test="avatarUrl != null and avatarUrl != ''">
+                and avatar_url = #{avatarUrl}
+            </if>
+            <if test="city != null and city != ''">
+                and city = #{city}
+            </if>
+            <if test="province != null and province != ''">
+                and province = #{province}
+            </if>
+            <if test="country != null and country != ''">
+                and country = #{country}
+            </if>
+            <if test="gender != null">
+                and gender = #{gender}
+            </if>
+            <if test="language != null and language != ''">
+                and language = #{language}
+            </if>
+            <if test="nickName != null and nickName != ''">
+                and nick_name = #{nickName}
+            </if>
+            <if test="realName != null and realName != ''">
+                and real_name = #{realName}
+            </if>
+            <if test="age != null">
+                and age = #{age}
+            </if>
+            <if test="stuId != null and stuId != ''">
+                and stu_id = #{stuId}
+            </if>
+            <if test="background != null and background != ''">
+                and background = #{background}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="userId" useGeneratedKeys="true">
+        insert into user_info(user_id, openid, session_key, avatar_url, city, province, country, gender, language,
+                              nick_name, real_name, age, stu_id, background)
+        values (#{userId}, #{openid}, #{sessionKey}, #{avatarUrl}, #{city}, #{province}, #{country}, #{gender},
+                #{language}, #{nickName}, #{realName}, #{age}, #{stuId}, #{background})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into user_info(user_id, openid, session_key, avatar_url, city, province, country, gender, language, nick_name, real_name, age, stu_id, background)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.userId},#{entity.openid}, #{entity.sessionKey}, #{entity.avatarUrl}, #{entity.city}, #{entity.province}, #{entity.country}, #{entity.gender}, #{entity.language}, #{entity.nickName}, #{entity.realName}, #{entity.age}, #{entity.stuId}, #{entity.background})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into user_info(openid, session_key, avatar_url, city, province, country, gender, language, nick_name, real_name, age, stu_id, background)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.openid}, #{entity.sessionKey}, #{entity.avatarUrl}, #{entity.city}, #{entity.province}, #{entity.country}, #{entity.gender}, #{entity.language}, #{entity.nickName}, #{entity.realName}, #{entity.age}, #{entity.stuId}, #{entity.background})
+        </foreach>
+        on duplicate key update
+        openid = values(openid),
+        session_key = values(session_key),
+        avatar_url = values(avatar_url),
+        city = values(city),
+        province = values(province),
+        country = values(country),
+        gender = values(gender),
+        language = values(language),
+        nick_name = values(nick_name),
+        real_name = values(real_name),
+        age = values(age),
+        stu_id = values(stu_id),
+        background = values(background)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update user_info
+        <set>
+            <if test="openid != null and openid != ''">
+                openid = #{openid},
+            </if>
+            <if test="sessionKey != null and sessionKey != ''">
+                session_key = #{sessionKey},
+            </if>
+            <if test="avatarUrl != null and avatarUrl != ''">
+                avatar_url = #{avatarUrl},
+            </if>
+            <if test="city != null and city != ''">
+                city = #{city},
+            </if>
+            <if test="province != null and province != ''">
+                province = #{province},
+            </if>
+            <if test="country != null and country != ''">
+                country = #{country},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="language != null and language != ''">
+                language = #{language},
+            </if>
+            <if test="nickName != null and nickName != ''">
+                nick_name = #{nickName},
+            </if>
+            <if test="realName != null and realName != ''">
+                real_name = #{realName},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+            <if test="stuId != null and stuId != ''">
+                stu_id = #{stuId},
+            </if>
+            <if test="background != null and background != ''">
+                background = #{background},
+            </if>
+        </set>
+        where user_id = #{userId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from user_info where user_id = #{userId}
+    </delete>
+
+</mapper>
+

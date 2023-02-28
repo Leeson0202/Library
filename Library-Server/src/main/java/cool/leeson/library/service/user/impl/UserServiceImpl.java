@@ -1,8 +1,8 @@
-package cool.leeson.library.service.impl;
+package cool.leeson.library.service.user.impl;
 
 import cool.leeson.library.entity.User;
 import cool.leeson.library.dao.UserDao;
-import cool.leeson.library.service.UserService;
+import cool.leeson.library.service.user.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

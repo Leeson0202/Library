@@ -33,7 +33,7 @@ Page({
     onLoad(options) {
         this.storeBindings = createStoreBindings(this, {
             store,
-            fields: ['userInfo', 'hasUserInfo'],
+            fields: ['userInfo', 'hasUserInfo','HasUserInfo'],
             actions: ['GetUserInfo']
         });
 
@@ -43,21 +43,18 @@ Page({
      * 生命周期函数--监听页面初次渲染完成
      */
     onReady() {
-        console.log("this.data.hasUserInfo", this.data.hasUserInfo);
+        // console.log("center " + this.data.HasUserInfo);
         if (this.data.hasUserInfo === false || this.data.hasUserInfo === undefined) {
-            console.log('onShow');
             wx.navigateTo({
                 url: '/pages/login/login',
             })
         }
-
     },
 
     /**
      * 生命周期函数--监听页面显示
      */
     onShow() {
-
     },
 
     /**

@@ -26,6 +26,8 @@
 
 .avater-block-main {
     position: relative;
+    height: 150rpx;
+    overflow: hidden;
     top: -60rpx;
     left: 40rpx;
 

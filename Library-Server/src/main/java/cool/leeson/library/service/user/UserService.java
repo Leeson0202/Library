@@ -1,4 +1,4 @@
-package cool.leeson.library.service;
+package cool.leeson.library.service.user;
 
 import cool.leeson.library.entity.User;
 import org.springframework.data.domain.Page;

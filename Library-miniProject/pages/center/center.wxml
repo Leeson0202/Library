@@ -7,24 +7,36 @@
     <view style="position: relative; top: -60rpx;">
 
         <view class="contents">
-            <!-- 头像-->
-            <view class="avater-block-main">
+            <!--头像和昵称-->
+            <view class="avater-block-main"  wx:if="{{hasUserInfo}}">
+                <!-- 头像 -->
                 <view class="avater-block">
                     <!-- 进入个人资料-->
-                    <image wx:if="{{hasUserInfo}}" src="{{userInfo.avatarUrl}}" mode="widthFix" />
-                    <!--进入登陆页面-->
-                    <image wx:if="{{!hasUserInfo}}" bindtap="loginHandel"  src="https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132" mode="widthFix" />
-
-
+                    <image src="{{userInfo.avatarUrl}}" mode="widthFix" />
                 </view>
+                <!--昵称-->
                 <view class="user-name-block">
-                    <text wx:if="{{hasUserInfo}}">{{userInfo.nickname}}</text>
-                    <text wx:else bindtap="getUserInfo">点击登陆</text>
-                    <image wx:if="{{hasUserInfo}}" class="user-name-image" src="../../resources/images/Author/level.svg" mode="aspectFit" />
+                    <text >{{userInfo.nickname}}</text>
+                    <image class="user-name-image" src="../../resources/images/Author/level.svg" mode="aspectFit" />
                 </view>
-
             </view>
-            <!-- 昵称及标志 -->
+
+            <view class="avater-block-main" wx:else="{{hasUserInfo}}">
+                <!-- 头像 -->
+                <view class="avater-block">
+                    <!--进入登陆页面-->
+                    <image bindtap="loginHandel"  src="https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132" mode="widthFix" />
+
+
+                </view>
+                <!--昵称-->
+                <view class="user-name-block">
+                    <text bindtap="getUserInfo">点击登陆</text>
+                </view>
+            </view>
+
+
+            <!-- 信息 -->
             <view class="user-info">
                 <view class="user-info-bliock">
                     <view class="user-info-num">100</view>
@@ -67,6 +79,9 @@
             </view>
         </card>
         <view style="position: relative; margin-top: 100rpx;">
+        <!-- <view>
+            {{hasUserInfo}},{{HasUserInfo}}
+        </view> -->
             <button class="recall">信息反馈</button>
         </view>
 

@@ -1,18 +1,17 @@
 package cool.leeson.library.dao;
 
-import cool.leeson.library.entity.User;
+import cool.leeson.library.entity.UserInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 
 /**
- * (User)表数据库访问层
+ * (UserInfo)表数据库访问层
  *
  * @author makejava
- * @since 2023-02-26 15:42:15
+ * @since 2023-02-27 23:53:28
  */
-public interface UserDao {
+public interface UserInfoDao {
 
     /**
      * 通过ID查询单条数据
@@ -20,64 +19,64 @@ public interface UserDao {
      * @param userId 主键
      * @return 实例对象
      */
-    User queryById(Integer userId);
+    UserInfo queryById(Integer userId);
 
     /**
-     * 通过openid查询单条数据
-     * @param openId 微信id
-     * @return 实例对象
+     * 通过openid查询单条
+     * @param openid 微信id
+     * @return 实体对象
      */
-    User queryByOpenid(String openId);
+    UserInfo queryByOpenid(String openid);
 
     /**
      * 查询指定行数据
      *
-     * @param user     查询条件
-     * @param pageable 分页对象
+     * @param userInfo 查询条件
+     * @param pageable         分页对象
      * @return 对象列表
      */
-    List<User> queryAllByLimit(User user, @Param("pageable") Pageable pageable);
+    List<UserInfo> queryAllByLimit(UserInfo userInfo, @Param("pageable") Pageable pageable);
 
     /**
      * 统计总行数
      *
-     * @param user 查询条件
+     * @param userInfo 查询条件
      * @return 总行数
      */
-    long count(User user);
+    long count(UserInfo userInfo);
 
     /**
      * 新增数据
      *
-     * @param user 实例对象
+     * @param userInfo 实例对象
      * @return 影响行数
      */
-    int insert(User user);
+    int insert(UserInfo userInfo);
 
     /**
      * 批量新增数据（MyBatis原生foreach方法）
      *
-     * @param entities List<User> 实例对象列表
+     * @param entities List<UserInfo> 实例对象列表
      * @return 影响行数
      */
-    int insertBatch(@Param("entities") List<User> entities);
+    int insertBatch(@Param("entities") List<UserInfo> entities);
 
     /**
      * 批量新增或按主键更新数据（MyBatis原生foreach方法）
      *
-     * @param entities List<User> 实例对象列表
+     * @param entities List<UserInfo> 实例对象列表
      * @return 影响行数
      * @throws org.springframework.jdbc.BadSqlGrammarException 入参是空List的时候会抛SQL语句错误的异常，请自行校验入参
      */
-    int insertOrUpdateBatch(@Param("entities") List<User> entities);
+    int insertOrUpdateBatch(@Param("entities") List<UserInfo> entities);
 
     /**
      * 修改数据
      *
-     * @param user 实例对象
+     * @param userInfo 实例对象
      * @return 影响行数
      */
-    int update(User user);
+    int update(UserInfo userInfo);
 
     /**
      * 通过主键删除数据

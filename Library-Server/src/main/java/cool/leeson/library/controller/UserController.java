@@ -1,7 +1,7 @@
 package cool.leeson.library.controller;
 
 import cool.leeson.library.entity.User;
-import cool.leeson.library.service.UserService;
+import cool.leeson.library.service.user.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;

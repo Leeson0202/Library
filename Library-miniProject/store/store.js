@@ -14,67 +14,82 @@ import {
 export const store = observable({
     baseUrl: "http://localhost:8080",
     userInfo: {},
-    hasUserInfo: false,
+    hasUserInfo: undefined,
     // 计算属性
     get avatarUrl() {
         return hasUserInfo == true ? this.userInfo.avatarUrl : "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132";
     },
     get nickName() {
-        return hasUserInfo == true ? this.userInfo.nickName : '微信用户';
+        return hasUserInfo == true ? this.userInfo.nickname : '微信用户';
+    },
+    get HasUserInfo(){
+        return this.hasUserInfo;
     },
     Logout: action(function () {
         this.userInfo = {};
         this.hasUserInfo = false;
         wx.removeStorageSync("userInfo");
     }),
+    ReLogin: action(function () {
+        let that = this;
+        // 向微信服务器发送请求 code
+
+        return new Promise((resolve, reject) => {
+            wx.login({
+                success: ({
+                    code
+                }) => {
+                    // 拿到code后，向开发者服务器请求,返回openid
+                    wx.request({
+                        url: that.baseUrl + '/wx/login',
+                        data: {
+                            code: code
+                        },
+                        method: "POST",
+                        header: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        success: function (res) {
+                            console.log(res.data.token);
+                            that.token = res.data.token;
+                            wx.setStorageSync("token",res.data.token);
+                            resolve(true);
+                        },
+                        fail: function () {
+                            reject(false);
+                        }
+                    })
+                },
+                fail() {
+                    wx.showToast({
+                        title: '请检查网络',
+                        icon: 'error'
+                    })
+                }
+            })
+        });
+    }),
 
     WxLogin: action(function (res) {
-        let that = this;
-        const tempUserInfo = res;
+        const that = this;
         wx.showLoading({
             title: '正在登陆',
         });
-        // 向微信服务器发送请求 code
-        wx.login({
-            success: ({
-                code
-            }) => {
-                // 拿到code后，向开发者服务器请求,返回openid
-                wx.request({
-                    url: that.baseUrl + '/wx/login',
-                    data: {
-                        code: code
-                    },
-                    method: "POST",
-                    header: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    success: function (res) {
-                        let openid = res.data.data
-                        // 储存全局变量
-                        that.hasUserInfo = true;
-                        that.userInfo = tempUserInfo;
-                        that.userInfo.openid = openid;// 保存缓冲
-                        wx.setStorageSync('userInfo', that.userInfo)
-                        that.hasUserInfo = true;
-                         // 关闭弹窗并返回上一页
-                        wx.hideLoading();
-                        wx.navigateBack();
-                    },
-                    fail: function () {
-                        // 关闭弹窗
-                        // wx.hideLoading();
-                        wx.showToast({
-                            title: '登陆失败，请联系管理',
-                            icon: 'error'
-                        })
-                    }
-                })
-
-            },
-            fail() {
+        this.ReLogin().then((tag) => {
+            if (tag) {
+                // 储存全局变量
+                that.hasUserInfo = true;
+                that.userInfo = res
+                wx.setStorageSync('userInfo', that.userInfo)
+                that.hasUserInfo = true;
+                // 关闭弹窗并返回上一页
+                wx.hideLoading();
+                wx.navigateBack();
+            } else {
+                // 登陆失败
+                wx.hideLoading();
                 wx.showToast({
-                    title: '请检查网络',
+                    title: '登陆失败，请联系管理',
                     icon: 'error'
                 })
             }
@@ -82,12 +97,11 @@ export const store = observable({
 
     }),
     Launch: action(function () {
-        console.log('Launching');
+        console.log('小程序第一次Launching');
         const userInfo = wx.getStorageSync('userInfo');
-        console.log('userInfo:', userInfo);
         if (userInfo !== null && userInfo !== undefined && userInfo !== '') {
-            this.userInfo = userInfo;
             this.hasUserInfo = true;
+            this.userInfo = userInfo;
         }
     })
 
