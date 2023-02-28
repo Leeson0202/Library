@@ -109,6 +109,13 @@
             <optional>true</optional>
         </dependency>
 
+        <!--电子邮件-->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+
 
 
     </dependencies>

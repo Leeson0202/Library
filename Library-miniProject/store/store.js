@@ -12,6 +12,7 @@ import {
 } from 'mobx-miniprogram'
 
 export const store = observable({
+    hasLogin: false,
     baseUrl: "http://localhost:8080",
     userInfo: {},
     hasUserInfo: undefined,
@@ -41,7 +42,7 @@ export const store = observable({
                 }) => {
                     // 拿到code后，向开发者服务器请求,返回openid
                     wx.request({
-                        url: that.baseUrl + '/wx/login',
+                        url: that.baseUrl + '/login/wx',
                         data: {
                             code: code
                         },
@@ -52,6 +53,7 @@ export const store = observable({
                         success: function (res) {
                             console.log(res.data.token);
                             that.token = res.data.token;
+                            // 储存
                             wx.setStorageSync("token",res.data.token);
                             resolve(true);
                         },
@@ -69,11 +71,10 @@ export const store = observable({
             })
         });
     }),
-
     WxLogin: action(function (res) {
         const that = this;
         wx.showLoading({
-            title: '正在登陆',
+            title: '正在登陆'
         });
         this.ReLogin().then((tag) => {
             if (tag) {
@@ -103,6 +104,20 @@ export const store = observable({
             this.hasUserInfo = true;
             this.userInfo = userInfo;
         }
+    }),
+    IsKeepAlive: action(function(){
+        wx.request({
+          url: this.baseUrl + "/alive",
+          method:"GET",
+          header:{
+              "token": wx.getStorageSync('token')
+          },
+          success(res){
+            console.log(res);
+          },fail(){
+              this.ReLogin();
+          }
+        })
     })
 
 })

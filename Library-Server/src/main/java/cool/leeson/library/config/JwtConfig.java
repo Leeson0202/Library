@@ -69,8 +69,8 @@ public class JwtConfig {
     /**
      * 获取token失效时间
      *
-     * @param token 获取失效时间
-     * @return 时间
+     * @param token token
+     * @return 实体对象
      */
     public Date getExpirationDateFromToken(String token) {
         return getTokenClaim(token).getExpiration();

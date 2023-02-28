@@ -1,13 +1,16 @@
 package cool.leeson.library.controller;
 
 import cool.leeson.library.entity.User;
+import cool.leeson.library.service.user.UserInfoService;
 import cool.leeson.library.service.user.UserService;
+import cool.leeson.library.util.ResMap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * (User)表控制层
@@ -23,6 +26,8 @@ public class UserController {
      */
     @Resource
     private UserService userService;
+    @Resource
+    private UserInfoService userInfoService;
 
     /**
      * 分页查询
@@ -46,6 +51,12 @@ public class UserController {
     public ResponseEntity<User> queryById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(this.userService.queryById(id));
     }
+
+    @GetMapping("userId/{userId}")
+    public ResponseEntity<Map<String, Object>> getUserInfo(@PathVariable("userId") Integer userId) {
+        return ResponseEntity.ok(ResMap.ok("userInfo", this.userInfoService.queryById(userId)).build());
+    }
+
 
     /**
      * 新增数据

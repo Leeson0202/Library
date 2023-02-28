@@ -30,6 +30,19 @@ public interface UserDao {
     User queryByOpenid(String openId);
 
     /**
+     * 通过手机号查找
+     * @param tel  手机号
+     */
+    User queryByTel(String tel);
+
+    /**
+     * 通过邮件查找
+     * @param email 邮件
+     * @return 用户信息
+     */
+    User queryByEmail(String email);
+
+    /**
      * 查询指定行数据
      *
      * @param user     查询条件

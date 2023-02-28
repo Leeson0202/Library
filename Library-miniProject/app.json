@@ -6,8 +6,7 @@
         "pages/function/function",
         "pages/notify/notify",
         "pages/notifyItem/notifyItem",
-        "pages/login/login",
-        "pages/wxLogin/wxLogin"
+        "pages/login/login"
     ],
     "window": {
         "backgroundTextStyle": "light",

@@ -1,6 +1,7 @@
 package cool.leeson.library.interceptor;
 
 import cool.leeson.library.config.JwtConfig;
+import cool.leeson.library.util.ResMap;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,8 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
                              Object handler) throws SignatureException {
         // 地址过滤
         String uri = request.getRequestURI();
-        if (uri.contains("/login")) {
+        // 登陆注册相关
+        if (uri.contains("login") || uri.contains("/register") || uri.contains("/confirm")) {
             return true;
         }
         // Token 验证

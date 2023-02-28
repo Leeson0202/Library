@@ -10,7 +10,7 @@
         <result property="openId" column="openid" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <!--查询单个-->
+    <!--查询单个 userId-->
     <select id="queryById" resultMap="UserMap">
         select user_id,
                phone_num,
@@ -22,7 +22,7 @@
     </select>
 
 
-    <!--查询单个-->
+    <!--查询单个 openid-->
     <select id="queryByOpenid" resultMap="UserMap">
         select user_id,
                phone_num,
@@ -31,6 +31,30 @@
                openid
         from user
         where openid = #{openid}
+    </select>
+
+
+    <!--查询单个 tel-->
+    <select id="queryByTel" resultMap="UserMap">
+        select user_id,
+               phone_num,
+               email,
+               pwd,
+               openid
+        from user
+        where phone_num = #{tel}
+    </select>
+
+
+    <!--查询单个 tel-->
+    <select id="queryByEmail" resultMap="UserMap">
+        select user_id,
+               phone_num,
+               email,
+               pwd,
+               openid
+        from user
+        where email = #{email}
     </select>
 
     <!--查询指定行数据-->
