@@ -5,10 +5,7 @@ import cool.leeson.library.entity.UserInfo;
 import cool.leeson.library.service.user.UserInfoService;
 import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

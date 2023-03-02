@@ -1,11 +1,15 @@
 package cool.leeson.library.service;
 
+import com.alibaba.fastjson.JSONObject;
 import cool.leeson.library.config.JwtConfig;
+import cool.leeson.library.dao.CquptInfoDao;
 import cool.leeson.library.dao.UserDao;
 import cool.leeson.library.dao.UserInfoDao;
+import cool.leeson.library.entity.CquptInfo;
 import cool.leeson.library.entity.User;
 import cool.leeson.library.entity.UserInfo;
 import cool.leeson.library.service.wx.WxServiceImpl;
+import cool.leeson.library.util.HttpClientUtil;
 import cool.leeson.library.util.ResMap;
 import cool.leeson.library.util.code.CodeUtil;
 import cool.leeson.library.util.email.EmailUtil;
@@ -13,8 +17,10 @@ import cool.leeson.library.util.email.LibraryEmailUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +33,8 @@ public class LoginServiceImpl {
     private UserDao userDao;
     @Resource
     private UserInfoDao userInfoDao;
+    @Resource
+    private CquptInfoDao cquptInfoDao;
 
     @Resource
     private RedisTemplate<String, String> redisTemplate;
@@ -78,6 +86,7 @@ public class LoginServiceImpl {
             return ResMap.ok("请输入正确的邮箱");
         }
         log.info("email: " + email + "; code: " + code);
+        // 查询缓存
         String codeKey = "loginEmail:" + email;
         String rCode = redisTemplate.opsForValue().get(codeKey);
         if (rCode == null || !rCode.equals(code)) {
@@ -115,25 +124,66 @@ public class LoginServiceImpl {
 
     }
 
+
     /**
-     * 微信登陆 注册过程
+     * 重邮账号登陆
      *
-     * @param code 微信code
-     * @return token
+     * @param cqupt_id 账号
+     * @param password 密码
+     * @return  实体
      */
-    public Map<String, Object> loginWx(String code) {
-        log.info("code:" + code);
+    public Map<String, Object> loginCqupt(String cqupt_id, String password) {
+        if (StringUtils.isEmpty(cqupt_id) || StringUtils.isEmpty(password)) {
+            return ResMap.err("账号密码不能空");
+        }
+        // 向重邮服务器发送请求
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("User-Agent", "Mozilla/5.0 (Linux; Android 12; RMX2121 Build/SP1A.210812.016; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/86.0.4240.99 XWEB/4425 MMWEBSDK/20220903 Mobile Safari/537.36 MMWEBID/5026 MicroMessenger/8.0.28.2240(0x28001C35) WeChat/arm64 Weixin NetType/WIFI Language/zh_CN ABI/arm64 MiniProgramEnv/android");
+        headers.put("Referer", "https://servicewechat.com/wx8227f55dc4490f45/184/page-frame.html");
+        headers.put("traefik", "user");
+        String url = String.format("https://we.cqupt.edu.cn/api/login?cqupt_id=%s&password=%s", cqupt_id, password);
+        String response = null;
 
-        String token = wxService.getLoginCertificate(code);
-        log.info("token: " + token);
-        if (token == null)
-            return ResMap.err("服务器错误");
+        // 发送请求
+//        try {
+//            response = HttpClientUtil.postRequest(url, null, headers);
+//            System.out.println(response);
+//        } catch (Exception e) {
+//            log.info("请求失败：" + cqupt_id + " " + password);
+//        }
+//
+////        response = "{\"code\":0,\"msg\":\"登录成功\",\"data\":{\"user_info\":{\"role\":\"undergraduate\",\"name\":\"李瑶鑫\",\"cqupt_id\":\"1665412\",\"student_id\":\"2019210138\",\"grade\":\"2019\",\"class\":\"01041902\",\"academy_name\":\"通信与信息工程学院\",\"profession_name\":\"信息工程\",\"gender\":\"男\",\"counselor_name\":\"黄彩映\",\"counselor_cqupt_id\":\"0103117\"}}}\n";
+//
+//        response = response.replace("class", "classs");
+//        //格式化JSON数据
+//        HashMap<Object, Object> map = JSONObject.parseObject(response, HashMap.class);
+//        if (!Integer.valueOf(0).equals(map.get("code"))) {
+//            return ResMap.err((String) map.get("msg"));
+//        }
+//        JSONObject data = (JSONObject) map.get("data");
+//        JSONObject Info = (JSONObject) data.get("user_info");
+//        CquptInfo cquptInfo = Info.toJavaObject(CquptInfo.class);
 
-
-        return ResMap.ok("token", token).build();
-
-
+        // 查询数据库是否有 cqupt_id
+        CquptInfo qCquptInfo = this.cquptInfoDao.queryByCquptId(cqupt_id);
+        Integer userId = 1000000000 + Integer.parseInt(cqupt_id);
+//        if (qCquptInfo == null) {
+//            // 插入
+//            User user = new User();
+//            user.setUserId(userId);
+//            if (this.userDao.insert(user) < 1) return ResMap.err("插入User表失败");
+//            cquptInfo.setUserId(userId);
+//            if (this.cquptInfoDao.insert(cquptInfo) < 1) return ResMap.err("插入cquptInfo表失败");
+//            UserInfo userInfo = new UserInfo();654
+//            userInfo.setUserId(userId);
+//            userInfo.setRealName(cquptInfo.getName());
+//            userInfo.setNickName(cquptInfo.getName());
+//            userInfo.setGender(cquptInfo.getGender());
+//            userInfo.setGender(cquptInfo.getGender());
+//            if (this.userInfoDao.insert(userInfo) < 1) return ResMap.err("插入userInfo表失败");
+//        }
+        UserInfo userInfo = this.userInfoDao.queryById(userId);
+        // 直接返回token
+        return ResMap.ok("token", new JwtConfig().createToken(String.valueOf(userId))).put("userInfo", userInfo).build();
     }
-
-
 }

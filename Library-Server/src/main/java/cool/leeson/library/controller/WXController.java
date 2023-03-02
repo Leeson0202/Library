@@ -10,12 +10,18 @@ import javax.annotation.Resource;
 import java.util.Map;
 
 @RestController
-@RequestMapping("wx")
 @Slf4j
+@RequestMapping("wx")
 public class WXController {
     @Resource
     private WxServiceImpl wxService;
 
+    /**
+     * 微信登陆 注册过程
+     *
+     * @param code 微信code
+     * @return 实体对象
+     */
     @PostMapping("login")
     public ResponseEntity<Map<String, Object>> Login(String code) {
         log.info("method in wx.Login(code)" + code);
@@ -28,4 +34,10 @@ public class WXController {
 
         return ResponseEntity.ok(ResMap.ok("token", token).build());
     }
+
+    @GetMapping("/login/access")
+    public ResponseEntity<Map<String, Object>> accessToken(){
+        return ResponseEntity.ok(this.wxService.getAccessToken());
+    }
+
 }

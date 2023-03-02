@@ -9,7 +9,11 @@
 import {
     action,
     observable
-} from 'mobx-miniprogram'
+} from 'mobx-miniprogram';
+import {
+    setStorageSyncSecond,
+    getStorageSyncTime
+} from '../utils/storage'
 
 export const store = observable({
     hasLogin: false,
@@ -23,14 +27,16 @@ export const store = observable({
     get nickName() {
         return hasUserInfo == true ? this.userInfo.nickname : '微信用户';
     },
-    get HasUserInfo(){
+    get HasUserInfo() {
         return this.hasUserInfo;
     },
+    // 退出登录
     Logout: action(function () {
         this.userInfo = {};
         this.hasUserInfo = false;
         wx.removeStorageSync("userInfo");
     }),
+    // 登陆主要请求
     ReLogin: action(function () {
         let that = this;
         // 向微信服务器发送请求 code
@@ -42,7 +48,7 @@ export const store = observable({
                 }) => {
                     // 拿到code后，向开发者服务器请求,返回openid
                     wx.request({
-                        url: that.baseUrl + '/login/wx',
+                        url: that.baseUrl + '/wx/login',
                         data: {
                             code: code
                         },
@@ -54,7 +60,7 @@ export const store = observable({
                             console.log(res.data.token);
                             that.token = res.data.token;
                             // 储存
-                            wx.setStorageSync("token",res.data.token);
+                            wx.setStorageSync("token", res.data.token);
                             resolve(true);
                         },
                         fail: function () {
@@ -71,6 +77,7 @@ export const store = observable({
             })
         });
     }),
+    // 微信头像和名称 登陆
     WxLogin: action(function (res) {
         const that = this;
         wx.showLoading({
@@ -97,6 +104,7 @@ export const store = observable({
         })
 
     }),
+    // 程序初始化，从storage中获取数据
     Launch: action(function () {
         console.log('小程序第一次Launching');
         const userInfo = wx.getStorageSync('userInfo');
@@ -105,19 +113,82 @@ export const store = observable({
             this.userInfo = userInfo;
         }
     }),
-    IsKeepAlive: action(function(){
+    IsKeepAlive: action(function () {
         wx.request({
-          url: this.baseUrl + "/alive",
-          method:"GET",
-          header:{
-              "token": wx.getStorageSync('token')
-          },
-          success(res){
-            console.log(res);
-          },fail(){
-              this.ReLogin();
-          }
+            url: this.baseUrl + "/alive",
+            method: "GET",
+            header: {
+                "token": wx.getStorageSync('token')
+            },
+            success(res) {
+                console.log(res);
+            },
+            fail() {
+                this.ReLogin();
+            }
         })
+    }),
+    // 获取access_token
+    GetAccessToken: action(function () {
+        var isTime = getStorageSyncTime('access_token');
+        if (isTime === undefined) {
+            let access_token = wx.getStorageSync('access_token')
+            return access_token;
+        }
+        wx.request({
+            url: this.baseUrl + "/wx/login/access",
+            method: "GET",
+            success(res) {
+                // 保存到storage
+                const access_token = res.data.data.access_token;
+                setStorageSyncSecond('access_token', access_token);
+                console.log(access_token);
+                return access_token;
+            },
+            fail() {
+                console.log("请求失败");
+            }
+        })
+    }),
+    LoginCqupt: action(function (cqupt_id, password) {
+        let that = this
+        wx.showLoading({
+            title: "正在登陆"
+        });
+        console.log(cqupt_id, password);
+        wx.request({
+            url: this.baseUrl + '/login/cqupt',
+            method: "POST",
+            data: {
+                cqupt_id: cqupt_id,
+                password: password
+            },
+            header: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            success(res) {
+                console.log(res.data);
+                let token = res.data.token;
+                let userInfo = res.data.userInfo;
+                console.log(userInfo);
+                that.userInfo.nickname = userInfo.nickName;
+                that.hasUserInfo = true;
+
+                // 储存
+                wx.setStorageSync("token", token);
+                wx.hideLoading();
+                wx.navigateBack();
+
+            },
+            fail() {
+                wx.hideLoading();
+                wx.showToast({
+                    title: '请检查网络',
+                    icon: "error"
+                })
+            }
+        })
+
     })
 
 })

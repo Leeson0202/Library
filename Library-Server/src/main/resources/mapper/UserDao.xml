@@ -107,8 +107,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="userId" useGeneratedKeys="true">
-        insert into user(phone_num, email, pwd, openid)
-        values (#{phoneNum}, #{email}, #{pwd}, #{openId})
+        insert into user(user_id, phone_num, email, pwd, openid)
+        values (#{userId}, #{phoneNum}, #{email}, #{pwd}, #{openId})
     </insert>
 
     <insert id="insertBatch" keyProperty="userId" useGeneratedKeys="true">

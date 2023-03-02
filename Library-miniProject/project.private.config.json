@@ -53,6 +53,20 @@
                     "query": "",
                     "launchMode": "default",
                     "scene": null
+                },
+                {
+                    "name": "",
+                    "pathName": "pages/test/test",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "",
+                    "pathName": "pages/cquptLogin/cquptLogin",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
                 }
             ]
         }

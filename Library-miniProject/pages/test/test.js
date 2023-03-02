@@ -1,12 +1,10 @@
-// pages/center/center.js
-//先引入
+// pages/test/test.js//先引入
 import {
     createStoreBindings
 } from 'mobx-miniprogram-bindings'
 import {
     store
-} from '../../store/store'
-const app = getApp();
+}from '../../store/store'
 Page({
 
     /**
@@ -15,16 +13,8 @@ Page({
     data: {
 
     },
-    //进入登陆页面
-    loginHandel() {
-        wx.navigateTo({
-            url: '/pages/cquptLogin/cquptLogin',
-        })
-    },
-    getUserInfo(e) {
-        if (this.data.hasUserInfo == undefined || this.data.hasUserInfo === false) {
-            this.GetUserInfo();
-        }
+    getPhoneNumber (e) {
+      console.log(e.detail.code)
     },
 
     /**
@@ -34,7 +24,7 @@ Page({
         this.storeBindings = createStoreBindings(this, {
             store,
             fields: ['userInfo', 'hasUserInfo','HasUserInfo'],
-            actions: ['GetUserInfo']
+            actions: ['GetAccessToken']
         });
 
     },
@@ -43,18 +33,14 @@ Page({
      * 生命周期函数--监听页面初次渲染完成
      */
     onReady() {
-        // console.log("center " + this.data.HasUserInfo);
-        if (this.data.hasUserInfo === false || this.data.hasUserInfo === undefined) {
-            wx.navigateTo({
-                url: '/pages/cquptLogin/cquptLogin',
-            })
-        }
+
     },
 
     /**
      * 生命周期函数--监听页面显示
      */
     onShow() {
+
     },
 
     /**
@@ -68,7 +54,7 @@ Page({
      * 生命周期函数--监听页面卸载
      */
     onUnload() {
-        this.storeBindings.destroyStoreBindings()
+
     },
 
     /**

@@ -6,7 +6,9 @@
         "pages/function/function",
         "pages/notify/notify",
         "pages/notifyItem/notifyItem",
-        "pages/login/login"
+        "pages/login/login",
+        "pages/test/test",
+        "pages/cquptLogin/cquptLogin"
     ],
     "window": {
         "backgroundTextStyle": "light",

@@ -19,10 +19,6 @@ public class LoginController {
     @Resource
     private HttpServletRequest request;
 
-    @PostMapping("/login/wx")
-    public ResponseEntity<Map<String, Object>> loginWx(String code) {
-        return ResponseEntity.ok(this.loginService.loginWx(code));
-    }
 
     /**
      * 更新token
@@ -74,7 +70,7 @@ public class LoginController {
     /**
      * 邮箱验证
      *
-     * @param code 验证码
+     * @param code  验证码
      * @param email 邮箱
      * @return 实体对象
      */
@@ -85,5 +81,10 @@ public class LoginController {
         return ResponseEntity.ok(resMap);
     }
 
+    @PostMapping("login/cqupt")
+    public ResponseEntity<Map<String, Object>> loginCqupt(String cqupt_id, String password) {
+        Map<String, Object> map = this.loginService.loginCqupt(cqupt_id, password);
+        return ResponseEntity.ok(map);
+    }
 
 }
