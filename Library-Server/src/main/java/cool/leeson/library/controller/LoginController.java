@@ -40,7 +40,8 @@ public class LoginController {
      */
     @GetMapping("login/tel")
     public ResponseEntity<Map<String, Object>> loginTel(String tel) {
-        return ResponseEntity.ok(ResMap.ok(true));
+        Map<String, Object> res = this.loginService.loginTel(tel);
+        return ResponseEntity.ok(res);
     }
 
     /**
@@ -52,7 +53,7 @@ public class LoginController {
      */
     @GetMapping("confirm/tel")
     public ResponseEntity<Map<String, Object>> confirmTel(String code, String tel) {
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(this.loginService.confirmTel(code, tel));
     }
 
     /**

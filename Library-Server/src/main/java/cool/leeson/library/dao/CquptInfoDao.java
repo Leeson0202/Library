@@ -20,7 +20,7 @@ public interface CquptInfoDao {
      * @param userId 主键
      * @return 实例对象
      */
-    CquptInfo queryById(Integer userId);
+    CquptInfo queryById(String userId);
 
     /**
      * 通过cqupt_id查询对象

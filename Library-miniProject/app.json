@@ -8,7 +8,8 @@
         "pages/notifyItem/notifyItem",
         "pages/login/login",
         "pages/test/test",
-        "pages/cquptLogin/cquptLogin"
+        "pages/cquptLogin/cquptLogin",
+        "pages/confirm/confirm"
     ],
     "window": {
         "backgroundTextStyle": "light",

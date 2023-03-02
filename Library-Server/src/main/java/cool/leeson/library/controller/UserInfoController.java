@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -31,7 +30,7 @@ public class UserInfoController {
         log.info("token: " + token);
         // 解析token获取userId
         String userId = new JwtConfig().getUsernameFromToken(token);
-        UserInfo userInfo = this.userInfoService.queryById(Integer.valueOf(userId));
+        UserInfo userInfo = this.userInfoService.queryById(userId);
         userInfo.setSessionKey("");
         return ResponseEntity.ok(ResMap.ok("userInfo", userInfo).build());
     }

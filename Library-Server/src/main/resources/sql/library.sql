@@ -10,7 +10,7 @@ use library;
 drop table if exists user;
 create table user
 (
-    user_id   int primary key auto_increment comment 'id',
+    user_id   varchar(100) primary key comment 'id',
     phone_num varchar(20) unique comment '电话',
     email     varchar(200) unique comment '邮件',
     pwd       varchar(30) comment '密码',
@@ -24,7 +24,7 @@ create table user
 drop table if exists user_info;
 create table user_info
 (
-    user_id     int primary key comment 'id',
+    user_id     varchar(100) primary key comment 'id',
     openid      varchar(50) unique comment '微信id',
     session_key varchar(50) comment '会话密钥',
     avatar_url  varchar(500) comment '头像',
@@ -51,7 +51,7 @@ create table user_info
 drop table if exists cquptInfo;
 create table cquptInfo
 (
-    user_id            int primary key comment 'id',
+    user_id            varchar(100) primary key comment 'id',
     `role`             varchar(50) comment 'role',
     `name`             varchar(50) comment '姓名',
     cqupt_id           varchar(50) unique comment 'cqupt_id',
@@ -63,5 +63,12 @@ create table cquptInfo
     gender             varchar(50) comment '性别',
     counselor_name     varchar(50) comment '辅导员',
     counselor_cqupt_id varchar(50) comment '辅导员cqupt_id'
+);
+
+
+drop table if exists school;
+create table school(
+    id int primary key comment 'id',
+    name varchar(40) comment '名称'
 );
 

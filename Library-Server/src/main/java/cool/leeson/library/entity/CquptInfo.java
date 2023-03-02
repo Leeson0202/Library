@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CquptInfo {
-    private Integer userId;
+    private String userId;
     private String role;
     private String name;
     private String cqupt_id;

@@ -14,11 +14,23 @@ Page({
      */
     data: {
 
+        
+    },
+    headHandl(){
+        if(this.data.hasUserInfo){
+
+        }else{
+            wx.navigateTo({
+                url: '/pages/login/login',
+            })
+
+        }
+
     },
     //进入登陆页面
     loginHandel() {
         wx.navigateTo({
-            url: '/pages/cquptLogin/cquptLogin',
+            url: '/pages/login/login',
         })
     },
     getUserInfo(e) {
@@ -31,22 +43,25 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad(options) {
+        console.log("onLoad");
+        
         this.storeBindings = createStoreBindings(this, {
             store,
             fields: ['userInfo', 'hasUserInfo','HasUserInfo'],
             actions: ['GetUserInfo']
         });
-
     },
 
     /**
      * 生命周期函数--监听页面初次渲染完成
      */
     onReady() {
-        // console.log("center " + this.data.HasUserInfo);
+
+        console.log("onReady");
+        console.log( this.data.hasUserInfo);
         if (this.data.hasUserInfo === false || this.data.hasUserInfo === undefined) {
             wx.navigateTo({
-                url: '/pages/cquptLogin/cquptLogin',
+                url: '/pages/login/login',
             })
         }
     },
@@ -55,6 +70,7 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow() {
+        console.log("onShow");
     },
 
     /**
@@ -62,6 +78,7 @@ Page({
      */
     onHide() {
 
+        console.log("onHide");
     },
 
     /**

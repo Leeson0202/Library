@@ -1,0 +1,84 @@
+/* pages/confirm/confirm.wxss */
+.main{
+    margin: 40rpx auto;
+    padding: 0 30rpx;
+    font-size: 38rpx;
+}
+.title{
+    font-size: 38rpx;
+}
+.stitle{
+    margin-top: 14rpx;
+    font-size: 24rpx;
+}
+.confirm-input{
+    margin-top: 60rpx;
+    padding-bottom: 16rpx;
+    text-align: center;
+    font-size: 28rpx;
+    border-bottom: 1rpx solid #ddd;
+}
+
+.confirm-button{
+    width: 90%;
+    height: 80rpx;
+    line-height: 80rpx;
+    margin: auto;
+    margin-top: 140rpx;
+    text-align: center;
+    background-color: #f4f4f4;
+    border-radius: 30rpx;
+    font-size: 30rpx;
+    color: #666;
+}
+
+
+
+/**
+隐藏部分
+**/
+
+.avatar-wrapper {
+    width: 160rpx;
+    height: 160rpx;
+    padding: 0;
+    margin: 0;
+    margin-top: 160rpx;
+    background-color: #fff;
+
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 20rpx;
+}
+
+.nick-name-block {
+
+    margin-top: 40rpx;
+    border-top: 1rpx solid #eee;
+    border-bottom: 1rpx solid #eee;
+    line-height: 80rpx;
+    height: 80rpx;
+}
+
+.nick-pre {
+    width: 15%;
+    text-align: right;
+}
+
+.weui-input {
+    display: inline-block;
+    position: relative;
+    top: 10rpx;
+    text-align: center;
+    width: 70%;
+
+}
+
+.load-submit {
+    margin-top: 80rpx;
+    font-weight: 400;
+    font-size: 28rpx;
+}

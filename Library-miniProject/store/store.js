@@ -18,8 +18,16 @@ import {
 export const store = observable({
     hasLogin: false,
     baseUrl: "http://localhost:8080",
-    userInfo: {},
-    hasUserInfo: undefined,
+    userInfo: {
+        avatarUrl: "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132",
+        nickname: "点击登陆"
+    },
+    tel: "",
+    email: "",
+    // {0:手机， 1:邮箱}
+    loginMethod: 0,
+    tag: false, // 新用户
+    hasUserInfo: false,
     // 计算属性
     get avatarUrl() {
         return hasUserInfo == true ? this.userInfo.avatarUrl : "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132";
@@ -150,6 +158,7 @@ export const store = observable({
             }
         })
     }),
+    // 登陆cqupt
     LoginCqupt: action(function (cqupt_id, password) {
         let that = this
         wx.showLoading({
@@ -189,6 +198,138 @@ export const store = observable({
             }
         })
 
-    })
+    }),
+    // 设置 hasUserInfo 【true false】
+    changeHasUserInfo: action(function (tag) {
+        this.hasUserInfo = tag;
+    }),
+    // 设置登陆方式
+    ChangeLoginMethod: action(function (tag) {
+        this.loginMethod = tag;
+    }),
+    // 登陆login
+    Login: action(function (str) {
+        if(str===null || str.length ===0) {
+            wx.showToast({
+              title: '请输入',
+              icon: "none"
+            })
+            return;
+        }
+        let that = this
+        that.tag = false
+        if (that.loginMethod === 0) {
+            that.tel = str
+        } else if (that.loginMethod === 1) {
+            that.email = str
+        }
+        wx.showLoading({
+            title: '正在发送验证码',
+        })
+        let uri = that.loginMethod == 0 ? "/login/tel" : "/login/email";
+        let url = that.baseUrl + uri;
+        console.log(url);
+        wx.request({
+            url: url,
+            method: "GET",
+            data: {
+                tel: that.tel,
+                email: that.email
+            },
+            success(res) {
+                wx.hideLoading();
+                if (res.data.code == 200) {
+                    wx.showToast({
+                        title: res.data.data,
+                        icon: "none"
+                    })
+                    wx.navigateTo({
+                        url: '/pages/confirm/confirm',
+                    })
+                } else {
+                    wx.showToast({
+                        title: res.data.err,
+                        icon: "none"
+                    })
+                }
+            },
+            fail() {
+                wx.hideLoading();
+                wx.showToast({
+                    title: '请连接网络',
+                    icon: "none"
+                })
+            }
+        })
 
+    }),
+    // 登陆验证
+    Confirm: action(function (code) {
+        let that = this;
+        // 检测
+        if (code === null || code.length < 6) {
+            wx.showToast({
+                title: '请输入完整的验证码',
+                icon: "none"
+            })
+        }
+        let url = that.baseUrl + (that.loginMethod === 0 ? "/confirm/tel" : "/confirm/email");
+        console.log(url);
+        wx.showLoading({
+            title: '正在登陆',
+        })
+        wx.request({
+            url: url,
+            method: "GET",
+            data: {
+                tel: that.tel,
+                email: that.email,
+                code: code
+            },
+            success(res) {
+                wx.hideLoading();
+                if (res.data.code !== 200) {
+                    wx.showToast({
+                        title: res.data.data,
+                        icon: "none"
+                    })
+                    return false;
+                }
+                if (res.data.code === 200) {
+                    wx.setStorageSync('token', res.data.token);
+                    // 是否为新用户
+                    if (res.data.tag !== that.loginMethod) {
+                        that.tag = true;
+                    } else {
+                        wx.showToast({
+                            title: '登陆成功',
+                            icon: "success"
+                        });
+                        that.hasUserInfo = true;
+                        wx.reLaunch({
+                          url: '/pages/center/center',
+                        })
+                    }
+                }
+            },
+            fail() {
+                wx.hideLoading();
+                wx.showToast({
+                    title: '请检查网络',
+                    icon: "error"
+                })
+            }
+        })
+    }),
+    // 设置头像 和昵称
+    Submit: action(function (avatarUrl, nickname) {
+        this.userInfo.avatarUrl = avatarUrl;
+        this.userInfo.nickname = nickname;
+        this.hasUserInfo = true;
+        wx.setStorageSync('userInfo', this.userInfo);
+        wx.reLaunch({
+          url: '/pages/center/center',
+        })
+        // 上传名字 和 头像
+    })
 })

@@ -48,12 +48,12 @@ public class UserController {
      * @return 单条数据
      */
     @GetMapping("{id}")
-    public ResponseEntity<User> queryById(@PathVariable("id") Integer id) {
+    public ResponseEntity<User> queryById(@PathVariable("id") String id) {
         return ResponseEntity.ok(this.userService.queryById(id));
     }
 
     @GetMapping("userId/{userId}")
-    public ResponseEntity<Map<String, Object>> getUserInfo(@PathVariable("userId") Integer userId) {
+    public ResponseEntity<Map<String, Object>> getUserInfo(@PathVariable("userId") String userId) {
         return ResponseEntity.ok(ResMap.ok("userInfo", this.userInfoService.queryById(userId)).build());
     }
 

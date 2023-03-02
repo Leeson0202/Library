@@ -30,7 +30,7 @@ public class WxServiceImpl {
     private RedisTemplate<String, String> redisTemplate;
 
     public String getLoginCertificate(String code) {
-        Integer userId;
+        String userId;
         // 请求地址
         String requestUrl = WxUtil.getWxLoginUrl(code);
         String response;

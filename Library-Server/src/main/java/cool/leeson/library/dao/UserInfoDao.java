@@ -20,7 +20,7 @@ public interface UserInfoDao {
      * @param userId 主键
      * @return 实例对象
      */
-    UserInfo queryById(Integer userId);
+    UserInfo queryById(String userId);
 
     /**
      * 通过openid查询单条

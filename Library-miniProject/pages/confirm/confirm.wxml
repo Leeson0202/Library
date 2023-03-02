@@ -1,0 +1,33 @@
+<!--pages/confirm/confirm.wxml-->
+<view class="main"  wx:if="{{tag===false}}">
+    <view class="title">
+    请输入验证码
+    <view class="stitle" wx:if="{{loginMethod===0}}"> 已发送至{{tel}}</view>
+    <view class="stitle" wx:if="{{loginMethod===1}}"> 已发送至{{email}}</view>
+
+    </view>
+    <view class="confirm-input">
+        <input type="number" 
+        value="{{code}}"
+        bindinput="codeInput"
+        maxlength="{{6}}"
+        placeholder="请输入6位验证码"/>
+    </view>
+    <view class="confirm-button" bindtap="confirm">
+        登陆
+    </view>
+</view>
+
+<view class="wx-block" wx:if="{{tag===true}}">
+        <view>
+            <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+                <image class="avatar" src="{{avatarUrl}}" mode="heightFix"></image>
+            </button>
+        </view>
+        <view class="nick-name-block">
+            <view class="nick-pre" style="display: inline-block;">昵称</view><input type="nickname" class="weui-input" model:value="{{nickname}}" placeholder="请输入昵称" />
+
+        </view>
+        <button class="load-submit" bindtap="submit">进入小程序</button>
+
+    </view>

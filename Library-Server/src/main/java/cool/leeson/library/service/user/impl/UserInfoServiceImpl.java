@@ -28,7 +28,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @return 实例对象
      */
     @Override
-    public UserInfo queryById(Integer userId) {
+    public UserInfo queryById(String userId) {
         return this.userInfoDao.queryById(userId);
     }
 

@@ -3,7 +3,7 @@
 <mapper namespace="cool.leeson.library.dao.CquptInfoDao">
 
     <resultMap type="cool.leeson.library.entity.CquptInfo" id="CquptInfoMap">
-        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
         <result property="role" column="role" jdbcType="VARCHAR"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="cqupt_id" column="cqupt_id" jdbcType="VARCHAR"/>

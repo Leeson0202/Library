@@ -3,7 +3,7 @@
 <mapper namespace="cool.leeson.library.dao.UserInfoDao">
 
     <resultMap type="cool.leeson.library.entity.UserInfo" id="UserInfoMap">
-        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
         <result property="openid" column="openid" jdbcType="VARCHAR"/>
         <result property="sessionKey" column="session_key" jdbcType="VARCHAR"/>
         <result property="avatarUrl" column="avatar_url" jdbcType="VARCHAR"/>

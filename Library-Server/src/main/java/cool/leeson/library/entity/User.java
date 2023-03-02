@@ -20,7 +20,7 @@ public class User implements Serializable {
     /**
      * id
      */
-    private Integer userId;
+    private String userId;
     /**
      * 电话
      */

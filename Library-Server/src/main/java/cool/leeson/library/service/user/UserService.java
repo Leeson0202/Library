@@ -18,7 +18,7 @@ public interface UserService {
      * @param userId 主键
      * @return 实例对象
      */
-    User queryById(Integer userId);
+    User queryById(String userId);
 
     /**
      * 分页查询

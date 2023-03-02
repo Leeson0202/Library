@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserInfo {
     // user_id
-    private Integer userId;
+    private String userId;
     //OPEN_id
     private String openid;
     //会话密钥
