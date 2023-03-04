@@ -9,7 +9,8 @@
         "pages/login/login",
         "pages/test/test",
         "pages/cquptLogin/cquptLogin",
-        "pages/confirm/confirm"
+        "pages/confirm/confirm",
+        "pages/userInfo/userInfo"
     ],
     "window": {
         "backgroundTextStyle": "light",

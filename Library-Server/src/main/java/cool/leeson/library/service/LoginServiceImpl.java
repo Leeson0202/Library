@@ -72,8 +72,7 @@ public class LoginServiceImpl {
         // 存入缓存
         this.redisTemplate.opsForValue().set(codeKey, code, 5, TimeUnit.MINUTES);
         this.redisTemplate.opsForValue().set(confirmKey, code, 1, TimeUnit.MINUTES);
-
-        log.info(tel + "验证码发送成功");
+        log.info(tel + "验证码发送成功 " + code);
         return ResMap.ok("验证码发送成功");
     }
 
@@ -168,7 +167,7 @@ public class LoginServiceImpl {
         this.redisTemplate.opsForValue().set(codeKey, code, 5, TimeUnit.MINUTES);
         this.redisTemplate.opsForValue().set(confirmKey, code, 1, TimeUnit.MINUTES);
 
-        log.info(email + "验证码发送成功");
+        log.info(email + "验证码发送成功 " + code);
         return ResMap.ok("验证码发送成功");
 
     }

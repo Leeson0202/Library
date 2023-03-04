@@ -16,28 +16,27 @@ import {
 } from '../utils/storage'
 
 export const store = observable({
-    hasLogin: false,
     baseUrl: "http://localhost:8080",
+    header: {
+        "Content-Type": "application/x-www-form-urlencoded"
+    },
+    hasLogin: false,
+    hasUserInfo: false,
     userInfo: {
         avatarUrl: "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132",
-        nickname: "点击登陆"
+        nickName: "点击登陆"
     },
+    // 注册相关
     tel: "",
     email: "",
     // {0:手机， 1:邮箱}
-    loginMethod: 0,
+    loginMethod: 1,
     tag: false, // 新用户
-    hasUserInfo: false,
     // 计算属性
     get avatarUrl() {
         return hasUserInfo == true ? this.userInfo.avatarUrl : "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132";
     },
-    get nickName() {
-        return hasUserInfo == true ? this.userInfo.nickname : '微信用户';
-    },
-    get HasUserInfo() {
-        return this.hasUserInfo;
-    },
+    
     // 退出登录
     Logout: action(function () {
         this.userInfo = {};
@@ -180,7 +179,7 @@ export const store = observable({
                 let token = res.data.token;
                 let userInfo = res.data.userInfo;
                 console.log(userInfo);
-                that.userInfo.nickname = userInfo.nickName;
+                that.userInfo.nickName = userInfo.nickName;
                 that.hasUserInfo = true;
 
                 // 储存
@@ -207,16 +206,17 @@ export const store = observable({
     ChangeLoginMethod: action(function (tag) {
         this.loginMethod = tag;
     }),
-    // 登陆login
+    // 登陆login 发送验证码
     Login: action(function (str) {
-        if(str===null || str.length ===0) {
+        if (str === null || str.length === 0) {
             wx.showToast({
-              title: '请输入',
-              icon: "none"
+                title: '请输入',
+                icon: "none"
             })
             return;
         }
         let that = this
+        that.hasLogin = false;
         that.tag = false
         if (that.loginMethod === 0) {
             that.tel = str
@@ -266,6 +266,8 @@ export const store = observable({
     // 登陆验证
     Confirm: action(function (code) {
         let that = this;
+        that.hasLogin = false;
+        that.tag = false;
         // 检测
         if (code === null || code.length < 6) {
             wx.showToast({
@@ -287,16 +289,20 @@ export const store = observable({
                 code: code
             },
             success(res) {
+                console.log(res.data);
                 wx.hideLoading();
                 if (res.data.code !== 200) {
                     wx.showToast({
-                        title: res.data.data,
+                        title: res.data.err,
                         icon: "none"
                     })
                     return false;
                 }
                 if (res.data.code === 200) {
+                    console.log(res.data);
                     wx.setStorageSync('token', res.data.token);
+                    that.hasLogin = true;
+
                     // 是否为新用户
                     if (res.data.tag !== that.loginMethod) {
                         that.tag = true;
@@ -305,9 +311,8 @@ export const store = observable({
                             title: '登陆成功',
                             icon: "success"
                         });
-                        that.hasUserInfo = true;
                         wx.reLaunch({
-                          url: '/pages/center/center',
+                            url: '/pages/center/center',
                         })
                     }
                 }
@@ -322,14 +327,46 @@ export const store = observable({
         })
     }),
     // 设置头像 和昵称
-    Submit: action(function (avatarUrl, nickname) {
+    Submit: action(function (avatarUrl, nickName) {
+        let that = this;
         this.userInfo.avatarUrl = avatarUrl;
-        this.userInfo.nickname = nickname;
+        this.userInfo.nickName = nickName;
         this.hasUserInfo = true;
         wx.setStorageSync('userInfo', this.userInfo);
         wx.reLaunch({
-          url: '/pages/center/center',
+            url: '/pages/center/center',
         })
         // 上传名字 和 头像
+        wx.request({
+            url: that.baseUrl + '/userInfo/update',
+            method: "POST",
+            header: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "token": wx.getStorageSync('token')
+            },
+            data:{
+                "avatarUrl": avatarUrl,
+                nickName: nickName
+            },success(res){
+                console.log(res.data);
+                that.userInfo = res.data.userInfo;
+                wx.setStorageSync('userInfo', res.data.userInfo)
+                that.hasUserInfo = true;
+            },fail(){
+                console.log("上传失败");
+            }
+        })
+    }),
+    // 获取用户
+    GetUserInfo: action(function () {
+        let that = this ;
+        wx.request({
+          url: that.baseUrl+'/userInfo',
+          method: 'GET',
+          success(res){
+              console.log(res.data);
+          }
+        })
+        
     })
 })

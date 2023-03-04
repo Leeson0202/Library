@@ -65,6 +65,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      */
     @Override
     public UserInfo update(UserInfo userInfo) {
+        // 解析
         this.userInfoDao.update(userInfo);
         return this.queryById(userInfo.getUserId());
     }

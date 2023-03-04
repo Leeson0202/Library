@@ -1,4 +1,4 @@
-// pages/center/center.js
+
 //先引入
 import {
     createStoreBindings
@@ -13,22 +13,6 @@ Page({
      * 页面的初始数据
      */
     data: {
-
-        
-    },
-    headHandl(){
-        let that = this
-        if(!that.data.hasLogin){
-            wx.navigateTo({
-                url: '/pages/login/login',
-            })
-        } else  {
-         // 进入个人资料
-         wx.navigateTo({
-           url: '/pages/userInfo/userInfo',
-         })
-        }
-
     },
     // 获取用户信息
     getUserInfo(e) {
@@ -78,7 +62,6 @@ Page({
      */
     onHide() {
 
-        console.log("onHide");
     },
 
     /**
@@ -92,10 +75,6 @@ Page({
      * 页面相关事件处理函数--监听用户下拉动作
      */
     onPullDownRefresh() {
-        // 更新操作
-        if(this.data.hasLogin){
-            this.GetUserInfo()
-        }
 
     },
 

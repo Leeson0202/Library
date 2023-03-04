@@ -11,7 +11,7 @@ Page({
     data: {
         code: "",
         avatarUrl: defaultAvatarUrl,
-        nickname: null
+        nickName: null
     },
     // 手机号或邮箱登陆 tag决定
     login() {
@@ -49,7 +49,7 @@ Page({
         })
     },
     submit() {
-        if (this.data.avatarUrl === defaultAvatarUrl || this.data.nickname === null) {
+        if (this.data.avatarUrl === defaultAvatarUrl || this.data.nickName === null) {
             wx.showToast({
                 title: '请点击头像和名字',
                 icon: 'error'
@@ -57,7 +57,7 @@ Page({
             return;
         }
         wx.navigateBack(2)
-        this.Submit(this.data.avatarUrl, this.data.nickname)
+        this.Submit(this.data.avatarUrl, this.data.nickName)
 
 
 

@@ -25,7 +25,7 @@
             </button>
         </view>
         <view class="nick-name-block">
-            <view class="nick-pre" style="display: inline-block;">昵称</view><input type="nickname" class="weui-input" model:value="{{nickname}}" placeholder="请输入昵称" />
+            <view class="nick-pre" style="display: inline-block;">昵称</view><input type="nickname" class="weui-input" model:value="{{nickName}}" placeholder="请输入昵称" />
 
         </view>
         <button class="load-submit" bindtap="submit">进入小程序</button>

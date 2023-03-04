@@ -16,7 +16,7 @@
                 </view>
                 <!--昵称-->
                 <view class="user-name-block" bindtap="headHandl">
-                    <text>{{userInfo.nickname}}</text>
+                    <text>{{userInfo.nickName}}</text>
                     <image class="user-name-image" src="../../resources/images/Author/level.svg" mode="aspectFit" wx:if="{{hasUserInfo}}"/>
                 </view>
             </view>
