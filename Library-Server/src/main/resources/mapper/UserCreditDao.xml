@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cool.leeson.library.dao.UserCreditDao">
+
+    <resultMap type="cool.leeson.library.entity.UserCredit" id="UserCreditMap">
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="userCredit" column="user_credit" jdbcType="INTEGER"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="UserCreditMap">
+        select user_id,
+               user_credit,
+               description
+        from user_credit
+        where user_id = #{userId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserCreditMap">
+        select
+        user_id, user_credit, description
+        from user_credit
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="userCredit != null">
+                and user_credit = #{userCredit}
+            </if>
+            <if test="description != null and description != ''">
+                and description = #{description}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from user_credit
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="userCredit != null">
+                and user_credit = #{userCredit}
+            </if>
+            <if test="description != null and description != ''">
+                and description = #{description}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="" useGeneratedKeys="true">
+        insert into user_credit(user_id, user_credit, description)
+        values (#{userId}, #{userCredit}, #{description})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="" useGeneratedKeys="true">
+        insert into user_credit(user_id, user_credit, description)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userId}, #{entity.userCredit}, #{entity.description})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="" useGeneratedKeys="true">
+        insert into user_credit(user_id, user_credit, description)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userId}, #{entity.userCredit}, #{entity.description})
+        </foreach>
+        on duplicate key update
+        user_id = values(user_id),
+        user_credit = values(user_credit),
+        description = values(description)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update user_credit
+        <set>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId},
+            </if>
+            <if test="userCredit != null">
+                user_credit = #{userCredit},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+        </set>
+        where = #{}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from user_credit
+        where user_id = #{userId}
+    </delete>
+
+</mapper>
+

@@ -1,5 +1,11 @@
 // pages/function/function.js
-
+//先引入
+import {
+    createStoreBindings
+} from 'mobx-miniprogram-bindings'
+import {
+    store
+} from '../../store/store'
 
 Page({
 
@@ -9,11 +15,38 @@ Page({
     data: {
 
     },
+    bookHandel(e) {
+        console.log(e.currentTarget.dataset.tag);
+        let tag = e.currentTarget.dataset.tag;
+        // 判断是否登陆
+        this.HasLogin();
+        let url = ""
+        switch (tag) {
+            case "book":
+                url = '/pages/book/book';
+                break;
+            case "fastBook":
+                url = '/pages/fastBook/fastBook';
+                break;
+        }
+        console.log(url);
+        if (url !== "") {
+            wx.navigateTo({
+                url: url
+            })
+        }
+
+    },
 
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad(options) {
+        this.storeBindings = createStoreBindings(this, {
+            store,
+            fields: ['userInfo', 'hasUserInfo', 'hasLogin'],
+            actions: ['HasLogin']
+        });
     },
 
     /**
@@ -41,7 +74,7 @@ Page({
      * 生命周期函数--监听页面卸载
      */
     onUnload() {
-
+        this.storeBindings.destroyStoreBindings()
     },
 
     /**

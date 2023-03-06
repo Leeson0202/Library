@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserInfo {
+public class UserInfoQuery {
     // user_id
     private String userId;
     //OPEN_id
@@ -36,6 +36,4 @@ public class UserInfo {
     private Integer stuId;
     // 背景
     private String background;
-    // 用户记录
-    private UserRecord userRecord;
 }

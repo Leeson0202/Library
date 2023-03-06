@@ -4,6 +4,8 @@ import cool.leeson.library.entity.UserInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.Map;
+
 /**
  * (UserInfo)表服务接口
  *
@@ -21,10 +23,18 @@ public interface UserInfoService {
     UserInfo queryById(String userId);
 
     /**
+     * 通过token获取id
+     * @param userId 用户id
+     * @return 实体
+     */
+    public UserInfo query(String userId);
+
+
+    /**
      * 分页查询
      *
-     * @param userInfo 筛选条件
-     * @param pageRequest      分页对象
+     * @param userInfo    筛选条件
+     * @param pageRequest 分页对象
      * @return 查询结果
      */
     Page<UserInfo> queryByPage(UserInfo userInfo, PageRequest pageRequest);

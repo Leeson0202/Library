@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cool.leeson.library.dao.UserSchoolDao">
+
+    <resultMap type="cool.leeson.library.entity.UserSchool" id="UserSchoolMap">
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="schoolId" column="school_id" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="UserSchoolMap">
+        select user_id,
+               school_id
+        from user_school
+        where user_id = #{userId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserSchoolMap">
+        select
+        user_id, school_id
+        from user_school
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="schoolId != null and schoolId != ''">
+                and school_id = #{schoolId}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from user_school
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="schoolId != null and schoolId != ''">
+                and school_id = #{schoolId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="" useGeneratedKeys="true">
+        insert into user_school(user_id, school_id)
+        values (#{userId}, #{schoolId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="" useGeneratedKeys="true">
+        insert into user_school(user_id, school_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userId}, #{entity.schoolId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="" useGeneratedKeys="true">
+        insert into user_school(user_id, school_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userId}, #{entity.schoolId})
+        </foreach>
+        on duplicate key update
+        user_id = values(user_id),
+        school_id = values(school_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update user_school
+        <set>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId},
+            </if>
+            <if test="schoolId != null and schoolId != ''">
+                school_id = #{schoolId},
+            </if>
+        </set>
+        where = #{}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from user_school
+        where user_id = #{userId}
+    </delete>
+
+</mapper>
+

@@ -6,11 +6,13 @@
 
 <view class="main">
     <view class="book">
-        <view class="card-button" style="float:left; height: 240rpx; line-height: 260rpx;">
+        <view class="card-button" style="float:left; height: 240rpx; line-height: 260rpx;"
+        bindtap="bookHandel" data-tag="book">
             一般预约
         </view>
         <view style="display: inline-block; height: 300rpx;">
-            <view class="card-button" style="display: block;">
+            <view class="card-button" style="display: block;" 
+            bindtap="bookHandel" data-tag="fastBook">
                 快速预约
             </view>
             <view class="card-button" style="height: 140rpx; line-height: 140rpx;">

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cool.leeson.library.dao.UserRecordDao">
+
+    <resultMap type="cool.leeson.library.entity.UserRecord" id="UserRecordMap">
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="credit" column="credit" jdbcType="INTEGER"/>
+        <result property="maxTime" column="max_time" jdbcType="INTEGER"/>
+        <result property="allTime" column="all_time" jdbcType="INTEGER"/>
+        <result property="dayRank" column="day_rank" jdbcType="INTEGER"/>
+        <result property="weekRank" column="week_rank" jdbcType="INTEGER"/>
+        <result property="monthRank" column="month_rank" jdbcType="INTEGER"/>
+        <result property="allRank" column="all_rank" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="UserRecordMap">
+        select
+          user_id, credit, max_time, all_time, day_rank, week_rank, month_rank, all_rank
+        from user_record
+        where user_id = #{userId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserRecordMap">
+        select
+          user_id, credit, max_time, all_time, day_rank, week_rank, month_rank, all_rank
+        from user_record
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="credit != null">
+                and credit = #{credit}
+            </if>
+            <if test="maxTime != null">
+                and max_time = #{maxTime}
+            </if>
+            <if test="allTime != null">
+                and all_time = #{allTime}
+            </if>
+            <if test="dayRank != null">
+                and day_rank = #{dayRank}
+            </if>
+            <if test="weekRank != null">
+                and week_rank = #{weekRank}
+            </if>
+            <if test="monthRank != null">
+                and month_rank = #{monthRank}
+            </if>
+            <if test="allRank != null">
+                and all_rank = #{allRank}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from user_record
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="credit != null">
+                and credit = #{credit}
+            </if>
+            <if test="maxTime != null">
+                and max_time = #{maxTime}
+            </if>
+            <if test="allTime != null">
+                and all_time = #{allTime}
+            </if>
+            <if test="dayRank != null">
+                and day_rank = #{dayRank}
+            </if>
+            <if test="weekRank != null">
+                and week_rank = #{weekRank}
+            </if>
+            <if test="monthRank != null">
+                and month_rank = #{monthRank}
+            </if>
+            <if test="allRank != null">
+                and all_rank = #{allRank}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="" useGeneratedKeys="true">
+        insert into user_record(user_id, credit, max_time, all_time, day_rank, week_rank, month_rank, all_rank)
+        values (#{userId}, #{credit}, #{maxTime}, #{allTime}, #{dayRank}, #{weekRank}, #{monthRank}, #{allRank})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="" useGeneratedKeys="true">
+        insert into user_record(user_id, credit, max_time, all_time, day_rank, week_rank, month_rank, all_rank)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.userId}, #{entity.credit}, #{entity.maxTime}, #{entity.allTime}, #{entity.dayRank}, #{entity.weekRank}, #{entity.monthRank}, #{entity.allRank})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="" useGeneratedKeys="true">
+        insert into user_record(user_id, credit, max_time, all_time, day_rank, week_rank, month_rank, all_rank)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userId}, #{entity.credit}, #{entity.maxTime}, #{entity.allTime}, #{entity.dayRank}, #{entity.weekRank}, #{entity.monthRank}, #{entity.allRank})
+        </foreach>
+        on duplicate key update
+        user_id = values(user_id),
+        credit = values(credit),
+        max_time = values(max_time),
+        all_time = values(all_time),
+        day_rank = values(day_rank),
+        week_rank = values(week_rank),
+        month_rank = values(month_rank),
+        all_rank = values(all_rank)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update user_record
+        <set>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId},
+            </if>
+            <if test="credit != null">
+                credit = #{credit},
+            </if>
+            <if test="maxTime != null">
+                max_time = #{maxTime},
+            </if>
+            <if test="allTime != null">
+                all_time = #{allTime},
+            </if>
+            <if test="dayRank != null">
+                day_rank = #{dayRank},
+            </if>
+            <if test="weekRank != null">
+                week_rank = #{weekRank},
+            </if>
+            <if test="monthRank != null">
+                month_rank = #{monthRank},
+            </if>
+            <if test="allRank != null">
+                all_rank = #{allRank},
+            </if>
+        </set>
+        where  = #{}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from user_record where user_id  = #{userId}
+    </delete>
+
+</mapper>
+

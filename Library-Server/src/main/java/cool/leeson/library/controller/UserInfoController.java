@@ -32,7 +32,7 @@ public class UserInfoController {
         log.info("token: " + token);
         // 解析token获取userId
         String userId = new JwtConfig().getUsernameFromToken(token);
-        UserInfo userInfo = this.userInfoService.queryById(userId);
+        UserInfo userInfo = this.userInfoService.query(userId);
         userInfo.setSessionKey(""); // 去掉sessionKey
         return ResponseEntity.ok(ResMap.ok("userInfo", userInfo).build());
     }

@@ -24,7 +24,8 @@ export const store = observable({
     hasUserInfo: false,
     userInfo: {
         avatarUrl: "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132",
-        nickName: "点击登陆"
+        nickName: "点击登陆",
+        background: "http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1010/13/c6/5494373_5494373_1286955435968.jpg"
     },
     // 注册相关
     tel: "",
@@ -36,7 +37,15 @@ export const store = observable({
     get avatarUrl() {
         return hasUserInfo == true ? this.userInfo.avatarUrl : "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132";
     },
-    
+    HasLogin: action(function () {
+        if (this.hasLogin !== true) {
+            wx.naveigateTo({
+                url: '/pages/login/login',
+            })
+            return;
+        }
+    }),
+
     // 退出登录
     Logout: action(function () {
         this.userInfo = {};
@@ -299,14 +308,14 @@ export const store = observable({
                     return false;
                 }
                 if (res.data.code === 200) {
-                    console.log(res.data);
                     wx.setStorageSync('token', res.data.token);
                     that.hasLogin = true;
-
                     // 是否为新用户
                     if (res.data.tag !== that.loginMethod) {
                         that.tag = true;
                     } else {
+                        console.log(that);
+                        that.GetUserInfo();
                         wx.showToast({
                             title: '登陆成功',
                             icon: "success"
@@ -332,10 +341,45 @@ export const store = observable({
         this.userInfo.avatarUrl = avatarUrl;
         this.userInfo.nickName = nickName;
         this.hasUserInfo = true;
-        wx.setStorageSync('userInfo', this.userInfo);
+        let data ={
+            avatarUrl: avatarUrl,
+            nickName: nickName
+        }
+        // 更新用户信息
+        this.UserInfoUpdate(data);
         wx.reLaunch({
             url: '/pages/center/center',
         })
+    }),
+    // 获取用户
+    GetUserInfo: action(function () {
+        let that = this;
+        wx.request({
+            url: that.baseUrl + '/userInfo',
+            method: 'GET',
+            header:{
+                "Content-Type": "application/x-www-form-urlencoded",
+                'token': wx.getStorageSync('token')
+            },
+            success(res) {
+                console.log(res.data.userInfo);
+                if(res.data.code!==200){
+                    wx.showToast({
+                      title: '请稍后重试',
+                      icon: "error"
+                    })
+                }
+                let userInfo = res.data.userInfo;
+                that.userInfo = userInfo;
+                wx.setStorageSync('userInfo', userInfo)
+                that.hasUserInfo = true;
+
+            }
+        })
+
+    }),
+    UserInfoUpdate: action(function (data) {
+        let that = this
         // 上传名字 和 头像
         wx.request({
             url: that.baseUrl + '/userInfo/update',
@@ -344,29 +388,27 @@ export const store = observable({
                 "Content-Type": "application/x-www-form-urlencoded",
                 "token": wx.getStorageSync('token')
             },
-            data:{
-                "avatarUrl": avatarUrl,
-                nickName: nickName
-            },success(res){
+            data: data,
+            success(res) {
                 console.log(res.data);
+                if(res.data.code!==200){
+                    wx.showToast({
+                      title: res.data.err,
+                      icon: "none"
+                    })
+                    return false;
+                }
                 that.userInfo = res.data.userInfo;
                 wx.setStorageSync('userInfo', res.data.userInfo)
                 that.hasUserInfo = true;
-            },fail(){
+                wx.showToast({
+                  title: '保存成功',
+                  icon: "success"
+                })
+            },
+            fail() {
                 console.log("上传失败");
             }
         })
-    }),
-    // 获取用户
-    GetUserInfo: action(function () {
-        let that = this ;
-        wx.request({
-          url: that.baseUrl+'/userInfo',
-          method: 'GET',
-          success(res){
-              console.log(res.data);
-          }
-        })
-        
     })
 })

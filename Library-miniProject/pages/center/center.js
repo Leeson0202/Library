@@ -52,7 +52,8 @@ Page({
      * 生命周期函数--监听页面初次渲染完成
      */
     onReady() {
-        if (this.data.hasUserInfo === false || this.data.hasUserInfo === undefined) {
+        if (this.data.hasLogin !== true) {
+            console.log(this.data.hasLogin);
             wx.navigateTo({
                 url: '/pages/login/login',
             })
@@ -78,7 +79,6 @@ Page({
      */
     onHide() {
 
-        console.log("onHide");
     },
 
     /**

@@ -74,6 +74,13 @@
                     "query": "",
                     "launchMode": "default",
                     "scene": null
+                },
+                {
+                    "name": "",
+                    "pathName": "pages/userInfo/userInfo",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
                 }
             ]
         }

@@ -2,12 +2,8 @@ package cool.leeson.library.service;
 
 import com.alibaba.fastjson.JSONObject;
 import cool.leeson.library.config.JwtConfig;
-import cool.leeson.library.dao.CquptInfoDao;
-import cool.leeson.library.dao.UserDao;
-import cool.leeson.library.dao.UserInfoDao;
-import cool.leeson.library.entity.CquptInfo;
-import cool.leeson.library.entity.User;
-import cool.leeson.library.entity.UserInfo;
+import cool.leeson.library.dao.*;
+import cool.leeson.library.entity.*;
 import cool.leeson.library.util.HttpClientUtil;
 import cool.leeson.library.util.ResMap;
 import cool.leeson.library.util.code.CodeUtil;
@@ -34,6 +30,15 @@ public class LoginServiceImpl {
     private UserInfoDao userInfoDao;
     @Resource
     private CquptInfoDao cquptInfoDao;
+    @Resource
+    private UserRecordDao userRecordDao;
+    @Resource
+    private UserCreditDao userCreditDao;
+    @Resource
+    private UserLearnedDao userLearnedDao;
+    @Resource
+    private UserSchoolDao userSchoolDao;
+
 
     @Resource
     private RedisTemplate<String, String> redisTemplate;
@@ -89,7 +94,7 @@ public class LoginServiceImpl {
 
         if (!MsmUtil.checkMobileNum(tel)) {
             log.error(tel + "输入正确手机号");
-            return ResMap.ok("请输入正确的邮箱");
+            return ResMap.err("请输入正确的手机号");
         }
         log.info(tel + "正在验证短信验证码");
         // 查询缓存
@@ -106,23 +111,9 @@ public class LoginServiceImpl {
         if (quser == null) {
             // 开始注册
             tag = 2; // 新用户
-            log.info(tel + "开始注册");
-            String userId = UUID.randomUUID().toString();
-            quser = new User();
-            quser.setUserId(userId);
-            quser.setPhoneNum(tel);
-            if (userDao.insert(quser) < 1) {
-                log.info(tel + " User数据库插入失败");
-                return ResMap.err("User数据库插入失败");
-            }
-            log.info(tel + "注册，User插入成功");
-            UserInfo userInfo = new UserInfo();
-            userInfo.setUserId(userId);
-            if (userInfoDao.insert(userInfo) < 1) {
-                log.info(tel + " UserInfo数据库插入失败");
-                return ResMap.err("UserInfo数据库插入失败");
-            }
-            log.info(tel + "注册，UserInfo插入成功");
+            boolean register = this.register(tel, null);
+            if (!register) return ResMap.err("注册失败");
+            quser = this.userDao.queryByTel(tel);
         }
         log.info(tel + "开始生成token");
         String userId = quser.getUserId();
@@ -186,7 +177,7 @@ public class LoginServiceImpl {
         // 检测缓冲是否有code
         if (!EmailUtil.checkEmail(email)) {
             log.error(email + "输入正确的邮箱");
-            return ResMap.ok("请输入正确的邮箱");
+            return ResMap.err("请输入正确的邮箱");
         }
         log.info(email + "正在验证验证码");
         // 查询缓存
@@ -203,32 +194,49 @@ public class LoginServiceImpl {
         if (quser == null) {
             // 开始注册
             tag = 2; //新用户
-            log.info(email + "开始注册");
-            String userId = UUID.randomUUID().toString();
-            quser = new User();
-            quser.setUserId(userId);
-            quser.setEmail(email);
-            if (userDao.insert(quser) < 1) {
-                log.info(email + " User数据库插入失败");
-                return ResMap.err("User数据库插入失败");
-            }
-            log.info(email + "注册，User插入成功");
-            UserInfo userInfo = new UserInfo();
-            userInfo.setUserId(userId);
-            if (userInfoDao.insert(userInfo) < 1) {
-                log.info(email + " UserInfo数据库插入失败");
-                return ResMap.err("UserInfo数据库插入失败");
-            }
-            log.info(email + "注册，UserInfo插入成功");
+            boolean register = this.register(null, email);
+            if (!register) return ResMap.err("注册失败");
+            quser = this.userDao.queryByEmail(email);
         }
         log.info(email + "开始生成token");
         String userId = quser.getUserId();
+
         // 注册成功后返回token
         return ResMap
                 .ok("token", new JwtConfig().createToken(userId))
                 .put("tag", tag)
                 .build();
 
+    }
+
+    private boolean register(String tel, String email) {
+        log.info(email + "开始注册");
+        String userId = UUID.randomUUID().toString();
+        User user = new User(); // User
+        UserInfo userInfo = new UserInfo(); // UserInfo
+        UserRecord userRecord = new UserRecord(); // UserRecord
+        user.setUserId(userId);
+        // tel
+        if (!StringUtils.isEmpty(tel)) user.setPhoneNum(tel);
+        // email
+        if (!StringUtils.isEmpty(email)) user.setEmail(email);
+        userInfo.setUserId(userId);
+        userRecord.setUserId(userId);
+        userRecord.setCredit(100);
+        userRecord.setMaxTime(0);
+        userRecord.setAllTime(0);
+        userRecord.setDayRank(0);
+        userRecord.setWeekRank(0);
+        userRecord.setMonthRank(0);
+        userRecord.setAllRank(0);
+
+
+        if (userDao.insert(user) < 1 || userInfoDao.insert(userInfo) < 1 || this.userRecordDao.insert(userRecord) < 1) {
+            log.info(email + " 数据库插入失败");
+            return false;
+        }
+        log.info(email + "注册，数据库插入成功");
+        return true;
     }
 
 

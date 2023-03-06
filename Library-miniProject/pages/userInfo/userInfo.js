@@ -1,4 +1,3 @@
-
 //先引入
 import {
     createStoreBindings
@@ -13,12 +12,76 @@ Page({
      * 页面的初始数据
      */
     data: {
+        avatarUrl: "",
+        nickNmae: "",
+        age: "",
+        gender: "",
+        country: "",
+        sign: ""
+
+
     },
     // 获取用户信息
     getUserInfo(e) {
         if (this.data.hasUserInfo == undefined || this.data.hasUserInfo === false) {
             this.GetUserInfo();
         }
+    },
+    handleNAvatarUrl(e) {
+        this.setData({
+            avatarUrl: e.detail.value
+        })
+    },
+    handleName(e) {
+        this.setData({
+            nickNmae: e.detail.value
+        })
+    },
+    handleAge(e) {
+        this.setData({
+            age: e.detail.value
+        })
+    },
+    handleGender(e) {
+        this.setData({
+            gender: e.detail.value
+        })
+    },
+    handleCountry(e) {
+        this.setData({
+            country: e.detail.value
+        })
+    },
+    handleSign(e) {
+        this.setData({
+            sign: e.detail.value
+        })
+    },
+    submit() {
+        let data = {};
+        if (this.data.avatarUrl != "") {
+            data.avatarUrl = this.data.avatarUrl;
+        }
+        if (this.data.nickNmae != "") {
+            data.nickNmae = this.data.nickNmae;
+        }
+        if (this.data.age != "") {
+            data.age = this.data.age;
+        }
+        if (this.data.gender != "") {
+            data.gender = this.data.gender;
+        }
+        if (this.data.country != "") {
+            data.country = this.data.country;
+        }
+        if (this.data.sign != "") {
+            data.sign = this.data.sign;
+        }
+        console.log(data);
+        if(Object.keys(data).length==0){
+            return;
+        }
+        this.UserInfoUpdate(data);
     },
 
     /**
@@ -27,8 +90,8 @@ Page({
     onLoad(options) {
         this.storeBindings = createStoreBindings(this, {
             store,
-            fields: ['userInfo', 'hasUserInfo','hasLogin'],
-            actions: ['GetUserInfo']
+            fields: ['userInfo', 'hasUserInfo', 'hasLogin'],
+            actions: ['GetUserInfo', 'UserInfoUpdate']
         });
     },
 
@@ -48,10 +111,10 @@ Page({
      */
     onShow() {
         console.log("onShow", this.data.hasUserInfo, this.data.hasLogin);
-        if (this.data.hasLogin===true && this.hasUserInfo !== true) {
+        if (this.data.hasLogin === true && this.hasUserInfo !== true) {
             let userInfo = wx.getStorageSync('userInfo');
-            console.log("onShow userInfo: " , userInfo);
-            if(userInfo === "" ){
+            console.log("onShow userInfo: ", userInfo);
+            if (userInfo === "") {
                 this.GetUserInfo();
             }
         }
@@ -88,6 +151,5 @@ Page({
     /**
      * 用户点击右上角分享
      */
-    onShareAppMessage() {
-    }
+    onShareAppMessage() {}
 })
