@@ -1,18 +1,16 @@
 package cool.leeson.library.service.user.impl;
 
 import cool.leeson.library.dao.UserRecordDao;
-import cool.leeson.library.entity.UserInfo;
+import cool.leeson.library.entity.user.UserInfo;
 import cool.leeson.library.dao.UserInfoDao;
-import cool.leeson.library.entity.UserRecord;
+import cool.leeson.library.entity.user.UserRecord;
 import cool.leeson.library.service.user.UserInfoService;
-import cool.leeson.library.util.ResMap;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 /**
  * (UserInfo)表服务实现类
@@ -41,7 +39,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     public UserInfo query(String userId) {
         UserInfo userInfo = this.userInfoDao.queryById(userId);
-        UserRecord userRecord = userRecordDao.queryById(userId);
+        UserRecord userRecord = userRecordDao.queryByUserId(userId);
         userInfo.setUserRecord(userRecord);
 
         return userInfo;
@@ -83,7 +81,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         // 解析
         this.userInfoDao.update(userInfo);
         userInfo = this.queryById(userInfo.getUserId());
-        UserRecord userRecord = this.userRecordDao.queryById(userInfo.getUserId());
+        UserRecord userRecord = this.userRecordDao.queryByUserId(userInfo.getUserId());
         userInfo.setUserRecord(userRecord);
         return userInfo;
     }

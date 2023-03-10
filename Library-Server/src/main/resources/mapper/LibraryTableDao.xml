@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cool.leeson.library.dao.LibraryTableDao">
+
+    <resultMap type="cool.leeson.library.entity.library.LibraryTable" id="LibraryTableMap">
+        <result property="tableId" column="table_id" jdbcType="VARCHAR"/>
+        <result property="roomId" column="room_id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="x" column="x" jdbcType="INTEGER"/>
+        <result property="y" column="y" jdbcType="INTEGER"/>
+        <result property="width" column="width" jdbcType="INTEGER"/>
+        <result property="height" column="height" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="LibraryTableMap">
+        select
+          table_id, room_id, name, x, y, width, height
+        from library_table
+        where table_id = #{tableId}
+    </select>
+
+    <!--查询单个-->
+    <select id="queryByRoomId" resultMap="LibraryTableMap">
+        select
+            table_id, room_id, name, x, y, width, height
+        from library_table
+        where room_id = #{roomId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="LibraryTableMap">
+        select
+          table_id, room_id, name, x, y, width, height
+        from library_table
+        <where>
+            <if test="tableId != null and tableId != ''">
+                and table_id = #{tableId}
+            </if>
+            <if test="roomId != null and roomId != ''">
+                and room_id = #{roomId}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="x != null">
+                and x = #{x}
+            </if>
+            <if test="y != null">
+                and y = #{y}
+            </if>
+            <if test="width != null">
+                and width = #{width}
+            </if>
+            <if test="height != null">
+                and height = #{height}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from library_table
+        <where>
+            <if test="tableId != null and tableId != ''">
+                and table_id = #{tableId}
+            </if>
+            <if test="roomId != null and roomId != ''">
+                and room_id = #{roomId}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="x != null">
+                and x = #{x}
+            </if>
+            <if test="y != null">
+                and y = #{y}
+            </if>
+            <if test="width != null">
+                and width = #{width}
+            </if>
+            <if test="height != null">
+                and height = #{height}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="tableId" useGeneratedKeys="true">
+        insert into library_table(room_id, name, x, y, width, height)
+        values (#{roomId}, #{name}, #{x}, #{y}, #{width}, #{height})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="tableId" useGeneratedKeys="true">
+        insert into library_table(room_id, name, x, y, width, height)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.roomId}, #{entity.name}, #{entity.x}, #{entity.y}, #{entity.width}, #{entity.height})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="tableId" useGeneratedKeys="true">
+        insert into library_table(room_id, name, x, y, width, height)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.roomId}, #{entity.name}, #{entity.x}, #{entity.y}, #{entity.width}, #{entity.height})
+        </foreach>
+        on duplicate key update
+        room_id = values(room_id),
+        name = values(name),
+        x = values(x),
+        y = values(y),
+        width = values(width),
+        height = values(height)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update library_table
+        <set>
+            <if test="roomId != null and roomId != ''">
+                room_id = #{roomId},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="x != null">
+                x = #{x},
+            </if>
+            <if test="y != null">
+                y = #{y},
+            </if>
+            <if test="width != null">
+                width = #{width},
+            </if>
+            <if test="height != null">
+                height = #{height},
+            </if>
+        </set>
+        where table_id = #{tableId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from library_table where table_id = #{tableId}
+    </delete>
+
+</mapper>
+

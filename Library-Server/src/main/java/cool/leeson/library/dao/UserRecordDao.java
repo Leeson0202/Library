@@ -1,16 +1,15 @@
 package cool.leeson.library.dao;
 
-import cool.leeson.library.entity.UserRecord;
+import cool.leeson.library.entity.user.UserRecord;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 
 /**
  * (UserRecord)表数据库访问层
  *
  * @author makejava
- * @since 2023-03-06 19:47:53
+ * @since 2023-03-07 22:17:03
  */
 public interface UserRecordDao {
 
@@ -20,13 +19,13 @@ public interface UserRecordDao {
      * @param userId 主键
      * @return 实例对象
      */
-    UserRecord queryById(String userId);
+    UserRecord queryByUserId(String userId);
 
     /**
      * 查询指定行数据
      *
      * @param userRecord 查询条件
-     * @param pageable   分页对象
+     * @param pageable         分页对象
      * @return 对象列表
      */
     List<UserRecord> queryAllByLimit(UserRecord userRecord, @Param("pageable") Pageable pageable);

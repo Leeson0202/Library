@@ -1,6 +1,6 @@
 package cool.leeson.library.dao;
 
-import cool.leeson.library.entity.CquptInfo;
+import cool.leeson.library.entity.user.CquptInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
 

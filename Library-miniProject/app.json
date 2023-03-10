@@ -1,22 +1,24 @@
 {
     "pages": [
         "pages/index/index",
-        "pages/center/center",
+        "pages/index/notify/notify",
+        "pages/index/notify/notifyItem/notifyItem",
         "pages/function/function",
-        "pages/notify/notify",
-        "pages/notifyItem/notifyItem",
-        "pages/login/login",
+        "pages/function/bookGuide/bookGuide",
+        "pages/function/book/book",
+        "pages/center/center",
+        "pages/center/login/login",
+        "pages/center/login/confirm/confirm",
+        "pages/center/userInfo/userInfo",
         "pages/test/test",
-        "pages/cquptLogin/cquptLogin",
-        "pages/confirm/confirm",
-        "pages/userInfo/userInfo",
-        "pages/book/book"
+        "pages/cquptLogin/cquptLogin"
     ],
     "window": {
         "backgroundTextStyle": "light",
         "navigationBarBackgroundColor": "#fff",
         "navigationBarTitleText": "我的小程序",
-        "navigationBarTextStyle": "black"
+        "navigationBarTextStyle": "black",
+        "backgroundColor": "#eee"
     },
     "tabBar": {
         "selectedColor": "#707070",

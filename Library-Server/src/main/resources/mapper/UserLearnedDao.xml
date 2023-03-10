@@ -2,27 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cool.leeson.library.dao.UserLearnedDao">
 
-    <resultMap type="cool.leeson.library.entity.UserLearned" id="UserLearnedMap">
+    <resultMap type="cool.leeson.library.entity.user.UserLearned" id="UserLearnedMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
         <result property="userId" column="user_id" jdbcType="VARCHAR"/>
         <result property="date" column="date" jdbcType="TIMESTAMP"/>
         <result property="learnTime" column="learn_time" jdbcType="INTEGER"/>
     </resultMap>
 
-    <!--查询单个-->
+    <!--查询单个 id-->
     <select id="queryById" resultMap="UserLearnedMap">
-        select user_id,
-               date,
-               learn_time
+        select
+          id, user_id, date, learn_time
         from user_learned
-        where user_id= #{userId}
+        where id = #{id}
+    </select>
+    <!--查询单个 userId-->
+    <select id="queryByUserId" resultMap="UserLearnedMap">
+        select
+            id, user_id, date, learn_time
+        from user_learned
+        where user_id = #{userId}
     </select>
 
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="UserLearnedMap">
         select
-        user_id, date, learn_time
+          id, user_id, date, learn_time
         from user_learned
         <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
             <if test="userId != null and userId != ''">
                 and user_id = #{userId}
             </if>
@@ -41,6 +51,9 @@
         select count(1)
         from user_learned
         <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
             <if test="userId != null and userId != ''">
                 and user_id = #{userId}
             </if>
@@ -54,20 +67,20 @@
     </select>
 
     <!--新增所有列-->
-    <insert id="insert" keyProperty="" useGeneratedKeys="true">
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
         insert into user_learned(user_id, date, learn_time)
         values (#{userId}, #{date}, #{learnTime})
     </insert>
 
-    <insert id="insertBatch" keyProperty="" useGeneratedKeys="true">
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
         insert into user_learned(user_id, date, learn_time)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.userId}, #{entity.date}, #{entity.learnTime})
+        (#{entity.userId}, #{entity.date}, #{entity.learnTime})
         </foreach>
     </insert>
 
-    <insert id="insertOrUpdateBatch" keyProperty="" useGeneratedKeys="true">
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
         insert into user_learned(user_id, date, learn_time)
         values
         <foreach collection="entities" item="entity" separator=",">
@@ -93,14 +106,12 @@
                 learn_time = #{learnTime},
             </if>
         </set>
-        where = #{}
+        where id = #{id}
     </update>
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete
-        from user_learned
-        where user_id = #{userId}
+        delete from user_learned where id = #{id}
     </delete>
 
 </mapper>

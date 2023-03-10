@@ -39,8 +39,8 @@ export const store = observable({
     },
     HasLogin: action(function () {
         if (this.hasLogin !== true) {
-            wx.naveigateTo({
-                url: '/pages/login/login',
+            wx.navigateTo({
+                url: '/pages/center/login/login',
             })
             return;
         }
@@ -253,7 +253,7 @@ export const store = observable({
                         icon: "none"
                     })
                     wx.navigateTo({
-                        url: '/pages/confirm/confirm',
+                        url: '/pages/center/login/confirm/confirm',
                     })
                 } else {
                     wx.showToast({

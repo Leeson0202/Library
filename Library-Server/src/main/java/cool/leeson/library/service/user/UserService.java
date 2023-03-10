@@ -1,6 +1,6 @@
 package cool.leeson.library.service.user;
 
-import cool.leeson.library.entity.User;
+import cool.leeson.library.entity.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 

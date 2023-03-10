@@ -3,7 +3,10 @@ package cool.leeson.library.service;
 import com.alibaba.fastjson.JSONObject;
 import cool.leeson.library.config.JwtConfig;
 import cool.leeson.library.dao.*;
-import cool.leeson.library.entity.*;
+import cool.leeson.library.entity.user.CquptInfo;
+import cool.leeson.library.entity.user.User;
+import cool.leeson.library.entity.user.UserInfo;
+import cool.leeson.library.entity.user.UserRecord;
 import cool.leeson.library.util.HttpClientUtil;
 import cool.leeson.library.util.ResMap;
 import cool.leeson.library.util.code.CodeUtil;
@@ -13,6 +16,7 @@ import cool.leeson.library.util.msm.MsmUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -23,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
+@Transactional
 public class LoginServiceImpl {
     @Resource
     private UserDao userDao;

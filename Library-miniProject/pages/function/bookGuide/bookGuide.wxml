@@ -1,0 +1,38 @@
+<!--pages/function/bookGuide/bookGuide.wxml-->
+
+<view class="main-container">
+    <view class="head" style="background-image: url({{school.background}});">
+        <view class="title">
+            {{school.name}}
+
+        </view>
+    </view>
+    <view style="background-color: #f2f2f2;">
+        <view class="mm {{selected==0? 'selected':''}}"
+        bindtap="changeSelect" data-selected="0">
+            介绍
+        </view>
+        <view class="mm {{selected==1? 'selected':''}}" bindtap="changeSelect" data-selected="1">
+            规则
+        </view>
+        <view class="mm {{selected==2? 'selected':''}}" bindtap="changeSelect" data-selected="2">
+            图书馆
+        </view>
+    </view>
+    <view class="manu">
+
+
+        <view class="manu-descs" hidden="{{selected!=0}}">
+        <text>{{school.descs}}</text>
+        </view>
+        <view class="manu-label" hidden="{{selected!=2}}"
+        wx:for="{{libraries}}" wx:key="id" style="background-image: url({{item.background}});">
+            <view class="label" bindtap="handelbook" data-id="{{item.libraryId}}">{{item.name}}</view>
+        </view>
+
+
+
+    </view>
+
+
+</view>

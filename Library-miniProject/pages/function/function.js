@@ -23,10 +23,10 @@ Page({
         let url = ""
         switch (tag) {
             case "book":
-                url = '/pages/book/book';
+                url = '/pages/function/bookGuide/bookGuide';
                 break;
             case "fastBook":
-                url = '/pages/fastBook/fastBook';
+                url = '/pages/function/fastBook/fastBook';
                 break;
         }
         console.log(url);

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cool.leeson.library.dao.SchoolDao">
+
+    <resultMap type="cool.leeson.library.entity.library.School" id="SchoolMap">
+        <result property="schoolId" column="school_id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="descs" column="descs" jdbcType="VARCHAR"/>
+        <result property="icon" column="icon" jdbcType="VARCHAR"/>
+        <result property="background" column="background" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SchoolMap">
+        select
+          school_id, name, descs, icon, background
+        from school
+        where school_id = #{schoolId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SchoolMap">
+        select
+          school_id, name, descs, icon, background
+        from school
+        <where>
+            <if test="schoolId != null and schoolId != ''">
+                and school_id = #{schoolId}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="descs != null and descs != ''">
+                and descs = #{descs}
+            </if>
+            <if test="icon != null and icon != ''">
+                and icon = #{icon}
+            </if>
+            <if test="background != null and background != ''">
+                and background = #{background}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from school
+        <where>
+            <if test="schoolId != null and schoolId != ''">
+                and school_id = #{schoolId}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="descs != null and descs != ''">
+                and descs = #{descs}
+            </if>
+            <if test="icon != null and icon != ''">
+                and icon = #{icon}
+            </if>
+            <if test="background != null and background != ''">
+                and background = #{background}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="schoolId" useGeneratedKeys="true">
+        insert into school(name, descs, icon, background)
+        values (#{name}, #{descs}, #{icon}, #{background})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="schoolId" useGeneratedKeys="true">
+        insert into school(name, descs, icon, background)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.name}, #{entity.descs}, #{entity.icon}, #{entity.background})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="schoolId" useGeneratedKeys="true">
+        insert into school(name, descs, icon, background)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.descs}, #{entity.icon}, #{entity.background})
+        </foreach>
+        on duplicate key update
+        name = values(name),
+        descs = values(descs),
+        icon = values(icon),
+        background = values(background)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update school
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="descs != null and descs != ''">
+                descs = #{descs},
+            </if>
+            <if test="icon != null and icon != ''">
+                icon = #{icon},
+            </if>
+            <if test="background != null and background != ''">
+                background = #{background},
+            </if>
+        </set>
+        where school_id = #{schoolId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from school where school_id = #{schoolId}
+    </delete>
+
+</mapper>
+

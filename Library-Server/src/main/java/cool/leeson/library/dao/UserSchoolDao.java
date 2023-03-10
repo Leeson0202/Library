@@ -1,6 +1,6 @@
 package cool.leeson.library.dao;
 
-import cool.leeson.library.entity.UserSchool;
+import cool.leeson.library.entity.user.UserSchool;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
 
@@ -10,17 +10,26 @@ import java.util.List;
  * (UserSchool)表数据库访问层
  *
  * @author makejava
- * @since 2023-03-06 19:49:17
+ * @since 2023-03-10 22:06:22
  */
 public interface UserSchoolDao {
 
     /**
      * 通过ID查询单条数据
      *
-     * @param 主键
+     * @param id 主键
      * @return 实例对象
      */
-    UserSchool queryById();
+    UserSchool queryById(String id);
+    /**
+     * 通过userId查询单条数据
+     *
+     * @param userId 主键
+     * @return 实例对象
+     */
+    UserSchool queryByUserId(String userId);
+
+
 
     /**
      * 查询指定行数据
@@ -75,10 +84,10 @@ public interface UserSchoolDao {
     /**
      * 通过主键删除数据
      *
-     * @param 主键
+     * @param id 主键
      * @return 影响行数
      */
-    int deleteById();
+    int deleteById(String id);
 
 }
 

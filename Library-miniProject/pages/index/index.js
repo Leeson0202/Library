@@ -10,7 +10,7 @@ Page({
     },
     notifyHandel() {
         wx.navigateTo({
-            url: '../notify/notify',
+            url: './notify/notify',
         })
     },
     qus() {

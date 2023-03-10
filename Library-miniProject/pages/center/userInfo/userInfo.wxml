@@ -1,0 +1,47 @@
+<!--pages/userInfo/userInfo.wxml-->
+<view>
+    <view class="first-block">
+        <card>
+            <view class="content" slot="content">
+                <view class="item">
+                    <button class="avatar-button" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">头像
+                    </button>
+
+                </view>
+                <view class="item">
+                    <view class="label">个性签名</view>
+                    <input class="val" bindinput="handleSign"></input>
+                </view>
+            </view>
+        </card>
+    </view>
+    <view class="second-block">
+        <card>
+            <view class="content" slot="content">
+                <view class="item">
+                    <view class="label">昵称</view>
+                    <input bindinput="handleName" class="label val" value="{{userInfo.nickName}}"></input>
+                </view>
+                <view class="item">
+                    <view class="label">年龄</view>
+                    <input class="val" bindinput="handleAge" value="{{userInfo.age!=null ?userInfo.age:''}}"></input>
+                </view>
+                <view class="item">
+                    <view class="label">性别</view>
+                    <input class="val" bindinput="handleGender" value="{{userInfo.gender!=null ? userInfo.gender: ''}}"></input>
+                </view>
+                <view class="item">
+                    <view class="label">国家</view>
+                    <input class="val" bindinput="handleCountry" value="{{userInfo.country!=null ? userInfo.country: ''}}"></input>
+                </view>
+
+            </view>
+        </card>
+
+    </view>
+    <view class="submit" bindtap="submit">
+        保存
+    </view>
+
+
+</view>

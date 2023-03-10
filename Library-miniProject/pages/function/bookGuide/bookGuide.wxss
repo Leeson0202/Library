@@ -1,0 +1,83 @@
+/* pages/function/bookGuide/bookGuide.wxss */
+
+page {
+    height: 100%;
+    width: 100%;
+}
+
+.main-container {
+    width: 100%;
+    height: 100%;
+}
+
+.head {
+    width: 100%;
+    height: 300rpx;
+    background-size: 122%;
+    background-position: 0rpx center 100rpx;
+}
+
+.title {
+    position: relative;
+    display: inline-block;
+    color: white;
+    text-shadow: #777 0 0 20rpx;
+    margin: 30rpx 20rpx;
+    font-size: 40rpx;
+}
+
+
+.mm {
+    display: inline-block;
+    width: calc(100% / 3);
+    height: 70rpx;
+    line-height: 70rpx;
+    text-align: center;
+    background-color: #fff;
+}
+
+.selected {
+    background-color: #f2f2f2;
+}
+
+.manu {
+    min-height: calc(100% - 300rpx);
+    /* background-color: rgb(145, 179, 241); */
+    background-color: #f2f2f2;
+    padding: 20rpx 0;
+}
+
+.manu-descs {
+    padding: 40rpx 30rpx;
+    text-indent: 2em;
+    font-size: 28rpx;
+    line-height: 55rpx;
+    /* letter-spacing: 1rpx; */
+}
+
+.manu-label {
+    position: relative;
+    margin: auto;
+    margin-bottom: 20rpx;
+    width: 97%;
+    height: 300rpx;
+    line-height: 300rpx;
+    text-align: center;
+    background-size: 100%;
+    background-position: center;
+    /* background-attachment: fixed; */
+    border-radius: 22rpx;
+
+    color: #fff;
+    font-size: 70rpx;
+    font-weight: 450;
+    text-shadow: #777 0rpx 0rpx 30rpx;
+    font-family: YouYuan;
+    letter-spacing: 10rpx;
+
+
+}
+
+.label {
+    background-color: rgba(255, 255, 255, 0.2);
+}

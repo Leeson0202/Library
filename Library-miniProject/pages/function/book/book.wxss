@@ -1,0 +1,42 @@
+/* pages/book/book.wxss */
+
+/* head */
+.head{
+    width: 100%;
+}
+.selecter{
+    width: 100%;
+    text-align: center;
+}
+
+
+.defaultArea {
+    background-color: #eee;
+    margin-top: 200rpx;
+}
+
+.movableOne {
+    width: calc(100% - 120rpx);
+    height: calc(100% - 160rpx);
+    padding: 80rpx 60rpx;
+
+}
+.seatArea{
+    position: relative;
+}
+
+.seatTap{
+    position: absolute;
+}
+.normal {
+    position: relative;
+    margin: auto;
+    margin-left: 10%;
+    text-align: center;
+    width: 80%;
+    
+    /* height: 100%;  */
+  }
+
+
+

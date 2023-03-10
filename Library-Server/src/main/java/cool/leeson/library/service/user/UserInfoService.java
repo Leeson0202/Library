@@ -1,10 +1,8 @@
 package cool.leeson.library.service.user;
 
-import cool.leeson.library.entity.UserInfo;
+import cool.leeson.library.entity.user.UserInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
-import java.util.Map;
 
 /**
  * (UserInfo)表服务接口

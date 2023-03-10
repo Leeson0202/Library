@@ -18,6 +18,8 @@ create table user
 
 );
 
+insert into user value ('12344321', '18523681435', 'asedrfa@163.com', null, null);
+
 -- user_info 用户信息
 -- id      微信id     会话密钥    头像      城市   国家     性别     语言      昵称      真实姓名 年龄   城市     学生id    背景
 -- user_id openid session_key avatar_url city country gender language nick_name  realName age province stu_id  background
@@ -40,6 +42,10 @@ create table user_info
     background  varchar(500) comment '背景'    default 'http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1010/13/c6/5494373_5494373_1286955435968.jpg'
 );
 
+insert into user_info(user_id, nick_name, gender, age, avatar_url)
+values ('12344321', 'Leeson', '男', 23,
+        'https://img1.baidu.com/it/u=1047817807,648960205&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500');
+
 -- user_class 用户类型 1表示管理 0 表示
 # create table user_class
 # (
@@ -48,11 +54,11 @@ create table user_info
 #     u_class boolean comment '用户类型'
 # );
 
--- 用户 使用记录
+-- 用户信息 - 使用记录
 drop table if exists user_record;
 create table user_record
 (
-    user_id    varchar(100) comment 'userId',
+    user_id    varchar(100) primary key comment 'userId',
     credit     smallint comment '信用'         default 100,
     max_time   smallint comment '单日最长时间' default 0,
     all_time   smallint comment '总时间'       default 0,
@@ -62,20 +68,25 @@ create table user_record
     all_rank   smallint comment '总排名'       default 0
 
 );
+insert into user_record(user_id)
+values ('12344321');
 
 -- 用户信用记录
 drop table if exists user_credit;
 create table user_credit
 (
+    id            varchar(100) primary key comment '信用记录id',
     user_id       varchar(100) comment 'userId',
     user_credit   smallint comment '信用条目',
     `description` varchar(200) comment '备注'
 );
 
+
 -- 用户的个人学习数据表
 drop table if exists user_learned;
 create table user_learned
 (
+    id           varchar(100) primary key comment '用户的单日记录',
     user_id      varchar(100) comment 'userId',
     -- 0点
     `date`       datetime comment '日期',
@@ -86,9 +97,13 @@ create table user_learned
 drop table if exists user_school;
 create table user_school
 (
+    id        varchar(100) primary key comment '用户学校记录id',
     user_id   varchar(100) comment 'userId',
     school_id varchar(100) comment '学校id'
 );
+
+insert into user_school
+values ('knadjcva', '12344321', 'dcajhbadhcavacda');
 
 
 

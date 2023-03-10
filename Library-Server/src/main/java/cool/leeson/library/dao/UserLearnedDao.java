@@ -1,6 +1,6 @@
 package cool.leeson.library.dao;
 
-import cool.leeson.library.entity.UserLearned;
+import cool.leeson.library.entity.user.UserLearned;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
 
@@ -10,17 +10,25 @@ import java.util.List;
  * (UserLearned)表数据库访问层
  *
  * @author makejava
- * @since 2023-03-06 19:48:51
+ * @since 2023-03-07 22:21:28
  */
 public interface UserLearnedDao {
 
     /**
      * 通过ID查询单条数据
      *
-     * @param 主键
+     * @param id 主键
      * @return 实例对象
      */
-    UserLearned queryById();
+    UserLearned queryById(String id);
+
+    /**
+     * 通过 userId 查询
+     *
+     * @param userId 用户id
+     * @return 实体
+     */
+    UserLearned queryByUserId(String userId);
 
     /**
      * 查询指定行数据
@@ -75,10 +83,10 @@ public interface UserLearnedDao {
     /**
      * 通过主键删除数据
      *
-     * @param 主键
+     * @param id 主键
      * @return 影响行数
      */
-    int deleteById();
+    int deleteById(String id);
 
 }
 

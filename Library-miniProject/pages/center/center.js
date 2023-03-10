@@ -20,12 +20,13 @@ Page({
         let that = this
         if(!that.data.hasLogin){
             wx.navigateTo({
-                url: '/pages/login/login',
+                url: '/pages/center/login/login',
             })
         } else  {
+            this.GetUserInfo();
          // 进入个人资料
          wx.navigateTo({
-           url: '/pages/userInfo/userInfo',
+           url: '/pages/center/userInfo/userInfo',
          })
         }
 
@@ -55,7 +56,7 @@ Page({
         if (this.data.hasLogin !== true) {
             console.log(this.data.hasLogin);
             wx.navigateTo({
-                url: '/pages/login/login',
+                url: '/pages/center/login/login',
             })
         }
     },

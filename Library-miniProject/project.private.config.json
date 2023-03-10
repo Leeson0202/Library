@@ -35,27 +35,6 @@
                 },
                 {
                     "name": "",
-                    "pathName": "pages/notify/notify",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "",
-                    "pathName": "pages/notifyItem/notifyItem",
-                    "query": "id=1",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "",
-                    "pathName": "pages/login/login",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "",
                     "pathName": "pages/test/test",
                     "query": "",
                     "launchMode": "default",
@@ -70,15 +49,22 @@
                 },
                 {
                     "name": "",
-                    "pathName": "pages/confirm/confirm",
+                    "pathName": "pages/function/book/book",
                     "query": "",
                     "launchMode": "default",
                     "scene": null
                 },
                 {
                     "name": "",
-                    "pathName": "pages/userInfo/userInfo",
+                    "pathName": "pages/function/bookGuide/bookGuide",
                     "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "",
+                    "pathName": "pages/function/book/book",
+                    "query": "schoolId=dcajhbadhcavacda&libraryId=jdgchvauajkavavvbh",
                     "launchMode": "default",
                     "scene": null
                 }

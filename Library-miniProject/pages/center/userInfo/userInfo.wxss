@@ -1,0 +1,60 @@
+/* pages/userInfo/userInfo.wxss */
+.first-block {
+    margin-top: 20rpx;
+}
+
+.second-block {
+    margin-top: 30rpx;
+}
+
+.item {
+    margin: auto;
+    height: 86rpx;
+    width: calc(100% - 40rpx);
+    line-height: 86rpx;
+    border-bottom: 1rpx solid #f2f2f2;
+    font-size: 30rpx;
+}
+
+.content>.item:last-child {
+    border-bottom: none
+}
+
+
+.label {
+    float: left;
+    width: 180rpx;
+}
+
+.val {
+    display: inline-block;
+    height: 86rpx;
+}
+
+.submit {
+    margin: auto;
+    margin-top: 100rpx;
+    width: 500rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    background-color: #f2f2f2;
+    border-radius: 16rpx;
+    text-align: center;
+    font-size: 30rpx;
+    color: #666;
+
+}
+.avatar-button {
+    display: inline-block;
+
+    padding: 0;
+    margin: 0rpx;
+
+    background-color: #fff;
+    height: 86rpx;
+    line-height: 86rpx;
+    font-size: 30rpx;
+    font-weight: normal;
+    text-align: left;
+
+}

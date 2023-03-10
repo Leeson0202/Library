@@ -24,15 +24,15 @@
             <!-- 信息 -->
             <view class="user-info">
                 <view class="user-info-bliock">
-                    <view class="user-info-num">{{userInfo.userRecord.allTime!==null && userInfo.userRecord!==null  ?userInfo.userRecord.allTime: "-"}}</view>
+                    <view class="user-info-num">{{userInfo.userRecord.allTime!=null && userInfo.userRecord!=null && userInfo!=null?userInfo.userRecord.allTime: "-"}}</view>
                     <view>学习时长</view>
                 </view>
                 <view class="user-info-bliock" style="border-left: 0.5rpx solid #ccc; border-right: 0.5rpx solid #ccc; ">
-                    <view class="user-info-num">{{userInfo.userRecord.allRank!==null  && userInfo.userRecord!==null ?userInfo.userRecord.allRank: "-"}}</view>
+                    <view class="user-info-num">{{userInfo.userRecord.allRank!=null  && userInfo.userRecord!=null ?userInfo.userRecord.allRank: "-"}}</view>
                     <view>排名</view>
                 </view>
                 <view class="user-info-bliock">
-                    <view class="user-info-num">{{userInfo.userRecord.maxTime!==null  && userInfo.userRecord!==null ?userInfo.userRecord.maxTime: "-"}}</view>
+                    <view class="user-info-num">{{userInfo.userRecord.maxTime!=null  && userInfo.userRecord!=null ?userInfo.userRecord.maxTime: "-"}}</view>
                     <view>单日最长</view>
                 </view>
 

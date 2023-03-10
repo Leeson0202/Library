@@ -1,6 +1,6 @@
 package cool.leeson.library.dao;
 
-import cool.leeson.library.entity.UserInfo;
+import cool.leeson.library.entity.user.UserInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
 

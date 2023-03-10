@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cool.leeson.library.dao.LibraryDao">
+
+    <resultMap type="cool.leeson.library.entity.library.Library" id="LibraryMap">
+        <result property="libraryId" column="library_id" jdbcType="VARCHAR"/>
+        <result property="schoolId" column="school_id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="descs" column="descs" jdbcType="VARCHAR"/>
+        <result property="background" column="background" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="LibraryMap">
+        select
+          library_id, school_id, name, descs, background
+        from library
+        where library_id = #{libraryId}
+    </select>
+
+    <!--查询单个-->
+    <select id="queryBySchoolId" resultMap="LibraryMap">
+        select library_id,
+               school_id,
+               name,
+               descs,
+               background
+        from library
+        where school_id = #{schoolId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="LibraryMap">
+        select
+          library_id, school_id, name, descs, background
+        from library
+        <where>
+            <if test="libraryId != null and libraryId != ''">
+                and library_id = #{libraryId}
+            </if>
+            <if test="schoolId != null and schoolId != ''">
+                and school_id = #{schoolId}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="descs != null and descs != ''">
+                and descs = #{descs}
+            </if>
+            <if test="background != null and background != ''">
+                and background = #{background}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from library
+        <where>
+            <if test="libraryId != null and libraryId != ''">
+                and library_id = #{libraryId}
+            </if>
+            <if test="schoolId != null and schoolId != ''">
+                and school_id = #{schoolId}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="descs != null and descs != ''">
+                and descs = #{descs}
+            </if>
+            <if test="background != null and background != ''">
+                and background = #{background}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="libraryId" useGeneratedKeys="true">
+        insert into library(school_id, name, descs, background)
+        values (#{schoolId}, #{name}, #{descs}, #{background})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="libraryId" useGeneratedKeys="true">
+        insert into library(school_id, name, descs, background)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.schoolId}, #{entity.name}, #{entity.descs}, #{entity.background})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="libraryId" useGeneratedKeys="true">
+        insert into library(school_id, name, descs, background)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.schoolId}, #{entity.name}, #{entity.descs}, #{entity.background})
+        </foreach>
+        on duplicate key update
+        school_id = values(school_id),
+        name = values(name),
+        descs = values(descs),
+        background = values(background)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update library
+        <set>
+            <if test="schoolId != null and schoolId != ''">
+                school_id = #{schoolId},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="descs != null and descs != ''">
+                descs = #{descs},
+            </if>
+            <if test="background != null and background != ''">
+                background = #{background},
+            </if>
+        </set>
+        where library_id = #{libraryId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from library where library_id = #{libraryId}
+    </delete>
+
+</mapper>
+
