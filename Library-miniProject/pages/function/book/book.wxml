@@ -1,19 +1,22 @@
 <view>
     <view class="head">
-        <view class="selecter" wx:if="{{school!=null || school!=undefined}}">
-            {{school.name}}
-
-            <!--图书馆选择-->
-            <picker class="picker" bindchange="bindPickerLibrary" value="{{libraryIdx}}" range="{{libraryList}}">
-                {{libraries[libraryIdx].name}}
-            </picker>
-
-            <!--图书室选择-->
-            <picker class="picker"  bindchange="bindPickerRoom" value="{{roomIdx}}" range="{{roomList}}">
-                {{rooms[roomIdx].name}}
-            </picker>
-
+        <view class="manu-label" style="background-image: url({{school.libraries[libraryIdx].background}});">
+            <view class="label">{{school.libraries[libraryIdx].name}}</view>
         </view>
+
+        <scroll-view class="scroll-block" scroll-x="true" 
+        bindscroll="scroll"
+        >
+        <view class="scroll-item" wx:for="{{rooms}}" wx:key="index">
+            {{item.name}}
+        </view>
+
+        </scroll-view>
+
+
+
+
+
 
     </view>
     <!-- 可视图 -->
@@ -31,7 +34,7 @@
                 </view>
 
                 <!--每个座子-->
-                <view wx:for="{{zhuoziList}}" wx:key="id" wx:for-index="index" wx:for-item="item" class='seatTap' catchtap='clickSeat' data-index='{{index}}' style="left:{{(item.x-1)* seatScaleHeight}}px; top:{{(item.y-1) * seatScaleHeight}}px; width: {{seatScaleHeight}}px; height: {{seatScaleHeight*2}}px; -webkit-transform:rotate({{item.direction*90}}deg); background-color: rgb(165, 218, 252);">
+                <view wx:for="{{zhuoziList}}" wx:key="id" wx:for-index="index" wx:for-item="item" class='seatTap' bindtap='clickSeat' data-index='{{index}}' style="left:{{(item.x-1)* seatScaleHeight}}px; top:{{(item.y-1) * seatScaleHeight}}px; width: {{seatScaleHeight}}px; height: {{seatScaleHeight*2}}px; -webkit-transform:rotate({{item.direction*90}}deg); background-color: rgb(165, 218, 252);">
 
 
                 </view>

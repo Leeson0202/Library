@@ -38,12 +38,12 @@ public class LibraryRoomController {
     }
 
     /**
-     * 通过schoolId 获取library
+     * 通过roomId 获取room
      *
      * @return 查询结果
      */
-    @GetMapping
-    public Map<String, Object> queryByRoomId(String roomId) {
+    @GetMapping("id/{roomId}")
+    public Map<String, Object> queryByRoomId(@PathVariable("roomId") String roomId) {
         return this.libraryRoomService.queryById(roomId);
     }
 

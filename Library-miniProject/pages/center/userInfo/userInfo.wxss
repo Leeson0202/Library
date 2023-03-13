@@ -1,25 +1,4 @@
 /* pages/userInfo/userInfo.wxss */
-.first-block {
-    margin-top: 20rpx;
-}
-
-.second-block {
-    margin-top: 30rpx;
-}
-
-.item {
-    margin: auto;
-    height: 86rpx;
-    width: calc(100% - 40rpx);
-    line-height: 86rpx;
-    border-bottom: 1rpx solid #f2f2f2;
-    font-size: 30rpx;
-}
-
-.content>.item:last-child {
-    border-bottom: none
-}
-
 
 .label {
     float: left;
@@ -46,15 +25,12 @@
 }
 .avatar-button {
     display: inline-block;
-
     padding: 0;
-    margin: 0rpx;
-
+    margin-left: 0;
+    margin-right: 0;
     background-color: #fff;
-    height: 86rpx;
     line-height: 86rpx;
     font-size: 30rpx;
     font-weight: normal;
     text-align: left;
-
 }

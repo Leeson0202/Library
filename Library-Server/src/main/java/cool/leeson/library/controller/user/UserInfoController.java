@@ -7,10 +7,7 @@ import cool.leeson.library.util.CheckObjectIsNullUtils;
 import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +28,7 @@ public class UserInfoController {
      *
      * @return 实体
      */
-    @RequestMapping
+    @GetMapping
     public ResponseEntity<Map<String, Object>> query() {
         // 解析token获取userId
         String userId = new JwtConfig().getUsernameFromToken(request.getHeader("token"));
@@ -47,7 +44,7 @@ public class UserInfoController {
      * @param userId 用户id
      * @return map
      */
-    @RequestMapping("id/{userId}")
+    @GetMapping("id/{userId}")
     public Map queryByUserId(@PathVariable("userId") String userId) {
         UserInfo userInfo = this.userInfoService.query(userId);
         userInfo.setOpenid(null); // 去掉openid
@@ -63,7 +60,7 @@ public class UserInfoController {
      * @param userInfo userInfo
      * @return 实体
      */
-    @PostMapping("/update")
+    @PutMapping()
     public ResponseEntity<Map<String, Object>> update(UserInfo userInfo) {
         // 判断是否为空
         if (CheckObjectIsNullUtils.objCheckAllIsNull(userInfo)) {

@@ -2,6 +2,12 @@
 
 var jsonData = require('../../../utils/data.js');
 const app = getApp();
+import {
+    createStoreBindings
+} from 'mobx-miniprogram-bindings'
+import {
+    store
+} from '../../../store/store'
 
 
 Page({
@@ -12,9 +18,6 @@ Page({
     data: {
 
         schoolId: null,
-        school: {
-            name: "重庆邮电大学"
-        },
 
         libraryId: null,
         libraries: [{
@@ -38,8 +41,8 @@ Page({
         roomIdx: 0,
 
         // 设置宽高
-        paddingLeft: 15,
-        paddingTop: 160,
+        paddingLeft: 40,
+        paddingTop: 80,
 
         // 座位数据
         seatList: [],
@@ -53,6 +56,11 @@ Page({
     onLoad(options) {
         // 初始化数据
         let that = this;
+        this.storeBindings = createStoreBindings(this, {
+            store,
+            fields: ['school', 'hasSchool', 'hasLogin'],
+            actions: ['GetSchool','InitData']
+        });
         // console.log(options);
         that.setData({
             schoolId: options.schoolId,
@@ -71,7 +79,7 @@ Page({
         // 本地数据
 
         that.setData({
-            seatArea: getApp().globalData.screenHeight - getApp().globalData.statusBarHeight - (500 * getApp().globalData.screenWidth / 750),
+            seatArea: getApp().globalData.screenHeight - getApp().globalData.statusBarHeight - (600 * getApp().globalData.screenWidth / 750),
             seatAreaWidth: getApp().globalData.screenWidth - this.data.paddingLeft,
             rpxToPx: getApp().globalData.screenWidth / 750,
         });
@@ -194,25 +202,6 @@ Page({
 
     },
 
-    // picker library
-    bindPickerLibrary(e){
-        console.log(e.detail.value);
-        this.setData({
-            libraryIdx: e.detail.value
-        })
-        // 获取图书馆信息
-        this.queryLibrary(this.data.libraries[e.detail.value].libraryId)
-    },
-
-    // picker room
-    bindPickerRoom(e){
-        console.log(e.detail.value);
-        this.setData({
-            roomIdx: e.detail.value
-        })
-        this.queryRoom(this.data.rooms[e.detail.value].roomId);
-    },
-
 
     // 椅子点击事件
     handelSelect(e) {
@@ -299,7 +288,7 @@ Page({
      * 生命周期函数--监听页面隐藏
      */
     onHide() {
-
+        this.storeBindings.destroyStoreBindings()
     },
 
     /**

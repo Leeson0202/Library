@@ -44,7 +44,7 @@ public class LibraryController {
      * @param libraryId 主键
      * @return 单条数据
      */
-    @GetMapping
+    @GetMapping("id/{libraryId}")
     public Map<String, Object> queryById(String libraryId) {
         return this.libraryService.queryById(libraryId);
     }
@@ -55,7 +55,7 @@ public class LibraryController {
      * @param library 实体
      * @return 新增结果
      */
-    @PostMapping("insert")
+    @PostMapping
     public ResponseEntity<Library> add(Library library) {
         return ResponseEntity.ok(this.libraryService.insert(library));
     }
@@ -66,7 +66,7 @@ public class LibraryController {
      * @param library 实体
      * @return 编辑结果
      */
-    @PutMapping("update")
+    @PutMapping
     public Map<String, Object> edit(Library library) {
         return this.libraryService.update(library);
     }
