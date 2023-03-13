@@ -3,14 +3,13 @@ package cool.leeson.library.dao;
 import cool.leeson.library.entity.user.UserSchool;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 
 /**
  * (UserSchool)表数据库访问层
  *
- * @author makejava
- * @since 2023-03-10 22:06:22
+ * @author Leeson0202
+ * @since 2023-03-11 13:15:39
  */
 public interface UserSchoolDao {
 
@@ -21,21 +20,13 @@ public interface UserSchoolDao {
      * @return 实例对象
      */
     UserSchool queryById(String id);
-    /**
-     * 通过userId查询单条数据
-     *
-     * @param userId 主键
-     * @return 实例对象
-     */
     UserSchool queryByUserId(String userId);
-
-
 
     /**
      * 查询指定行数据
      *
      * @param userSchool 查询条件
-     * @param pageable   分页对象
+     * @param pageable         分页对象
      * @return 对象列表
      */
     List<UserSchool> queryAllByLimit(UserSchool userSchool, @Param("pageable") Pageable pageable);

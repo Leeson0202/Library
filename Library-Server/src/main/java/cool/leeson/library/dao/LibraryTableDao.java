@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * (LibraryTable)表数据库访问层
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-03-11 02:27:34
  */
 public interface LibraryTableDao {

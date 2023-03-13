@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * (School)表数据库访问层
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-03-10 21:55:16
  */
 public interface SchoolDao {

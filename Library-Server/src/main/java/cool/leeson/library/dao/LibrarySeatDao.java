@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * (LibrarySeat)表数据库访问层
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-03-11 02:24:17
  */
 public interface LibrarySeatDao {

@@ -1,18 +1,41 @@
 package cool.leeson.library.service.library;
 
+import cool.leeson.library.dao.LibraryDao;
+import cool.leeson.library.dao.SchoolDao;
+import cool.leeson.library.dao.SchoolRuleDao;
+import cool.leeson.library.dao.UserSchoolDao;
+import cool.leeson.library.entity.library.Library;
 import cool.leeson.library.entity.library.School;
+import cool.leeson.library.entity.library.SchoolRule;
+import cool.leeson.library.entity.user.UserSchool;
+import cool.leeson.library.util.ResMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
- * (School)表服务接口
+ * (School)表服务实现类
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-03-10 21:55:16
  */
-public interface SchoolService {
+@Service("schoolService")
+@Slf4j
+public class SchoolService {
+    @Resource
+    private SchoolDao schoolDao;
+    @Resource
+    private UserSchoolDao userSchoolDao;
+    @Resource
+    private LibraryDao libraryDao;
+    @Resource
+    private SchoolRuleDao schoolRuleDao;
 
     /**
      * 通过ID查询单条数据
@@ -20,7 +43,34 @@ public interface SchoolService {
      * @param schoolId 主键
      * @return 实例对象
      */
-    Map<String, Object> queryById(String schoolId);
+    public Map<String, Object> queryById(String schoolId) {
+        School school = this.schoolDao.queryById(schoolId);
+        if (school == null) {
+            log.error(schoolId + " 学校不存在");
+            return ResMap.err("学校不存在");
+        }
+        // 查询图书馆 及 预约规则
+        List<Library> libraries = this.libraryDao.queryBySchoolId(schoolId);
+        SchoolRule schoolRule = this.schoolRuleDao.queryById(schoolId);
+        school.setLibraries(libraries);
+        school.setSchoolRule(schoolRule);
+        return ResMap.ok(school);
+    }
+
+    /**
+     * 用户id查找学校
+     *
+     * @param userId 用户id
+     * @return 实体
+     */
+    public Map<String, Object> queryByUserId(String userId) {
+        UserSchool userSchool = this.userSchoolDao.queryByUserId(userId);
+        if (userSchool == null) {
+            log.error(userId + " 没有绑定学校");
+            return ResMap.err("没有绑定学校");
+        }
+        return this.queryById(userSchool.getSchoolId());
+    }
 
     /**
      * 分页查询
@@ -29,7 +79,10 @@ public interface SchoolService {
      * @param pageRequest 分页对象
      * @return 查询结果
      */
-    Page<School> queryByPage(School school, PageRequest pageRequest);
+    public Page<School> queryByPage(School school, PageRequest pageRequest) {
+        long total = this.schoolDao.count(school);
+        return new PageImpl<>(this.schoolDao.queryAllByLimit(school, pageRequest), pageRequest, total);
+    }
 
     /**
      * 新增数据
@@ -37,7 +90,10 @@ public interface SchoolService {
      * @param school 实例对象
      * @return 实例对象
      */
-    School insert(School school);
+    public School insert(School school) {
+        this.schoolDao.insert(school);
+        return school;
+    }
 
     /**
      * 修改数据
@@ -45,7 +101,10 @@ public interface SchoolService {
      * @param school 实例对象
      * @return 实例对象
      */
-    Map<String, Object> update(School school);
+    public Map<String, Object> update(School school) {
+        this.schoolDao.update(school);
+        return ResMap.ok(this.queryById(school.getSchoolId()));
+    }
 
     /**
      * 通过主键删除数据
@@ -53,7 +112,9 @@ public interface SchoolService {
      * @param schoolId 主键
      * @return 是否成功
      */
-    boolean deleteById(String schoolId);
 
-    Map<String, Object> queryByUserId(String userId);
+    public boolean deleteById(String schoolId) {
+        return this.schoolDao.deleteById(schoolId) > 0;
+    }
+
 }

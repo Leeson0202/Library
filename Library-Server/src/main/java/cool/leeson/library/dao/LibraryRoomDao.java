@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * (LibraryRoom)表数据库访问层
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-03-11 02:02:35
  */
 public interface LibraryRoomDao {

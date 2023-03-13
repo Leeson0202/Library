@@ -1,6 +1,6 @@
 <!--pages/center/center.wxml-->
 
-<view style="height: 1120rpx; ">
+<view>
     <view id="background-image-view">
         <image id="background-image" src="http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1010/13/c6/5494373_5494373_1286955435968.jpg" mode="widthFix" />
     </view>
@@ -10,12 +10,12 @@
             <!--头像和昵称-->
             <view class="avater-block-main">
                 <!-- 头像 -->
-                <view class="avater-block" bindtap="headHandl">
+                <view class="avater-block"  bindtap="handleTap" data-idx="userInfo">
                     <!-- 进入个人资料-->
                     <image class="avatar-image" src="{{userInfo.avatarUrl}}" mode="widthFix" />
                 </view>
                 <!--昵称-->
-                <view class="user-name-block" bindtap="headHandl">
+                <view class="user-name-block" bindtap="handleTap" data-idx="userInfo">
                     <text>{{userInfo.nickName}}</text>
                     <image class="user-name-image" src="../../resources/images/Author/level.svg" mode="aspectFit" wx:if="{{hasUserInfo}}"/>
                 </view>
@@ -40,7 +40,7 @@
         </view>
         <card class="info-block-a">
             <view class="info-block" slot="content">
-                <view  bindtap="headHandl">
+                <view  bindtap="handleTap" data-idx="userInfo">
                     <image src="../../resources/images/Author/authorInfo.svg" mode="heightFix" />
                     个人资料
                 </view>
@@ -57,7 +57,7 @@
                     学习统计
                 </view>
 
-                <view>
+                <view bindtap="handleTap" data-idx="settings" >
                     <image src="../../resources/images/Author/setting.svg" mode="heightFix" />
                     设置
                 </view>

@@ -14,26 +14,28 @@ Page({
      */
     data: {
 
-        
+
     },
-    headHandl(){
+    handleTap(e) {
         let that = this
-        if(!that.data.hasLogin){
+        if (!that.data.hasLogin) {
             wx.navigateTo({
                 url: '/pages/center/login/login',
             })
-        } else  {
-            this.GetUserInfo();
-         // 进入个人资料
-         wx.navigateTo({
-           url: '/pages/center/userInfo/userInfo',
-         })
+        } else {
+            let idx = e.currentTarget.dataset.idx;
+            let url = '/pages/center/' + idx + '/' + idx;
+            // 进入个人资料
+            wx.navigateTo({
+                url: url,
+            })
         }
 
     },
     // 获取用户信息
     getUserInfo(e) {
-        if (this.data.hasUserInfo == undefined || this.data.hasUserInfo === false) {
+        // 更新操作
+        if (this.data.hasLogin) {
             this.GetUserInfo();
         }
     },
@@ -44,8 +46,8 @@ Page({
     onLoad(options) {
         this.storeBindings = createStoreBindings(this, {
             store,
-            fields: ['userInfo', 'hasUserInfo','hasLogin'],
-            actions: ['GetUserInfo']
+            fields: ['userInfo', 'hasUserInfo', 'hasLogin'],
+            actions: ['GetStorage','GetUserInfo']
         });
     },
 
@@ -53,26 +55,19 @@ Page({
      * 生命周期函数--监听页面初次渲染完成
      */
     onReady() {
-        if (this.data.hasLogin !== true) {
-            console.log(this.data.hasLogin);
-            wx.navigateTo({
-                url: '/pages/center/login/login',
-            })
-        }
+        setTimeout(() => {
+            if (this.data.hasLogin !== true) {
+                wx.navigateTo({
+                    url: '/pages/center/login/login',
+                })
+            }
+        }, 500);
     },
-
     /**
      * 生命周期函数--监听页面显示
      */
     onShow() {
-        console.log("onShow", this.data.hasUserInfo, this.data.hasLogin);
-        if (this.data.hasLogin===true && this.hasUserInfo !== true) {
-            let userInfo = wx.getStorageSync('userInfo');
-            console.log("onShow userInfo: " , userInfo);
-            if(userInfo === "" ){
-                this.GetUserInfo();
-            }
-        }
+        this.GetStorage();
     },
 
     /**
@@ -93,11 +88,11 @@ Page({
      * 页面相关事件处理函数--监听用户下拉动作
      */
     onPullDownRefresh() {
-        // 更新操作
-        if(this.data.hasLogin){
-            this.GetUserInfo()
+        if(!this.data.hasLogin){
+            wx.stopPullDownRefresh();
+            return
         }
-
+        this.getUserInfo();
     },
 
     /**
@@ -110,6 +105,5 @@ Page({
     /**
      * 用户点击右上角分享
      */
-    onShareAppMessage() {
-    }
+    onShareAppMessage() {}
 })

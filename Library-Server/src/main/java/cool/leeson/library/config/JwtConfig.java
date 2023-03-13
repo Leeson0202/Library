@@ -15,7 +15,7 @@ import java.util.Date;
 public class JwtConfig {
 
     private String secret = "cool.Leeson";
-    private long expire = 3600;
+    private long expire = 7 * 24 * 60 * 60; // 7天
     private String header = "token";
 
     /**

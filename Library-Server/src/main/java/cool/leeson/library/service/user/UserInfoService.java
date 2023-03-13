@@ -1,16 +1,30 @@
 package cool.leeson.library.service.user;
 
+import cool.leeson.library.dao.UserRecordDao;
 import cool.leeson.library.entity.user.UserInfo;
+import cool.leeson.library.dao.UserInfoDao;
+import cool.leeson.library.entity.user.UserRecord;
+import cool.leeson.library.util.CheckObjectIsNullUtils;
+import cool.leeson.library.util.ResMap;
+import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import javax.annotation.Resource;
+
 /**
- * (UserInfo)表服务接口
+ * (UserInfo)表服务实现类
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-02-27 23:53:28
  */
-public interface UserInfoService {
+@Service("userInfoService")
+public class UserInfoService {
+    @Resource
+    private UserInfoDao userInfoDao;
+    @Resource
+    private UserRecordDao userRecordDao;
 
     /**
      * 通过ID查询单条数据
@@ -18,15 +32,18 @@ public interface UserInfoService {
      * @param userId 主键
      * @return 实例对象
      */
-    UserInfo queryById(String userId);
+    public UserInfo queryById(String userId) {
+        return this.userInfoDao.queryById(userId);
+    }
 
-    /**
-     * 通过token获取id
-     * @param userId 用户id
-     * @return 实体
-     */
-    public UserInfo query(String userId);
 
+    public UserInfo query(String userId) {
+        UserInfo userInfo = this.userInfoDao.queryById(userId);
+        UserRecord userRecord = userRecordDao.queryByUserId(userId);
+        userInfo.setUserRecord(userRecord);
+
+        return userInfo;
+    }
 
     /**
      * 分页查询
@@ -35,7 +52,11 @@ public interface UserInfoService {
      * @param pageRequest 分页对象
      * @return 查询结果
      */
-    Page<UserInfo> queryByPage(UserInfo userInfo, PageRequest pageRequest);
+  
+    public Page<UserInfo> queryByPage(UserInfo userInfo, PageRequest pageRequest) {
+        long total = this.userInfoDao.count(userInfo);
+        return new PageImpl<>(this.userInfoDao.queryAllByLimit(userInfo, pageRequest), pageRequest, total);
+    }
 
     /**
      * 新增数据
@@ -43,7 +64,11 @@ public interface UserInfoService {
      * @param userInfo 实例对象
      * @return 实例对象
      */
-    UserInfo insert(UserInfo userInfo);
+  
+    public UserInfo insert(UserInfo userInfo) {
+        this.userInfoDao.insert(userInfo);
+        return userInfo;
+    }
 
     /**
      * 修改数据
@@ -51,7 +76,14 @@ public interface UserInfoService {
      * @param userInfo 实例对象
      * @return 实例对象
      */
-    UserInfo update(UserInfo userInfo);
+  
+    public UserInfo update(UserInfo userInfo) {
+        this.userInfoDao.update(userInfo);
+        userInfo = this.queryById(userInfo.getUserId());
+        UserRecord userRecord = this.userRecordDao.queryByUserId(userInfo.getUserId());
+        userInfo.setUserRecord(userRecord);
+        return userInfo;
+    }
 
     /**
      * 通过主键删除数据
@@ -59,6 +91,8 @@ public interface UserInfoService {
      * @param userId 主键
      * @return 是否成功
      */
-    boolean deleteById(Integer userId);
-
+  
+    public boolean deleteById(Integer userId) {
+        return this.userInfoDao.deleteById(userId) > 0;
+    }
 }

@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  * (UserLearned)实体类
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-03-07 22:21:28
  */
 @Data

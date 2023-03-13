@@ -1,49 +1,80 @@
 package cool.leeson.library.service.library;
 
+import cool.leeson.library.dao.LibraryDao;
+import cool.leeson.library.dao.LibraryRoomDao;
+import cool.leeson.library.dao.UserSchoolDao;
 import cool.leeson.library.entity.library.Library;
+import cool.leeson.library.entity.library.LibraryRoom;
+import cool.leeson.library.util.ResMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
- * (Library)表服务接口
+ * (Library)表服务实现类
  *
- * @author makejava
- * @since 2023-03-10 21:55:47
+ * @author Leeson0202
+ * @since 2023-03-11 13:40:59
  */
-public interface LibraryService {
-    /**
-     * 通过userId 查询图书馆
-     *
-     * @param userId 用户id
-     * @return 实体
-     */
-    Map<String, Object> queryLibraryByUserId(String userId);
-
-    /**
-     * schoolId 查询图书馆
-     *
-     * @param schoolId 学校id
-     * @return 实体
-     */
-    Map<String, Object> queryLibraryBySchoolId(String schoolId);
-
-    /**
-     * 获取room信息 libraryId
-     * @param libraryId libraryId
-     * @return 实体
-     */
-    Map<String, Object> queryRoomByLibraryId(String libraryId);
+@Service("libraryService")
+@Slf4j
+public class LibraryService {
+    @Resource
+    private LibraryDao libraryDao;
+    @Resource
+    private LibraryRoomDao libraryRoomDao;
+    @Resource
+    private UserSchoolDao userSchoolDao;
 
 
     /**
-     * 通过ID查询单条数据
+     * 通过libraryId 查询单条数据
      *
      * @param libraryId 主键
      * @return 实例对象
      */
-    Library queryById(String libraryId);
+    public Map<String, Object> queryById(String libraryId) {
+        Library library = this.libraryDao.queryById(libraryId);
+        if (library == null) {
+            log.error(libraryId + " 没有该图书馆信息");
+            return ResMap.err("没有该图书馆信息");
+        }
+
+        List<LibraryRoom> libraryRooms = this.libraryRoomDao.queryByLibraryId(libraryId);
+        library.setLibraryRooms(libraryRooms);
+
+
+        return ResMap.ok(library);
+    }
+
+
+    /**
+     * 通过schoolId 获取图书馆列表
+     *
+     * @param schoolId schoolId
+     * @return map
+     */
+    public Map<String, Object> queryBySchoolId(String schoolId) {
+        List<Library> libraries = this.libraryDao.queryBySchoolId(schoolId);
+
+        if (libraries == null || libraries.size() == 0) {
+            log.error(schoolId + " 没有该图书馆信息");
+            return ResMap.err("没有该图书馆信息");
+        }
+        // 房间信息
+        for (Library library : libraries) {
+            List<LibraryRoom> libraryRooms = this.libraryRoomDao.queryByLibraryId(library.getLibraryId());
+            library.setLibraryRooms(libraryRooms);
+        }
+
+        return ResMap.ok(libraries);
+    }
 
     /**
      * 分页查询
@@ -52,7 +83,10 @@ public interface LibraryService {
      * @param pageRequest 分页对象
      * @return 查询结果
      */
-    Page<Library> queryByPage(Library library, PageRequest pageRequest);
+    public Page<Library> queryByPage(Library library, PageRequest pageRequest) {
+        long total = this.libraryDao.count(library);
+        return new PageImpl<>(this.libraryDao.queryAllByLimit(library, pageRequest), pageRequest, total);
+    }
 
     /**
      * 新增数据
@@ -60,7 +94,10 @@ public interface LibraryService {
      * @param library 实例对象
      * @return 实例对象
      */
-    Library insert(Library library);
+    public Library insert(Library library) {
+        this.libraryDao.insert(library);
+        return library;
+    }
 
     /**
      * 修改数据
@@ -68,7 +105,10 @@ public interface LibraryService {
      * @param library 实例对象
      * @return 实例对象
      */
-    Library update(Library library);
+    public Map<String, Object> update(Library library) {
+        this.libraryDao.update(library);
+        return this.queryById(library.getLibraryId());
+    }
 
     /**
      * 通过主键删除数据
@@ -76,7 +116,7 @@ public interface LibraryService {
      * @param libraryId 主键
      * @return 是否成功
      */
-    boolean deleteById(String libraryId);
-
-    Map<String, Object> queryRoomByRoomId(String roomId);
+    public boolean deleteById(String libraryId) {
+        return this.libraryDao.deleteById(libraryId) > 0;
+    }
 }

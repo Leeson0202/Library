@@ -10,7 +10,7 @@
         <result property="student_id" column="student_id" jdbcType="VARCHAR"/>
         <result property="grade" column="grade" jdbcType="VARCHAR"/>
         <result property="classs" column="classs" jdbcType="VARCHAR"/>
-        <result property="academy_name" column="academy_name" jdbcType="VARCHAR"/>
+        <result property="unit_name" column="unit_name" jdbcType="VARCHAR"/>
         <result property="profession_name" column="profession_name" jdbcType="VARCHAR"/>
         <result property="gender" column="gender" jdbcType="VARCHAR"/>
         <result property="counselor_name" column="counselor_name" jdbcType="VARCHAR"/>
@@ -26,7 +26,7 @@
                student_id,
                grade,
                classs,
-               academy_name,
+               unit_name,
                profession_name,
                gender,
                counselor_name,
@@ -44,7 +44,7 @@
                student_id,
                grade,
                classs,
-               academy_name,
+               unit_name,
                profession_name,
                gender,
                counselor_name,
@@ -55,7 +55,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="CquptInfoMap">
         select
-        user_id, role, name, cqupt_id, student_id, grade, classs, academy_name, profession_name, gender, counselor_name,
+        user_id, role, name, cqupt_id, student_id, grade, classs, unit_name, profession_name, gender, counselor_name,
         counselor_cqupt_id
         from cquptInfo
         <where>
@@ -80,8 +80,8 @@
             <if test="classs != null and classs != ''">
                 and classs = #{classs}
             </if>
-            <if test="academy_name != null and academy_name != ''">
-                and academy_name = #{academy_name}
+            <if test="unit_name != null and unit_name != ''">
+                and unit_name = #{unit_name}
             </if>
             <if test="profession_name != null and profession_name != ''">
                 and profession_name = #{profession_name}
@@ -125,8 +125,8 @@
             <if test="classs != null and classs != ''">
                 and classs = #{classs}
             </if>
-            <if test="academy_name != null and academy_name != ''">
-                and academy_name = #{academy_name}
+            <if test="unit_name != null and unit_name != ''">
+                and unit_name = #{unit_name}
             </if>
             <if test="profession_name != null and profession_name != ''">
                 and profession_name = #{profession_name}
@@ -145,32 +145,32 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="userId" useGeneratedKeys="true">
-        insert into cquptInfo(user_id, role, name, cqupt_id, student_id, grade, classs, academy_name, profession_name,
+        insert into cquptInfo(user_id, role, name, cqupt_id, student_id, grade, classs, unit_name, profession_name,
                               gender,
                               counselor_name, counselor_cqupt_id)
-        values (#{userId}, #{role}, #{name}, #{cqupt_id}, #{student_id}, #{grade}, #{classs}, #{academy_name},
+        values (#{userId}, #{role}, #{name}, #{cqupt_id}, #{student_id}, #{grade}, #{classs}, #{unit_name},
                 #{profession_name},
                 #{gender}, #{counselor_name}, #{counselor_cqupt_id})
     </insert>
 
     <insert id="insertBatch" keyProperty="userId" useGeneratedKeys="true">
-        insert into cquptInfo(user_id, role, name, cqupt_id, student_id, grade, classs, academy_name, profession_name, gender,
+        insert into cquptInfo(user_id, role, name, cqupt_id, student_id, grade, classs, unit_name, profession_name, gender,
         counselor_name, counselor_cqupt_id)
         values
         <foreach collection="entities" item="entity" separator=",">
             (#{entity.usrId},#{entity.role}, #{entity.name}, #{entity.cqupt_id}, #{entity.student_id}, #{entity.grade}, #{entity.classs},
-            #{entity.academy_name}, #{entity.profession_name}, #{entity.gender}, #{entity.counselor_name},
+            #{entity.unit_name}, #{entity.profession_name}, #{entity.gender}, #{entity.counselor_name},
             #{entity.counselor_cqupt_id})
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="userId" useGeneratedKeys="true">
-        insert into cquptInfo(user_id, role, name, cqupt_id, student_id, grade, classs, academy_name, profession_name, gender,
+        insert into cquptInfo(user_id, role, name, cqupt_id, student_id, grade, classs, unit_name, profession_name, gender,
         counselor_name, counselor_cqupt_id)
         values
         <foreach collection="entities" item="entity" separator=",">
             (#{entity.userId}, #{entity.role}, #{entity.name}, #{entity.cqupt_id}, #{entity.student_id}, #{entity.grade}, #{entity.classs},
-            #{entity.academy_name}, #{entity.profession_name}, #{entity.gender}, #{entity.counselor_name},
+            #{entity.unit_name}, #{entity.profession_name}, #{entity.gender}, #{entity.counselor_name},
             #{entity.counselor_cqupt_id})
         </foreach>
         on duplicate key update
@@ -180,7 +180,7 @@
         student_id = values(student_id),
         grade = values(grade),
         classs = values(classs),
-        academy_name = values(academy_name),
+        unit_name = values(unit_name),
         profession_name = values(profession_name),
         gender = values(gender),
         counselor_name = values(counselor_name),
@@ -209,8 +209,8 @@
             <if test="classs != null and classs != ''">
                 classs = #{classs},
             </if>
-            <if test="academy_name != null and academy_name != ''">
-                academy_name = #{academy_name},
+            <if test="unit_name != null and unit_name != ''">
+                unit_name = #{unit_name},
             </if>
             <if test="profession_name != null and profession_name != ''">
                 profession_name = #{profession_name},

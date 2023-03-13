@@ -12,14 +12,30 @@ Page({
     data: {
 
         schoolId: null,
-        school: null,
+        school: {
+            name: "重庆邮电大学"
+        },
+
         libraryId: null,
-        libraryIdx: 0, // 下标
-        libraries: null,
+        libraries: [{
+            name: "老图书馆"
+        }, {
+            name: "数字图书馆"
+        }], // [] 记录详细信息
+        libraryList: ['老图书馆','数字图书馆'], // [] 记录名字
+        libraryIdx: 1, // 下标
+
         // 选择的房间
-        array: ['美国', '中国', '巴西', '日本'],
+        roomId: null,
+        rooms: [{
+            name: "请选择"
+        }, {
+            name: "一楼阅览室"
+        }, {
+            name: "二楼阅览室"
+        }],
+        roomList: ["请选择","一楼阅览室",'二楼阅览室'],
         roomIdx: 0,
-        index: 0,
 
         // 设置宽高
         paddingLeft: 15,
@@ -37,7 +53,7 @@ Page({
     onLoad(options) {
         // 初始化数据
         let that = this;
-        console.log(options);
+        // console.log(options);
         that.setData({
             schoolId: options.schoolId,
             libraryId: options.libraryId,
@@ -46,60 +62,13 @@ Page({
         })
 
         // 网络获取数据
-        // 获取学校信息
-        wx.request({
-            url: app.globalData.baseUrl + '/school/' + that.data.schoolId,
-            method: "GET",
-            success({
-                data
-            }) {
-                if (data.code != 200) {
-                    wx.showToast({
-                        title: data.err,
-                        icon: "none"
-                    })
-                    return
-                }
-                if (data.code == 200) {
-                    that.setData({
-                        school: data.data
-                    })
-                }
-
-            }
-        })
-        // 获取图书馆🏫
-        wx.request({
-            url: app.globalData.baseUrl + '/library/school?schoolId=dcajhbadhcavacda',
-            method: 'GET',
-            success({
-                data
-            }) {
-                console.log(data);
-                if (data.code != 200) {
-                    wx.showToast({
-                        title: data.err,
-                        icon: "none"
-                    })
-                    return
-                }
-                if (data.code == 200) {
-                    that.setData({
-                        libraries: data.data
-                    })
-                }
-            },
-            fail() {
-                wx.showToast({
-                    title: '获取图书馆失败',
-                    icon: "error"
-                })
-                return
-
-            }
+        that.querySchool(options.schoolId);
+        that.queryLibrary(options.libraryId);
 
 
-        })
+
+
+        // 本地数据
 
         that.setData({
             seatArea: getApp().globalData.screenHeight - getApp().globalData.statusBarHeight - (500 * getApp().globalData.screenWidth / 750),
@@ -132,8 +101,120 @@ Page({
         // 计算长度
         this.getWidth(jsonData.dataJson);
     },
+    /** 
+     * 获取学校信息 
+     */
+    querySchool(schoolId) {
+        let that = this
+        // 获取学校信息
+        wx.request({
+            url: app.globalData.baseUrl + '/school/' + schoolId,
+            method: "GET",
+            success({
+                data
+            }) {
+                // console.log(data.data);
+                if (data.code != 200) {
+                    wx.showToast({
+                        title: data.err,
+                        icon: "none"
+                    })
+                    return
+                }
+                if (data.code == 200) {
+                    let libraryList = []
+                    // 提取libraries 和 libraryIdx
+                    data.data.libraries.forEach((e, idx) => {
+                        libraryList.push(e.name)
+                        if (e.libraryId == that.data.libraryId) {
+                            that.setData({
+                                libraryIdx: idx
+                            })
+                        }
+                    })
+                    that.setData({
+                        school: data.data,
+                        libraryList: libraryList,
+                        libraries: data.data.libraries
+                    })
+                }
 
-    // 点击事件
+            }
+        })
+
+    },
+    /**
+     * 获取图书馆信息
+     */
+    queryLibrary(libraryId) {
+        let that = this
+        // 获取图书馆
+        wx.request({
+            url: app.globalData.baseUrl + '/library?libraryId=' + libraryId,
+            method: 'GET',
+            success({
+                data
+            }) {
+                console.log("library: ", data.data);
+                if (data.code != 200) {
+                    wx.showToast({
+                        title: data.err,
+                        icon: "none"
+                    })
+                    return
+                }
+                let roomList = []
+                roomList.push('请选择')
+                data.data.libraryRooms.forEach(e => {
+                    roomList.push(e.name)
+                })
+                data.data.libraryRooms.unshift({"name":"请选择"})
+                if (data.code == 200) {
+                    that.setData({
+                        roomIdx: 0,
+                        roomList: roomList,
+                        rooms: data.data.libraryRooms
+                    })
+                }
+            },
+            fail() {
+                wx.showToast({
+                    title: '获取图书馆失败',
+                    icon: "error"
+                })
+                return
+            }
+        })
+    },
+
+    /**
+     * 获取图书室信息
+     */
+    queryRoom(roomId) {
+
+    },
+
+    // picker library
+    bindPickerLibrary(e){
+        console.log(e.detail.value);
+        this.setData({
+            libraryIdx: e.detail.value
+        })
+        // 获取图书馆信息
+        this.queryLibrary(this.data.libraries[e.detail.value].libraryId)
+    },
+
+    // picker room
+    bindPickerRoom(e){
+        console.log(e.detail.value);
+        this.setData({
+            roomIdx: e.detail.value
+        })
+        this.queryRoom(this.data.rooms[e.detail.value].roomId);
+    },
+
+
+    // 椅子点击事件
     handelSelect(e) {
         let id = e.currentTarget.dataset.id;
         let index = null;

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * (Library)实体类
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-03-10 22:59:52
  */
 @Data
@@ -38,7 +38,7 @@ public class Library implements Serializable {
      * 背景
      */
     private String background;
-    private List<LibraryRoom> libraryRoom;
+    private List<LibraryRoom> libraryRooms;
 
 
 }

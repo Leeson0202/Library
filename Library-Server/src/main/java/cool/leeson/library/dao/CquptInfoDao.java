@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * (CquptInfo)表数据库访问层
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-03-01 15:14:03
  */
 public interface CquptInfoDao {

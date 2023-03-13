@@ -16,6 +16,12 @@ import java.awt.image.BufferedImage;
 @Slf4j
 @RequestMapping("common")
 public class CommonController {
+
+    @GetMapping
+    public String test() {
+        return "hello";
+    }
+
     @GetMapping("codeImage")
     public void getImage(HttpSession session, HttpServletResponse response) throws Exception {
         //生产验证码 6位

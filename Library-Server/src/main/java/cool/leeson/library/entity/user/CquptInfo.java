@@ -15,7 +15,7 @@ public class CquptInfo {
     private String student_id;
     private String grade;
     private String classs;
-    private String academy_name;
+    private String unit_name;
     private String profession_name;
     private String gender;
     private String counselor_name;

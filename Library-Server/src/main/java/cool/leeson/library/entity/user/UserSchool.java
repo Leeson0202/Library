@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * (UserSchool)实体类
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-03-07 22:24:58
  */
 @Data
@@ -29,6 +29,11 @@ public class UserSchool implements Serializable {
      * 学校id
      */
     private String schoolId;
+
+    /**
+     * 是否管理
+     */
+    private Boolean management;
 
 
 }

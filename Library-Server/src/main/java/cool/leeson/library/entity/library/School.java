@@ -1,13 +1,21 @@
 package cool.leeson.library.entity.library;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * (School)实体类
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-03-10 22:59:40
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class School implements Serializable {
     private static final long serialVersionUID = 166594818735096072L;
     /**
@@ -30,47 +38,15 @@ public class School implements Serializable {
      * 背景
      */
     private String background;
+    /**
+     * 图书馆列表
+     */
+    private List<Library> libraries;
+    /**
+     * 预约规则
+     */
+    private SchoolRule schoolRule;
 
-
-    public String getSchoolId() {
-        return schoolId;
-    }
-
-    public void setSchoolId(String schoolId) {
-        this.schoolId = schoolId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescs() {
-        return descs;
-    }
-
-    public void setDescs(String descs) {
-        this.descs = descs;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getBackground() {
-        return background;
-    }
-
-    public void setBackground(String background) {
-        this.background = background;
-    }
 
 }
 

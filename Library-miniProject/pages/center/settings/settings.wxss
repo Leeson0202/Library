@@ -1,0 +1,15 @@
+/* pages/center/settings/settings.wxss */
+
+.logout{
+    
+    margin: auto;
+    margin-top: 90rpx;
+    width: 90%;
+    height: 60rpx;
+    line-height: 60rpx;
+    background-color: rgb(248, 100, 100);
+    border-radius: 14rpx;
+    text-align: center;
+    color: #fff;
+    font-size: 28rpx;
+}

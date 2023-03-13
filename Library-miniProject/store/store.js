@@ -16,7 +16,8 @@ import {
 } from '../utils/storage'
 
 export const store = observable({
-    baseUrl: "http://localhost:8080",
+    baseUrl: "https://library.leeson.cool",
+    // baseUrl: "http://localhost:8080",
     header: {
         "Content-Type": "application/x-www-form-urlencoded"
     },
@@ -27,6 +28,8 @@ export const store = observable({
         nickName: "点击登陆",
         background: "http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1010/13/c6/5494373_5494373_1286955435968.jpg"
     },
+    hasSchool: false,
+    school: null,
     // 注册相关
     tel: "",
     email: "",
@@ -46,12 +49,7 @@ export const store = observable({
         }
     }),
 
-    // 退出登录
-    Logout: action(function () {
-        this.userInfo = {};
-        this.hasUserInfo = false;
-        wx.removeStorageSync("userInfo");
-    }),
+
     // 登陆主要请求
     ReLogin: action(function () {
         let that = this;
@@ -77,6 +75,7 @@ export const store = observable({
                             that.token = res.data.token;
                             // 储存
                             wx.setStorageSync("token", res.data.token);
+                            this.GetUserInfo();
                             resolve(true);
                         },
                         fail: function () {
@@ -120,9 +119,31 @@ export const store = observable({
         })
 
     }),
+
+    // 后面不要动
+    // 获取storage的数据 或网络请求
+    GetStorage: action(function () {
+        if (this.hasLogin == false) return;
+        console.log("GetStorage");
+        let userInfo = wx.getStorageSync('userInfo');
+        let school = wx.getStorageSync('school');
+        if (userInfo == "") {
+            this.GetUserInfo();
+        } else {
+            this.userInfo = userInfo
+            this.hasUserInfo = true
+        }
+        if (school == "") {
+            this.GetSchool();
+        } else {
+            this.school = school;
+            this.hasSchool = true;
+        }
+
+    }),
+
     // 程序初始化，从storage中获取数据
     Launch: action(function () {
-        console.log('小程序第一次Launching');
         const userInfo = wx.getStorageSync('userInfo');
         if (userInfo !== null && userInfo !== undefined && userInfo !== '') {
             this.hasUserInfo = true;
@@ -173,28 +194,36 @@ export const store = observable({
             title: "正在登陆"
         });
         console.log(cqupt_id, password);
+        let url = this.baseUrl + '/user/bind/cqupt'
         wx.request({
-            url: this.baseUrl + '/login/cqupt',
+            url: url,
             method: "POST",
             data: {
                 cqupt_id: cqupt_id,
                 password: password
             },
             header: {
-                "Content-Type": "application/x-www-form-urlencoded"
+                "Content-Type": "application/x-www-form-urlencoded",
+                token:wx.getStorageSync('token')
             },
             success(res) {
                 console.log(res.data);
-                let token = res.data.token;
-                let userInfo = res.data.userInfo;
-                console.log(userInfo);
-                that.userInfo.nickName = userInfo.nickName;
-                that.hasUserInfo = true;
-
-                // 储存
-                wx.setStorageSync("token", token);
                 wx.hideLoading();
-                wx.navigateBack();
+                if(res.data.code==400){
+                    wx.showToast({
+                      title: res.data.msg,
+                      icon: "error"
+                    })
+                    return
+                }
+                if(res.data.code==200){
+                    that.GetSchool();
+                    wx.showToast({
+                      title: '绑定成功',
+                      icon: "success"
+                    })
+                    wx.navigateBack();
+                }
 
             },
             fail() {
@@ -214,6 +243,20 @@ export const store = observable({
     // 设置登陆方式
     ChangeLoginMethod: action(function (tag) {
         this.loginMethod = tag;
+    }),
+    // 退出登录
+    InitData: action(function () {
+        wx.clearStorageSync();
+        this.hasLogin = false;
+        this.hasUserInfo=false;
+        this.hasSchool = false;
+        this.userInfo = {
+            avatarUrl: "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132",
+            nickName: "点击登陆",
+            background: "http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1010/13/c6/5494373_5494373_1286955435968.jpg"
+        }
+        this.school = {};
+
     }),
     // 登陆login 发送验证码
     Login: action(function (str) {
@@ -257,7 +300,7 @@ export const store = observable({
                     })
                 } else {
                     wx.showToast({
-                        title: res.data.err,
+                        title: res.data.msg,
                         icon: "none"
                     })
                 }
@@ -298,11 +341,11 @@ export const store = observable({
                 code: code
             },
             success(res) {
-                console.log(res.data);
+                // console.log(res.data);
                 wx.hideLoading();
                 if (res.data.code !== 200) {
                     wx.showToast({
-                        title: res.data.err,
+                        title: res.data.msg,
                         icon: "none"
                     })
                     return false;
@@ -314,7 +357,6 @@ export const store = observable({
                     if (res.data.tag !== that.loginMethod) {
                         that.tag = true;
                     } else {
-                        console.log(that);
                         that.GetUserInfo();
                         wx.showToast({
                             title: '登陆成功',
@@ -341,7 +383,7 @@ export const store = observable({
         this.userInfo.avatarUrl = avatarUrl;
         this.userInfo.nickName = nickName;
         this.hasUserInfo = true;
-        let data ={
+        let data = {
             avatarUrl: avatarUrl,
             nickName: nickName
         }
@@ -354,19 +396,22 @@ export const store = observable({
     // 获取用户
     GetUserInfo: action(function () {
         let that = this;
+        // 获取userInfo
+        let url = that.baseUrl + '/userInfo'
+        console.log(url);
         wx.request({
-            url: that.baseUrl + '/userInfo',
+            url: url,
             method: 'GET',
-            header:{
+            header: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 'token': wx.getStorageSync('token')
             },
             success(res) {
-                console.log(res.data.userInfo);
-                if(res.data.code!==200){
+                // console.log(res.data.userInfo);
+                if (res.data.code !== 200) {
                     wx.showToast({
-                      title: '请稍后重试',
-                      icon: "error"
+                        title: '请稍后重试',
+                        icon: "error"
                     })
                 }
                 let userInfo = res.data.userInfo;
@@ -376,8 +421,10 @@ export const store = observable({
 
             }
         })
-
+        // 获取 school
+        this.GetSchool();
     }),
+    // 更新用户
     UserInfoUpdate: action(function (data) {
         let that = this
         // 上传名字 和 头像
@@ -391,10 +438,10 @@ export const store = observable({
             data: data,
             success(res) {
                 console.log(res.data);
-                if(res.data.code!==200){
+                if (res.data.code !== 200) {
                     wx.showToast({
-                      title: res.data.err,
-                      icon: "none"
+                        title: res.data.msg,
+                        icon: "none"
                     })
                     return false;
                 }
@@ -402,13 +449,53 @@ export const store = observable({
                 wx.setStorageSync('userInfo', res.data.userInfo)
                 that.hasUserInfo = true;
                 wx.showToast({
-                  title: '保存成功',
-                  icon: "success"
+                    title: '保存成功',
+                    icon: "success"
                 })
             },
             fail() {
-                console.log("上传失败");
+                wx.showToast({
+                    title: '上传失败，请重试',
+                })
             }
         })
-    })
+    }),
+    // 获取学校
+    GetSchool: action(function () {
+        let that = this
+        let url = that.baseUrl + '/school'
+        console.log(url);
+        wx.request({
+            url: url,
+            method: "GET",
+            header: {
+                token: wx.getStorageSync('token')
+            },
+            success({
+                data
+            }) {
+                // console.log(data);
+                if (data.code == 500) {
+                    wx.showToast({
+                        title: data.msg,
+                        icon: "none"
+                    })
+                }
+                if (data.code == 200) {
+                    that.school = data.data;
+                    that.hasSchool = true;
+                    wx.setStorageSync('school', data.data)
+                }
+                // 2. 重新发起请求 并关闭下拉窗口
+                wx.stopPullDownRefresh();
+            },
+            fail() {
+                wx.showToast({
+                    title: '获取学校失败',
+                    icon: "none"
+                })
+            }
+
+        })
+    }),
 })

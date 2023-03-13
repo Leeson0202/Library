@@ -16,7 +16,7 @@ Page({
 
     },
     bookHandel(e) {
-        console.log(e.currentTarget.dataset.tag);
+        // console.log(e.currentTarget.dataset.tag);
         let tag = e.currentTarget.dataset.tag;
         // 判断是否登陆
         this.HasLogin();
@@ -29,7 +29,6 @@ Page({
                 url = '/pages/function/fastBook/fastBook';
                 break;
         }
-        console.log(url);
         if (url !== "") {
             wx.navigateTo({
                 url: url

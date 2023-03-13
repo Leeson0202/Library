@@ -5,8 +5,11 @@
     width: 100%;
 }
 .selecter{
-    width: 100%;
     text-align: center;
+}
+.picker{
+    display: inline-block;
+    padding: 0 8rpx;
 }
 
 

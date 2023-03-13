@@ -1,11 +1,13 @@
-package cool.leeson.library.controller.user;
+package cool.leeson.library.controller;
 
 import cool.leeson.library.config.JwtConfig;
-import cool.leeson.library.service.LoginServiceImpl;
-import cool.leeson.library.util.ResMap;
+import cool.leeson.library.exceptions.MyException;
+import cool.leeson.library.service.LoginService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -15,10 +17,12 @@ import java.util.Map;
 @Slf4j
 public class LoginController {
     @Resource
-    private LoginServiceImpl loginService;
+    private LoginService loginService;
     @Resource
     private HttpServletRequest request;
 
+    @Resource
+    private JwtConfig jwtConfig;
 
     /**
      * 更新token
@@ -26,10 +30,9 @@ public class LoginController {
      * @return 实体对象
      */
     @GetMapping("update")
-    public ResponseEntity<Map<String, Object>> update() {
+    public Map<String, Object> update() {
         String token = this.request.getHeader("token");
-        token = new JwtConfig().createToken(new JwtConfig().getUsernameFromToken(token));
-        return ResponseEntity.ok(ResMap.ok("token", token).build());
+        return this.loginService.loginUpdate(token);
     }
 
     /**
@@ -82,9 +85,10 @@ public class LoginController {
         return ResponseEntity.ok(resMap);
     }
 
-    @PostMapping("login/cqupt")
-    public ResponseEntity<Map<String, Object>> loginCqupt(String cqupt_id, String password) {
-        Map<String, Object> map = this.loginService.loginCqupt(cqupt_id, password);
+    @PostMapping("user/bind/cqupt")
+    public ResponseEntity<Map<String, Object>> loginCqupt(String cqupt_id, String password) throws MyException {
+        String userId = jwtConfig.getUsernameFromToken(request.getHeader("token"));
+        Map<String, Object> map = this.loginService.loginCqupt(cqupt_id, password, userId);
         return ResponseEntity.ok(map);
     }
 

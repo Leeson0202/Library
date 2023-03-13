@@ -36,7 +36,7 @@ create table user_info
     gender      varchar(5) comment '性别',
     `language`  varchar(20) comment '语言',
     nick_name   varchar(50) comment '用户昵称' default '用户',
-    real_name   varchar(50) comment '正式姓名',
+    real_name   varchar(50) comment '真实姓名',
     age         smallint comment '年龄',
     stu_id      int comment '学生id',
     background  varchar(500) comment '背景'    default 'http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1010/13/c6/5494373_5494373_1286955435968.jpg'
@@ -93,17 +93,19 @@ create table user_learned
     `learn_time` smallint comment '今日的时长'
 );
 
+
 -- 用户-学校关系表
 drop table if exists user_school;
 create table user_school
 (
-    id        varchar(100) primary key comment '用户学校记录id',
-    user_id   varchar(100) comment 'userId',
-    school_id varchar(100) comment '学校id'
+    id         varchar(100) primary key comment '用户学校记录id',
+    user_id    varchar(100) comment 'userId',
+    school_id  varchar(100) comment '学校id',
+    management bool default false comment '是否管理'
 );
 
 insert into user_school
-values ('knadjcva', '12344321', 'dcajhbadhcavacda');
+values ('knadjcva', '12344321', 'dcajhbadhcavacda', true);
 
 
 

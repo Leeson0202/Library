@@ -1,10 +1,23 @@
 /**app.wxss**/
 .container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20rpx 0;
-  box-sizing: border-box;
-} 
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20rpx 0;
+    box-sizing: border-box;
+}
+
+.line-item {
+    margin: auto;
+    height: 86rpx;
+    width: calc(100% - 40rpx);
+    line-height: 86rpx;
+    border-bottom: 1rpx solid #f2f2f2;
+    font-size: 30rpx;
+}
+
+.items>.line-item:last-child {
+    border-bottom: none
+}

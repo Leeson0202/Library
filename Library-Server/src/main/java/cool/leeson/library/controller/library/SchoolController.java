@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * (School)表控制层
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-03-10 21:55:16
  */
 @RestController
@@ -32,24 +32,23 @@ public class SchoolController {
      *
      * @return 查询结果
      */
-    @GetMapping("/query")
-    public Map<String, Object> queryByUserId() {
-        String token = request.getHeader("token");
+    @GetMapping
+    public Map<String, Object> queryByToken() {
         // 解析token获取userId
-        String userId = new JwtConfig().getUsernameFromToken(token);
+        String userId = new JwtConfig().getUsernameFromToken(request.getHeader("token"));
         return this.schoolService.queryByUserId(userId);
     }
 
     /**
      * 通过主键查询单条数据
      *
-     * @param id 主键
+     * @param schoolId 主键
      * @return 单条数据
      */
-    @GetMapping("{id}")
-    public Map<String, Object> queryById(@PathVariable("id") String id) {
+    @GetMapping("id/{schoolId}")
+    public Map<String, Object> queryById(@PathVariable("schoolId") String schoolId) {
 
-        return this.schoolService.queryById(id);
+        return this.schoolService.queryById(schoolId);
     }
 
     /**

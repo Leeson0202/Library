@@ -1,9 +1,6 @@
 package cool.leeson.library.controller.library;
 
-import cool.leeson.library.config.JwtConfig;
-import cool.leeson.library.dao.LibraryRoomDao;
 import cool.leeson.library.entity.library.Library;
-import cool.leeson.library.entity.library.LibraryRoom;
 import cool.leeson.library.service.library.LibraryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +12,7 @@ import java.util.Map;
 /**
  * (Library)表控制层
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-03-10 21:55:47
  */
 @RestController
@@ -31,59 +28,25 @@ public class LibraryController {
 
 
     /**
-     * 用户直接 获取library
-     *
-     * @return 查询结果
-     */
-    @GetMapping
-    public Map<String, Object> queryLibraryByUserId() {
-        String token = request.getHeader("token");
-        // 解析token获取userId
-        String userId = new JwtConfig().getUsernameFromToken(token);
-        return this.libraryService.queryLibraryByUserId(userId);
-    }
-
-    /**
      * 通过schoolId 获取libraries
      *
      * @return 查询结果
      */
     @GetMapping("school")
-    public Map<String, Object> queryLibraryBySchoolId(String schoolId) {
-
-        return this.libraryService.queryLibraryBySchoolId(schoolId);
-    }
-
-    /**
-     * 通过schoolId 获取Rooms
-     *
-     * @return 查询结果
-     */
-    @GetMapping("rooms")
-    public Map<String, Object> queryLibraryRoomByLibraryId(String libraryId) {
-        return this.libraryService.queryRoomByLibraryId(libraryId);
-    }
-
-    /**
-     * 通过schoolId 获取library
-     *
-     * @return 查询结果
-     */
-    @GetMapping("room/{roomId}")
-    public Map<String, Object> queryLibraryRoomByRoomId(@PathVariable("roomId") String roomId) {
-        return this.libraryService.queryRoomByRoomId(roomId);
+    public Map<String, Object> queryBySchoolId(String schoolId) {
+        return this.libraryService.queryBySchoolId(schoolId);
     }
 
 
     /**
      * 通过主键查询单条数据
      *
-     * @param id 主键
+     * @param libraryId 主键
      * @return 单条数据
      */
-    @GetMapping("{id}")
-    public ResponseEntity<Library> queryById(@PathVariable("id") String id) {
-        return ResponseEntity.ok(this.libraryService.queryById(id));
+    @GetMapping
+    public Map<String, Object> queryById(String libraryId) {
+        return this.libraryService.queryById(libraryId);
     }
 
     /**
@@ -104,8 +67,8 @@ public class LibraryController {
      * @return 编辑结果
      */
     @PutMapping("update")
-    public ResponseEntity<Library> edit(Library library) {
-        return ResponseEntity.ok(this.libraryService.update(library));
+    public Map<String, Object> edit(Library library) {
+        return this.libraryService.update(library);
     }
 
     /**

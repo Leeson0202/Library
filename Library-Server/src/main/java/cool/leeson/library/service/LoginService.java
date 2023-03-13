@@ -3,10 +3,8 @@ package cool.leeson.library.service;
 import com.alibaba.fastjson.JSONObject;
 import cool.leeson.library.config.JwtConfig;
 import cool.leeson.library.dao.*;
-import cool.leeson.library.entity.user.CquptInfo;
-import cool.leeson.library.entity.user.User;
-import cool.leeson.library.entity.user.UserInfo;
-import cool.leeson.library.entity.user.UserRecord;
+import cool.leeson.library.entity.user.*;
+import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.util.HttpClientUtil;
 import cool.leeson.library.util.ResMap;
 import cool.leeson.library.util.code.CodeUtil;
@@ -28,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Slf4j
 @Transactional
-public class LoginServiceImpl {
+public class LoginService {
     @Resource
     private UserDao userDao;
     @Resource
@@ -38,15 +36,17 @@ public class LoginServiceImpl {
     @Resource
     private UserRecordDao userRecordDao;
     @Resource
-    private UserCreditDao userCreditDao;
-    @Resource
-    private UserLearnedDao userLearnedDao;
-    @Resource
     private UserSchoolDao userSchoolDao;
-
-
     @Resource
     private RedisTemplate<String, String> redisTemplate;
+    private final String UserTokenKeyFormat = "%s:token"; // userId:token  7天
+    private final String codeKeyFormat = "%s:code"; // tel:code code  5分钟
+    private final String repeatKeyFormat = "%s:repeat"; // [email or tel]:repeat 一分钟时效
+
+    public Map<String, Object> loginUpdate(String token) {
+        String userId = new JwtConfig().getUsernameFromToken(token);
+        return this.loginSuccess(userId, -1);
+    }
 
     /**
      * 通过短信注册
@@ -60,10 +60,10 @@ public class LoginServiceImpl {
             log.error(tel + "输入正确手机号：");
             return ResMap.err("请输入正确的手机号");
         }
-        String codeKey = "loginTel:" + tel;
-        String confirmKey = "confirmTel:" + tel;
+        String codeKey = String.format(codeKeyFormat, tel);
+        String repeatKey = String.format(repeatKeyFormat, tel);
         // （1分钟内）?
-        String s = redisTemplate.opsForValue().get(confirmKey);
+        String s = redisTemplate.opsForValue().get(repeatKey);
         if (s != null) {
             log.error(tel + "在一分钟内多次请求");
             return ResMap.err("请在1分后请求");
@@ -81,7 +81,7 @@ public class LoginServiceImpl {
         }
         // 存入缓存
         this.redisTemplate.opsForValue().set(codeKey, code, 5, TimeUnit.MINUTES);
-        this.redisTemplate.opsForValue().set(confirmKey, code, 1, TimeUnit.MINUTES);
+        this.redisTemplate.opsForValue().set(repeatKey, code, 1, TimeUnit.MINUTES);
         log.info(tel + "验证码发送成功 " + code);
         return ResMap.ok("验证码发送成功");
     }
@@ -103,12 +103,13 @@ public class LoginServiceImpl {
         }
         log.info(tel + "正在验证短信验证码");
         // 查询缓存
-        String codeKey = "loginTel:" + tel;
+        String codeKey = String.format(codeKeyFormat, tel);
         String rCode = redisTemplate.opsForValue().get(codeKey);
         if (rCode == null || !rCode.equals(code)) {
             log.error(tel + "验证码错误 code：" + code + ", rcode：" + rCode);
             return ResMap.err("验证码错误");
         }
+        redisTemplate.delete(codeKey); // 删除
         log.info(tel + " 验证码正确");
 
         // 查询是否有该用户
@@ -120,13 +121,7 @@ public class LoginServiceImpl {
             if (!register) return ResMap.err("注册失败");
             quser = this.userDao.queryByTel(tel);
         }
-        log.info(tel + "开始生成token");
-        String userId = quser.getUserId();
-        // 注册成功后返回token
-        return ResMap
-                .ok("token", new JwtConfig().createToken(userId))
-                .put("tag", tag)
-                .build();
+        return this.loginSuccess(quser.getUserId(), tag);
     }
 
     /**
@@ -141,10 +136,10 @@ public class LoginServiceImpl {
             log.error(email + " 请输入正确的邮箱");
             return ResMap.err("请输入正确的邮箱");
         }
-        String codeKey = "loginEmail:" + email;
-        String confirmKey = "confirmEmail:" + email;
+        String codeKey = String.format(codeKeyFormat, email);
+        String repeatKey = String.format(repeatKeyFormat, email);
         // （1分钟内）?
-        String s = redisTemplate.opsForValue().get(confirmKey);
+        String s = redisTemplate.opsForValue().get(repeatKey);
         if (s != null) {
             log.error(email + "在一分钟内多次请求");
             return ResMap.err("请在1分后请求");
@@ -161,7 +156,7 @@ public class LoginServiceImpl {
 
         // 验证码进入缓冲 5分钟
         this.redisTemplate.opsForValue().set(codeKey, code, 5, TimeUnit.MINUTES);
-        this.redisTemplate.opsForValue().set(confirmKey, code, 1, TimeUnit.MINUTES);
+        this.redisTemplate.opsForValue().set(repeatKey, code, 1, TimeUnit.MINUTES);
 
         log.info(email + "验证码发送成功 " + code);
         return ResMap.ok("验证码发送成功");
@@ -186,12 +181,13 @@ public class LoginServiceImpl {
         }
         log.info(email + "正在验证验证码");
         // 查询缓存
-        String codeKey = "loginEmail:" + email;
+        String codeKey = String.format(codeKeyFormat, email);
         String rCode = redisTemplate.opsForValue().get(codeKey);
         if (rCode == null || !rCode.equals(code)) {
             log.info(email + "验证码错误 code：" + code + " rcode：" + rCode);
             return ResMap.err("验证码错误");
         }
+        redisTemplate.delete(codeKey); // 删除
         log.info(email + " 验证码正确");
 
         // 查询是否有该用户
@@ -203,17 +199,16 @@ public class LoginServiceImpl {
             if (!register) return ResMap.err("注册失败");
             quser = this.userDao.queryByEmail(email);
         }
-        log.info(email + "开始生成token");
-        String userId = quser.getUserId();
-
-        // 注册成功后返回token
-        return ResMap
-                .ok("token", new JwtConfig().createToken(userId))
-                .put("tag", tag)
-                .build();
-
+        return this.loginSuccess(quser.getUserId(), tag);
     }
 
+    /**
+     * 注册公共代码 可以手机号和邮箱
+     *
+     * @param tel   手机号
+     * @param email 邮箱
+     * @return 是否注册成功
+     */
     private boolean register(String tel, String email) {
         log.info(email + "开始注册");
         String userId = UUID.randomUUID().toString();
@@ -244,6 +239,27 @@ public class LoginServiceImpl {
         return true;
     }
 
+    /**
+     * 登陆成功公共代码
+     *
+     * @param userId 用户id
+     * @param tag    tag
+     * @return map{tag,token}
+     */
+    private Map<String, Object> loginSuccess(String userId, Integer tag) {
+        log.info(userId + " 开始生成token");
+        String token = new JwtConfig().createToken(userId);
+
+        String tokenKey = String.format(UserTokenKeyFormat, userId);
+        // 缓存7天
+        redisTemplate.opsForValue().set(tokenKey, token, 7, TimeUnit.DAYS);
+
+        // 成功后返回token
+        return ResMap
+                .ok("token", token)
+                .put("tag", tag)
+                .build();
+    }
 
     /**
      * 重邮账号登陆
@@ -252,7 +268,7 @@ public class LoginServiceImpl {
      * @param password 密码
      * @return 实体
      */
-    public Map<String, Object> loginCqupt(String cqupt_id, String password) {
+    public Map<String, Object> loginCqupt(String cqupt_id, String password, String userId) throws MyException {
         if (StringUtils.isEmpty(cqupt_id) || StringUtils.isEmpty(password)) {
             return ResMap.err("账号密码不能空");
         }
@@ -267,13 +283,13 @@ public class LoginServiceImpl {
         // 发送请求
         try {
             response = HttpClientUtil.postRequest(url, null, headers);
-            System.out.println(response);
+            log.info(response);
         } catch (Exception e) {
             log.info("请求失败：" + cqupt_id + " " + password);
         }
 
-//        response = "{\"code\":0,\"msg\":\"登录成功\",\"data\":{\"user_info\":{\"role\":\"undergraduate\",\"name\":\"李瑶鑫\",\"cqupt_id\":\"1665412\",\"student_id\":\"2019210138\",\"grade\":\"2019\",\"class\":\"01041902\",\"academy_name\":\"通信与信息工程学院\",\"profession_name\":\"信息工程\",\"gender\":\"男\",\"counselor_name\":\"黄彩映\",\"counselor_cqupt_id\":\"0103117\"}}}\n";
-
+//        response = "{\"code\":0,\"msg\":\"登录成功\",\"data\":{\"user_info\":{\"role\":\"undergraduate\",\"name\":\"李瑶鑫\",\"cqupt_id\":\"1665412\",\"student_id\":\"2019210138\",\"grade\":\"2019\",\"class\":\"01041902\",\"unit_name\":\"通信与信息工程学院\",\"profession_name\":\"信息工程\",\"gender\":\"男\",\"counselor_name\":\"黄彩映\",\"counselor_cqupt_id\":\"0103117\"}}}\n";
+        if (response == null) return ResMap.err("请重试");
         response = response.replace("class", "classs");
         //格式化JSON数据
         HashMap<Object, Object> map = JSONObject.parseObject(response, HashMap.class);
@@ -283,27 +299,34 @@ public class LoginServiceImpl {
         JSONObject data = (JSONObject) map.get("data");
         JSONObject Info = (JSONObject) data.get("user_info");
         CquptInfo cquptInfo = Info.toJavaObject(CquptInfo.class);
+        cquptInfo.setUserId(userId);
 
-        // 查询数据库是否有 cqupt_id
+        // 查询数据库是否绑定
+        // 是不是别人的
         CquptInfo qCquptInfo = this.cquptInfoDao.queryByCquptId(cqupt_id);
-        String userId = "1000" + Integer.parseInt(cqupt_id);
-        if (qCquptInfo == null) {
-            // 插入
-            User user = new User();
-            user.setUserId(userId);
-            if (this.userDao.insert(user) < 1) return ResMap.err("插入User表失败");
-            cquptInfo.setUserId(userId);
-            if (this.cquptInfoDao.insert(cquptInfo) < 1) return ResMap.err("插入cquptInfo表失败");
-            UserInfo userInfo = new UserInfo();
-            userInfo.setUserId(userId);
-            userInfo.setRealName(cquptInfo.getName());
-            userInfo.setNickName(cquptInfo.getName());
-            userInfo.setGender(cquptInfo.getGender());
-            userInfo.setGender(cquptInfo.getGender());
-            if (this.userInfoDao.insert(userInfo) < 1) return ResMap.err("插入userInfo表失败");
+        if (qCquptInfo != null && !qCquptInfo.getUserId().equals(userId)) {
+            // 有 但别人绑定了
+            return ResMap.err("该信息已经有人绑定");
         }
-        UserInfo userInfo = this.userInfoDao.queryById(userId);
-        // 直接返回token
-        return ResMap.ok("token", new JwtConfig().createToken(userId)).put("userInfo", userInfo).build();
+        qCquptInfo = this.cquptInfoDao.queryById(userId);
+        if (qCquptInfo != null) {
+            // 自己有了就更新
+            log.info(userId + " 用户存在cquptInfo数据");
+            if (this.cquptInfoDao.update(cquptInfo) < 0) {
+                return ResMap.err("cquptInfo数据库更新失败");
+            }
+            UserSchool userSchool = new UserSchool(UUID.randomUUID().toString(), userId, "dcajhbadhcavacda", false);
+
+            this.userSchoolDao.update(userSchool);
+        } else {
+            // 没有就插入
+            if (this.cquptInfoDao.insert(cquptInfo) < 1)
+                throw new MyException("插入cquptInfo表失败");
+            UserSchool userSchool = new UserSchool(UUID.randomUUID().toString(), userId, "dcajhbadhcavacda", false);
+            this.userSchoolDao.insert(userSchool);
+        }
+
+        // 最后返回cquptInfo
+        return ResMap.ok(cquptInfo);
     }
 }

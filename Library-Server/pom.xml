@@ -10,7 +10,7 @@
     </parent>
     <groupId>cool.leeson</groupId>
     <artifactId>Library-Server</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>Library-Server</name>
     <description>Library-Server</description>
     <properties>

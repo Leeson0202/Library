@@ -4,7 +4,8 @@ package cool.leeson.library.util.email;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.mail.*;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Date;
@@ -27,7 +28,7 @@ public class EmailUtil {
     private Session session;
 
     private String destEmail = "2224351168@qq.com";// 收件人邮箱
-    private String title = "悠点单词";// 标题
+    private String title = "Leeson Library";// 标题
     private String context = "正文内容";// 正文内容
 
 
@@ -70,9 +71,9 @@ public class EmailUtil {
         //创建一封邮件
         MimeMessage message = new MimeMessage(session);
         //发件人
-        message.setFrom(new InternetAddress(hostEmail, "悠点单词", "UTF-8"));
+        message.setFrom(new InternetAddress(hostEmail, "Leeson", "UTF-8"));
         //收件人
-        message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(destEmail, "XX用户", "UTF-8"));
+        message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(destEmail, "用户", "UTF-8"));
         //邮件主题
         message.setSubject(title, "UTF-8");
         //邮件正文

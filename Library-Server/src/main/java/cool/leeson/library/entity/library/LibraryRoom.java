@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * (LibraryRoom)实体类
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-03-11 02:02:35
  */
 @Data
@@ -42,7 +42,7 @@ public class LibraryRoom implements Serializable {
     /**
      * 周末是否开放
      */
-    private Integer weekend;
+    private Boolean weekend;
     /**
      * 每日开放开始时间
      */

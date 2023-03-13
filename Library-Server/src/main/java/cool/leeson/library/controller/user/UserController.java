@@ -1,25 +1,28 @@
 package cool.leeson.library.controller.user;
 
+import cool.leeson.library.config.JwtConfig;
 import cool.leeson.library.entity.user.User;
-import cool.leeson.library.service.user.UserInfoService;
+import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.user.UserService;
 import cool.leeson.library.util.ResMap;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
  * (User)表控制层
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-02-26 15:42:15
  */
 @RestController
 @RequestMapping("user")
+@Slf4j
 public class UserController {
     /**
      * 服务对象
@@ -27,47 +30,32 @@ public class UserController {
     @Resource
     private UserService userService;
     @Resource
-    private UserInfoService userInfoService;
+    private HttpServletRequest request;
 
-    /**
-     * 分页查询
-     *
-     * @param user        筛选条件
-     * @param pageRequest 分页对象
-     * @return 查询结果
-     */
-    @GetMapping
-    public ResponseEntity<Page<User>> queryByPage(User user, PageRequest pageRequest) {
-        return ResponseEntity.ok(this.userService.queryByPage(user, pageRequest));
-    }
 
     /**
      * 通过主键查询单条数据
      *
-     * @param id 主键
      * @return 单条数据
      */
-    @GetMapping("{id}")
-    public ResponseEntity<User> queryById(@PathVariable("id") String id) {
-        return ResponseEntity.ok(this.userService.queryById(id));
+    @GetMapping("id/{userId}")
+    public Map<String, Object> queryById(@PathVariable("userId") String userId) {
+        return this.userService.queryById(userId);
     }
-
-    @GetMapping("userId/{userId}")
-    public ResponseEntity<Map<String, Object>> getUserInfo(@PathVariable("userId") String userId) {
-        return ResponseEntity.ok(ResMap.ok("userInfo", this.userInfoService.queryById(userId)).build());
-    }
-
 
     /**
-     * 新增数据
+     * 通过token获取
      *
-     * @param user 实体
-     * @return 新增结果
+     * @return 实体
      */
-    @PostMapping
-    public ResponseEntity<User> add(User user) {
-        return ResponseEntity.ok(this.userService.insert(user));
+    @GetMapping()
+    public Map<String, Object> query() {
+        // 解析token获取userId
+        String userId = new JwtConfig().getUsernameFromToken(request.getHeader("token"));
+        log.info(userId + " 获取userInfo");
+        return this.userService.queryById(userId);
     }
+
 
     /**
      * 编辑数据
@@ -76,8 +64,19 @@ public class UserController {
      * @return 编辑结果
      */
     @PutMapping
-    public ResponseEntity<User> edit(User user) {
-        return ResponseEntity.ok(this.userService.update(user));
+    public Map edit(User user) {
+        // 解析token获取userId
+        String userId = new JwtConfig().getUsernameFromToken(request.getHeader("token"));
+        if (user == null) {
+            return ResMap.err("请添加用户信息");
+        }
+        if (StringUtils.isEmpty(user.getUserId())) {
+            return ResMap.err("请添加userId");
+        }
+        if (!userId.equals(user.getUserId())) {
+            return ResMap.err("请添加自己的userId");
+        }
+        return this.userService.update(user);
     }
 
     /**
@@ -89,6 +88,17 @@ public class UserController {
     @DeleteMapping
     public ResponseEntity<Boolean> deleteById(Integer id) {
         return ResponseEntity.ok(this.userService.deleteById(id));
+    }
+
+
+    /**
+     * 通过token获取 学校身份信息
+     * @return 实体
+     */
+    @GetMapping("studentInfo")
+    public Map<String,Object> queryCquptInfoByToken() throws MyException {
+        String userId = new JwtConfig().getUsernameFromToken(request.getHeader("token"));
+        return this.userService.queryCquptInfoByToken(userId);
     }
 
 }

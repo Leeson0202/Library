@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * (User)表数据库访问层
  *
- * @author makejava
+ * @author Leeson0202
  * @since 2023-02-26 15:42:15
  */
 public interface UserDao {

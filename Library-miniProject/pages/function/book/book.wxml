@@ -1,16 +1,21 @@
 <view>
     <view class="head">
-        <view class="selecter">
-            <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
-    <view class="picker">
-    {{school.name+" - "}}{{libraries[libraryIdx].name + " - "}}{{array[index]}}
-    </view></picker>
+        <view class="selecter" wx:if="{{school!=null || school!=undefined}}">
+            {{school.name}}
+
+            <!--图书馆选择-->
+            <picker class="picker" bindchange="bindPickerLibrary" value="{{libraryIdx}}" range="{{libraryList}}">
+                {{libraries[libraryIdx].name}}
+            </picker>
+
+            <!--图书室选择-->
+            <picker class="picker"  bindchange="bindPickerRoom" value="{{roomIdx}}" range="{{roomList}}">
+                {{rooms[roomIdx].name}}
+            </picker>
 
         </view>
 
     </view>
-
-
     <!-- 可视图 -->
     <movable-area scale-area="true" class="defaultArea" style="height:{{seatArea}}px; width: 750rpx;">
 

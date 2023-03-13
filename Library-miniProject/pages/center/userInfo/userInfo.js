@@ -13,7 +13,7 @@ Page({
      */
     data: {
         avatarUrl: "",
-        nickNmae: "",
+        nickName: "",
         age: "",
         gender: "",
         country: "",
@@ -27,43 +27,37 @@ Page({
             this.GetUserInfo();
         }
     },
-    handleNAvatarUrl(e) {
-        this.setData({
-            avatarUrl: e.detail.value
-        })
+
+    // 处理学校
+    bindSchool(){
+        if (!this.data.hasSchool) {
+            wx.navigateTo({
+              url: '/pages/center/cquptLogin/cquptLogin',
+            })
+        }else{
+            wx.showModal({
+                title: '提示',
+                content: '切换学校',
+                success (res) {
+                  if (res.confirm) {
+                    wx.navigateTo({
+                      url: '/pages/center/cquptLogin/cquptLogin',
+                    })
+                  } else if (res.cancel) {
+                      
+                  }
+                }
+              })
+        }
     },
-    handleName(e) {
-        this.setData({
-            nickNmae: e.detail.value
-        })
-    },
-    handleAge(e) {
-        this.setData({
-            age: e.detail.value
-        })
-    },
-    handleGender(e) {
-        this.setData({
-            gender: e.detail.value
-        })
-    },
-    handleCountry(e) {
-        this.setData({
-            country: e.detail.value
-        })
-    },
-    handleSign(e) {
-        this.setData({
-            sign: e.detail.value
-        })
-    },
+    // 提交保存信息
     submit() {
         let data = {};
         if (this.data.avatarUrl != "") {
             data.avatarUrl = this.data.avatarUrl;
         }
-        if (this.data.nickNmae != "") {
-            data.nickNmae = this.data.nickNmae;
+        if (this.data.nickName != "") {
+            data.nickName = this.data.nickName;
         }
         if (this.data.age != "") {
             data.age = this.data.age;
@@ -99,8 +93,8 @@ Page({
     onLoad(options) {
         this.storeBindings = createStoreBindings(this, {
             store,
-            fields: ['userInfo', 'hasUserInfo', 'hasLogin'],
-            actions: ['GetUserInfo', 'UserInfoUpdate']
+            fields: ['userInfo', 'hasUserInfo', 'hasLogin','hasSchool','school'],
+            actions: ['GetUserInfo', 'UserInfoUpdate','GetSchool']
         });
     },
 
@@ -119,21 +113,13 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow() {
-        console.log("onShow", this.data.hasUserInfo, this.data.hasLogin);
-        if (this.data.hasLogin === true && this.hasUserInfo !== true) {
-            let userInfo = wx.getStorageSync('userInfo');
-            console.log("onShow userInfo: ", userInfo);
-            if (userInfo === "") {
-                this.GetUserInfo();
-            }
-        }
+        this.GetUserInfo();
     },
 
     /**
      * 生命周期函数--监听页面隐藏
      */
     onHide() {
-
     },
 
     /**
@@ -141,6 +127,7 @@ Page({
      */
     onUnload() {
         this.storeBindings.destroyStoreBindings()
+        this.submit();
     },
 
     /**
@@ -160,5 +147,36 @@ Page({
     /**
      * 用户点击右上角分享
      */
-    onShareAppMessage() {}
+    onShareAppMessage() {},    handleNAvatarUrl(e) {
+        this.setData({
+            avatarUrl: e.detail.value
+        })
+    },
+
+    // 处理输入
+    handleName(e) {
+        this.setData({
+            nickName: e.detail.value
+        })
+    },
+    handleAge(e) {
+        this.setData({
+            age: e.detail.value
+        })
+    },
+    handleGender(e) {
+        this.setData({
+            gender: e.detail.value
+        })
+    },
+    handleCountry(e) {
+        this.setData({
+            country: e.detail.value
+        })
+    },
+    handleSign(e) {
+        this.setData({
+            sign: e.detail.value
+        })
+    }
 })
