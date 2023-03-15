@@ -2,7 +2,6 @@ package cool.leeson.library.interceptor;
 
 import cool.leeson.library.config.JwtConfig;
 import cool.leeson.library.exceptions.MyException;
-import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -40,7 +39,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             token = request.getParameter(jwtConfig.getHeader());
         }
         if (StringUtils.isEmpty(token)) {
-            log.warn(uri + " token 不能为空");
+//            log.warn(uri + " token 不能为空");
             throw new MyException(MyException.STATUS.badToken);
         }
 
@@ -50,6 +49,11 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             String rToken = this.redisTemplate.opsForValue().get(String.format(UserTokenKeyFormat, userId)); // redis中的token
             if (StringUtils.isEmpty(rToken) || !token.equals(rToken)) {
                 throw new MyException(MyException.STATUS.badToken);
+            }
+            // 验证token是否合法
+            if (jwtConfig.isTokenExpired(token)) {
+                log.info("token 失效: " + token);
+                return false;
             }
         } catch (Exception e) {
             throw new MyException(MyException.STATUS.badToken);

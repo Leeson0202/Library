@@ -2,6 +2,7 @@ package cool.leeson.library.controller.library;
 
 import cool.leeson.library.config.JwtConfig;
 import cool.leeson.library.entity.library.School;
+import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.library.SchoolService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class SchoolController {
      * @return 查询结果
      */
     @GetMapping
-    public Map<String, Object> queryByToken() {
+    public Map<String, Object> queryByToken() throws MyException {
         // 解析token获取userId
         String userId = new JwtConfig().getUsernameFromToken(request.getHeader("token"));
         return this.schoolService.queryByUserId(userId);

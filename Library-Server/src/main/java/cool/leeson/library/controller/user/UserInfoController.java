@@ -2,6 +2,7 @@ package cool.leeson.library.controller.user;
 
 import cool.leeson.library.config.JwtConfig;
 import cool.leeson.library.entity.user.UserInfo;
+import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.user.UserInfoService;
 import cool.leeson.library.util.CheckObjectIsNullUtils;
 import cool.leeson.library.util.ResMap;
@@ -29,7 +30,7 @@ public class UserInfoController {
      * @return 实体
      */
     @GetMapping
-    public ResponseEntity<Map<String, Object>> query() {
+    public ResponseEntity<Map<String, Object>> query() throws MyException {
         // 解析token获取userId
         String userId = new JwtConfig().getUsernameFromToken(request.getHeader("token"));
         log.info(userId + ": 获取userInfo");
@@ -61,7 +62,7 @@ public class UserInfoController {
      * @return 实体
      */
     @PutMapping()
-    public ResponseEntity<Map<String, Object>> update(UserInfo userInfo) {
+    public ResponseEntity<Map<String, Object>> update(UserInfo userInfo) throws MyException {
         // 判断是否为空
         if (CheckObjectIsNullUtils.objCheckAllIsNull(userInfo)) {
             return ResponseEntity.ok(ResMap.err("属性为空"));

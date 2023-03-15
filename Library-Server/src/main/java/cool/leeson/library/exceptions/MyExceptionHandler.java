@@ -31,7 +31,7 @@ public class MyExceptionHandler {
     @ExceptionHandler(value = MyException.class)
     @ResponseBody
     public Map<String, Object> MyExceptionHandler(MyException p) {
-        log.error(p.getMsg());
+        log.warn(p.getMsg());
         return new ResMap().putCode(p.getCode())
                 .putMsg(p.getMsg()).build();
     }

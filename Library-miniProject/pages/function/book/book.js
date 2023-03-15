@@ -25,7 +25,7 @@ Page({
         }, {
             name: "数字图书馆"
         }], // [] 记录详细信息
-        libraryList: ['老图书馆','数字图书馆'], // [] 记录名字
+        libraryList: ['老图书馆', '数字图书馆'], // [] 记录名字
         libraryIdx: 1, // 下标
 
         // 选择的房间
@@ -37,12 +37,19 @@ Page({
         }, {
             name: "二楼阅览室"
         }],
-        roomList: ["请选择","一楼阅览室",'二楼阅览室'],
+        roomList: ["一楼阅览室", '二楼阅览室'],
         roomIdx: 0,
+
+        dates: ["今天", "明天"],
+        date: '今天',
+        times: [
+            "8:00-10:00", "10:00-12:00", "12:00-14:00", "14:00-16:00", "16:00-18:00", "18:00-20:00", "20:00-22:00"
+        ],
+        timeIdx: 0,
 
         // 设置宽高
         paddingLeft: 40,
-        paddingTop: 80,
+        paddingTop: 70,
 
         // 座位数据
         seatList: [],
@@ -56,10 +63,11 @@ Page({
     onLoad(options) {
         // 初始化数据
         let that = this;
+        console.log();
         this.storeBindings = createStoreBindings(this, {
             store,
             fields: ['school', 'hasSchool', 'hasLogin'],
-            actions: ['GetSchool','InitData']
+            actions: ['GetSchool', 'InitData']
         });
         // console.log(options);
         that.setData({
@@ -68,18 +76,31 @@ Page({
             seatList: [],
             zhuoziList: []
         })
+        // 遍历图书馆 寻找idx
+        setTimeout(() => {
+            store.school.libraries.forEach((el, idx) => {
+                if (el.libraryId === options.libraryId) {
+                    that.setData({
+                        libraryIdx: idx
+                    })
+                }
+            })
+        }, 100);
+
+
 
         // 网络获取数据
-        that.querySchool(options.schoolId);
         that.queryLibrary(options.libraryId);
 
 
 
 
         // 本地数据
+        console.log("height:", getApp().globalData.screenHeight);
+        console.log("bar Height: ", getApp().globalData.statusBarHeight);
 
         that.setData({
-            seatArea: getApp().globalData.screenHeight - getApp().globalData.statusBarHeight - (600 * getApp().globalData.screenWidth / 750),
+            seatArea: getApp().globalData.screenHeight - getApp().globalData.statusBarHeight * 2 - 185 - 50,
             seatAreaWidth: getApp().globalData.screenWidth - this.data.paddingLeft,
             rpxToPx: getApp().globalData.screenWidth / 750,
         });
@@ -109,56 +130,17 @@ Page({
         // 计算长度
         this.getWidth(jsonData.dataJson);
     },
-    /** 
-     * 获取学校信息 
-     */
-    querySchool(schoolId) {
-        let that = this
-        // 获取学校信息
-        wx.request({
-            url: app.globalData.baseUrl + '/school/' + schoolId,
-            method: "GET",
-            success({
-                data
-            }) {
-                // console.log(data.data);
-                if (data.code != 200) {
-                    wx.showToast({
-                        title: data.err,
-                        icon: "none"
-                    })
-                    return
-                }
-                if (data.code == 200) {
-                    let libraryList = []
-                    // 提取libraries 和 libraryIdx
-                    data.data.libraries.forEach((e, idx) => {
-                        libraryList.push(e.name)
-                        if (e.libraryId == that.data.libraryId) {
-                            that.setData({
-                                libraryIdx: idx
-                            })
-                        }
-                    })
-                    that.setData({
-                        school: data.data,
-                        libraryList: libraryList,
-                        libraries: data.data.libraries
-                    })
-                }
 
-            }
-        })
-
-    },
     /**
      * 获取图书馆信息
      */
     queryLibrary(libraryId) {
         let that = this
+        let url = app.globalData.baseUrl + '/library/id/' + libraryId;
+        console.log(url);
         // 获取图书馆
         wx.request({
-            url: app.globalData.baseUrl + '/library?libraryId=' + libraryId,
+            url: url,
             method: 'GET',
             success({
                 data
@@ -171,18 +153,19 @@ Page({
                     })
                     return
                 }
-                let roomList = []
-                roomList.push('请选择')
-                data.data.libraryRooms.forEach(e => {
-                    roomList.push(e.name)
-                })
-                data.data.libraryRooms.unshift({"name":"请选择"})
                 if (data.code == 200) {
+                    let roomList = []
+                    data.data.libraryRooms.forEach(el => {
+                        roomList.push(el.name)
+                    })
                     that.setData({
+                        roomId: data.data.libraryRooms[0].roomId,
                         roomIdx: 0,
                         roomList: roomList,
                         rooms: data.data.libraryRooms
                     })
+                    console.log();
+                    that.queryRoom(data.data.libraryRooms[0].roomId);
                 }
             },
             fail() {
@@ -199,6 +182,40 @@ Page({
      * 获取图书室信息
      */
     queryRoom(roomId) {
+        console.log("roomId", roomId);
+        let that = this;
+        // 请求
+        let url = app.globalData.baseUrl + "/room/id/" + roomId;
+        console.log(url);
+        wx.request({
+            url: url,
+            method: "GET",
+            header: {
+                token: wx.getStorageSync('token'),
+            },
+            success({
+                data
+            }) {
+                console.log(data);
+                if (data.code != 200) {
+                    wx.showToast({
+                        title: data.msg,
+                        icon: "none"
+                    })
+                    return;
+                }
+                if (data.code == 200) {
+
+                }
+            },
+            fail() {
+                wx.showToast({
+                    title: '座位获取失败',
+                    icon: "none"
+                })
+            }
+
+        })
 
     },
 
@@ -244,6 +261,21 @@ Page({
             selectSeatIndex: index
         })
         // console.log(this.data.seatList[index]);
+    },
+    bindPickerChange: function (e) {
+        this.setData({
+            roomIdx: e.detail.value
+        })
+    },
+    bindPickerDateChange: function (e) {
+        this.setData({
+            date: this.data.dates[e.detail.value]
+        })
+    },
+    bindPickerTimeChange: function (e) {
+        this.setData({
+            timeIdx: e.detail.value
+        })
     },
 
     //计算最大座位数,生成影厅图大小

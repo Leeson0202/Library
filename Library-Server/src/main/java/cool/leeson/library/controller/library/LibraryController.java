@@ -45,7 +45,7 @@ public class LibraryController {
      * @return 单条数据
      */
     @GetMapping("id/{libraryId}")
-    public Map<String, Object> queryById(String libraryId) {
+    public Map<String, Object> queryById(@PathVariable("libraryId") String libraryId) {
         return this.libraryService.queryById(libraryId);
     }
 

@@ -1,5 +1,6 @@
 package cool.leeson.library.config;
 
+import cool.leeson.library.exceptions.MyException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -66,6 +67,11 @@ public class JwtConfig {
         return expirationTime.before(new Date());
     }
 
+    public boolean isTokenExpired(String token) {
+        Date expirationTime = this.getExpirationDateFromToken(token);
+        return expirationTime.before(new Date());
+    }
+
     /**
      * 获取token失效时间
      *
@@ -79,8 +85,12 @@ public class JwtConfig {
     /**
      * 获取用户名从token中
      */
-    public String getUsernameFromToken(String token) {
-        return getTokenClaim(token).getSubject();
+    public String getUsernameFromToken(String token) throws MyException {
+        try {
+            return getTokenClaim(token).getSubject();
+        } catch (NullPointerException p) {
+            throw new MyException(MyException.STATUS.badToken);
+        }
     }
 
     /**

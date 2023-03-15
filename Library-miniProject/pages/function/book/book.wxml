@@ -3,26 +3,35 @@
         <view class="manu-label" style="background-image: url({{school.libraries[libraryIdx].background}});">
             <view class="label">{{school.libraries[libraryIdx].name}}</view>
         </view>
+        <view class="section">
+            <picker class="picker-block picker-a" bindchange="bindPickerChange" value="{{roomIdx}}" range="{{roomList}}">
+                <view class="picker">
+                    <view class="picker-title">
+                        <image class="title-down" src="/resources/images/library/selectDown.svg" mode="heightFix" />{{roomList[roomIdx]}}
+                    </view>
+                </view>
+            </picker>
 
-        <scroll-view class="scroll-block" scroll-x="true" 
-        bindscroll="scroll"
-        >
-        <view class="scroll-item" wx:for="{{rooms}}" wx:key="index">
-            {{item.name}}
+            <picker class="picker-block picker-b" bindchange="bindPickerDateChange" range="{{dates}}">
+                <view class="picker">
+                    <view class="picker-title">
+                        <image class="title-down" src="/resources/images/library/selectDown.svg" mode="heightFix" />{{date}}
+                    </view>
+                </view>
+            </picker>
+            <picker class="picker-block picker-c" bindchange="bindPickerTimeChange" value="{{timeIdx}}" range="{{times}}">
+                <view class="picker">
+                    <view class="picker-title">
+                        <image class="title-down" src="/resources/images/library/selectDown.svg" mode="heightFix" />{{times[timeIdx]}}
+                    </view>
+                </view>
+            </picker>
         </view>
-
-        </scroll-view>
-
-
-
-
-
-
     </view>
+
+
     <!-- 可视图 -->
     <movable-area scale-area="true" class="defaultArea" style="height:{{seatArea}}px; width: 750rpx;">
-
-
 
         <movable-view class='movableOne' bindscale="handleScale" style="width: calc(100% - {{paddingLeft*2}}rpx);height: calc(100% - {{paddingTop*2}}rpx); padding: {{paddingTop}}rpx {{paddingLeft}}rpx" scale="true" direction="all" scale-max="2" scale-min="1" out-of-bounds="true">
 
@@ -44,4 +53,15 @@
             </view>
         </movable-view>
     </movable-area>
+    <view class="submit-block">
+        <view style="height: 100rpx;width:30%;background-color: #ddd;">
+            <view style="width: 100%; height: 100%;">
+                <image src="/resources/images/library/content.svg" style="height: 70rpx; width: 70rpx; margin-top: 15rpx; "/>
+            </view>
+        </view>
+        <view class="submit">
+            确定预约
+        </view>
+
+    </view>
 </view>

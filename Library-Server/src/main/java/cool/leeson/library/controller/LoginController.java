@@ -30,7 +30,7 @@ public class LoginController {
      * @return 实体对象
      */
     @GetMapping("update")
-    public Map<String, Object> update() {
+    public Map<String, Object> update() throws MyException {
         String token = this.request.getHeader("token");
         return this.loginService.loginUpdate(token);
     }

@@ -49,7 +49,7 @@ public class UserController {
      * @return 实体
      */
     @GetMapping()
-    public Map<String, Object> query() {
+    public Map<String, Object> query() throws MyException {
         // 解析token获取userId
         String userId = new JwtConfig().getUsernameFromToken(request.getHeader("token"));
         log.info(userId + " 获取userInfo");
@@ -64,7 +64,7 @@ public class UserController {
      * @return 编辑结果
      */
     @PutMapping
-    public Map edit(User user) {
+    public Map edit(User user) throws MyException {
         // 解析token获取userId
         String userId = new JwtConfig().getUsernameFromToken(request.getHeader("token"));
         if (user == null) {

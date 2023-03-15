@@ -42,7 +42,7 @@ public class LibraryService {
     public Map<String, Object> queryById(String libraryId) {
         Library library = this.libraryDao.queryById(libraryId);
         if (library == null) {
-            log.error(libraryId + " 没有该图书馆信息");
+            log.warn(libraryId + " 没有该图书馆信息");
             return ResMap.err("没有该图书馆信息");
         }
 

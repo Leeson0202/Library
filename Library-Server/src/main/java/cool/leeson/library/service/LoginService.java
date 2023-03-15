@@ -43,7 +43,7 @@ public class LoginService {
     private final String codeKeyFormat = "%s:code"; // tel:code code  5分钟
     private final String repeatKeyFormat = "%s:repeat"; // [email or tel]:repeat 一分钟时效
 
-    public Map<String, Object> loginUpdate(String token) {
+    public Map<String, Object> loginUpdate(String token) throws MyException {
         String userId = new JwtConfig().getUsernameFromToken(token);
         return this.loginSuccess(userId, -1);
     }

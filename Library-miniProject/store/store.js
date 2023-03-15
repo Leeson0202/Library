@@ -377,6 +377,8 @@ export const store = observable({
             }
         })
     }),
+
+    /** 获取实体 */
     // 设置头像 和昵称
     Submit: action(function (avatarUrl, nickName) {
         let that = this;
