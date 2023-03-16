@@ -165,6 +165,9 @@ export const store = observable({
             }
         })
     }),
+    LocalImag:action(function(uri){
+        return this.baseUrl + uri;
+    }),
     // 获取access_token
     GetAccessToken: action(function () {
         var isTime = getStorageSyncTime('access_token');

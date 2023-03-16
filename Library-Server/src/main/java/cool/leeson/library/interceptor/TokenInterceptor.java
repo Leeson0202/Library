@@ -30,8 +30,11 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         // 地址过滤
         String uri = request.getRequestURI();
         // 登陆注册相关
-        if (uri.contains("school") || uri.contains("library") || uri.contains("login") || uri.contains("common") || uri.contains("/register") || uri.contains("/confirm")) {
+        if (uri.contains("img") || uri.contains("library") || uri.contains("login") || uri.contains("common") || uri.contains("/confirm")) {
             return true;
+        }
+        if(uri.contains("error")){
+            throw new MyException(400,"没有该请求");
         }
         // Token 验证
         String token = request.getHeader(jwtConfig.getHeader());

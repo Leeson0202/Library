@@ -13,7 +13,7 @@ create table school
 insert into school value ('dcajhbadhcavacda', '重庆邮电大学',
                           '重庆邮电大学（Chongqing University of Posts and Telecommunications）简称“重邮”，坐落于直辖市——重庆市，是中华人民共和国工业和信息化部与重庆市人民政府共建的教学研究型大学，入选国家“中西部高校基础能力建设工程”、国家“卓越工程师教育培养计划”，是国家“2011计划”核心协同高校、中国政府奖学金来华留学生接收院校、国家大学生文化素质教育基地、国家布点设立并重点建设的四所邮电高校之一，重庆市一流学科建设高校，CDIO工程教育联盟成员单位。',
                           'https://bkimg.cdn.bcebos.com/pic/3c6d55fbb2fb43163d37add525a4462309f7d371?x-bce-process=image/resize,m_lfit,w_536,limit_1',
-                          'https://bkimg.cdn.bcebos.com/pic/d53f8794a4c27d1ef114acd816d5ad6eddc438ff?x-bce-process=image/resize,m_lfit,w_1280,limit_1');
+                          '/img/schoolbg.jpeg');
 
 -- 图书馆
 drop table if exists library;
@@ -27,9 +27,9 @@ create table library
 );
 insert into library
 values ('jdgchvauajkuvbh', 'dcajhbadhcavacda', '数字图书馆', '新图书馆',
-        'http://ehall.cqupt.edu.cn/new/portal/css/dark/millennium/images/bg/bg.jpg'),
+        '/img/bg.jpg'),
        ('jdgchvauajkavavvbh', 'dcajhbadhcavacda', '老图书馆', '老图书馆',
-        'https://ids.cqupt.edu.cn/authserver/cquptDzTheme/static/web/dzimages/bg1.jpg');
+        '/img/bg1.jpg');
 
 
 -- 图书室
@@ -46,10 +46,10 @@ create table library_room
     end_time   time comment '每日开放结束时间'
 );
 insert into library_room
-values ('dsackacsvjakcaw1', 'jdgchvauajkavavvbh', '一楼电脑室', '一楼电脑室', 12, true, '7:00:00', '22:00:00'),
-       ('dsavasckacbjakcaw2', 'jdgchvauajkavavvbh', '二楼电脑室', '二楼电脑室', 12, true, '7:00:00', '22:00:00'),
-       ('dsackacbjakcaw3', 'jdgchvauajkuvbh', '一楼阅览室', '一楼阅览室', 12, true, '7:00:00', '22:00:00'),
-       ('dsackacbjakcdfw4', 'jdgchvauajkuvbh', '二楼阅览室', '二楼阅览室', 12, true, '7:00:00', '22:00:00');
+values ('dsackacsvjakcaw1', 'jdgchvauajkavavvbh', '一楼电脑室', '一楼电脑室', 12, true, '8:00:00', '22:00:00'),
+       ('dsavasckacbjakcaw2', 'jdgchvauajkavavvbh', '二楼电脑室', '二楼电脑室', 12, true, '8:00:00', '22:00:00'),
+       ('dsackacbjakcaw3', 'jdgchvauajkuvbh', '一楼阅览室', '一楼阅览室', 12, true, '8:00:00', '22:00:00'),
+       ('dsackacbjakcdfw4', 'jdgchvauajkuvbh', '二楼阅览室', '二楼阅览室', 12, true, '8:00:00', '22:00:00');
 
 
 -- 图书座位

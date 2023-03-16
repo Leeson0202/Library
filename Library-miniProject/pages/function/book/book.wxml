@@ -1,6 +1,6 @@
 <view>
     <view class="head">
-        <view class="manu-label" style="background-image: url({{school.libraries[libraryIdx].background}});">
+        <view class="manu-label" style="background-image: url({{baseUrl+school.libraries[libraryIdx].background}});">
             <view class="label">{{school.libraries[libraryIdx].name}}</view>
         </view>
         <view class="section">

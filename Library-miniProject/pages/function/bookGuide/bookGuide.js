@@ -43,10 +43,13 @@ Page({
 
         this.storeBindings = createStoreBindings(this, {
             store,
-            fields: ['school', 'hasSchool', 'hasLogin'],
-            actions: ['GetSchool','InitData']
+            fields: ['school', 'hasSchool', 'hasLogin','baseUrl'],
+            actions: ['GetSchool','InitData','LocalImg']
         });
 
+    },
+    localImag(uri){
+        return this.LocalImag(uri);
     },
 
 
