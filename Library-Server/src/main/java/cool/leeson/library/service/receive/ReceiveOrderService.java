@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @since 2023-03-17 16:43:01
  */
 @Service("receiveOrderService")
-public class ReceiveOrderServiceImpl {
+public class ReceiveOrderService {
     @Resource
     private ReceiveOrderDao receiveOrderDao;
 
@@ -26,7 +26,6 @@ public class ReceiveOrderServiceImpl {
      * @param orderId 主键
      * @return 实例对象
      */
-    @Override
     public ReceiveOrder queryById(String orderId) {
         return this.receiveOrderDao.queryById(orderId);
     }
@@ -38,7 +37,6 @@ public class ReceiveOrderServiceImpl {
      * @param pageRequest  分页对象
      * @return 查询结果
      */
-    @Override
     public Page<ReceiveOrder> queryByPage(ReceiveOrder receiveOrder, PageRequest pageRequest) {
         long total = this.receiveOrderDao.count(receiveOrder);
         return new PageImpl<>(this.receiveOrderDao.queryAllByLimit(receiveOrder, pageRequest), pageRequest, total);
@@ -50,7 +48,6 @@ public class ReceiveOrderServiceImpl {
      * @param receiveOrder 实例对象
      * @return 实例对象
      */
-    @Override
     public ReceiveOrder insert(ReceiveOrder receiveOrder) {
         this.receiveOrderDao.insert(receiveOrder);
         return receiveOrder;
@@ -62,7 +59,6 @@ public class ReceiveOrderServiceImpl {
      * @param receiveOrder 实例对象
      * @return 实例对象
      */
-    @Override
     public ReceiveOrder update(ReceiveOrder receiveOrder) {
         this.receiveOrderDao.update(receiveOrder);
         return this.queryById(receiveOrder.getOrderId());
@@ -74,7 +70,6 @@ public class ReceiveOrderServiceImpl {
      * @param orderId 主键
      * @return 是否成功
      */
-    @Override
     public boolean deleteById(String orderId) {
         return this.receiveOrderDao.deleteById(orderId) > 0;
     }

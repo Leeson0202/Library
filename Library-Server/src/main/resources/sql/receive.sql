@@ -21,6 +21,7 @@ create table receive_item
     room_id      varchar(100) comment '图书室id',
     seat_id      varchar(100) comment '座位id',
     -- 多少号几点
+    receive_date date comment '预约日期',
     receive_time time comment '预约时间'
 
 );

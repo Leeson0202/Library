@@ -1,4 +1,8 @@
 /* pages/book/book.wxss */
+page {
+    height: 100%;
+    width: 100%;
+}
 
 /* head */
 .head {
@@ -169,4 +173,36 @@
     background-color: rgb(141, 191, 253);
     color: #fff;
     font-size: 34rpx;
+}
+
+.success-img{
+    display: block;
+    margin: auto;
+    height: 150rpx;
+    margin-bottom: 40rpx;
+}
+.success-title {
+    position: relative;
+    margin-top: 100px;
+    height: 80rpx;
+    line-height: 80rpx;
+    width: 100%;
+    text-align: center;
+    font-size: 40rpx;
+}
+
+.success-button {
+    position: absolute;
+    bottom: 300rpx;
+    margin-left: 30%;
+    margin-top: 300rpx;
+    width: 40%;
+    height: 70rpx;
+    line-height: 70rpx;
+    text-align: center;
+    border-radius: 10rpx;
+    /* box-shadow: 0 0 30rpx #ddd; */
+    background-color: #eee;
+    color: #333;
+    font-size: 30rpx;
 }

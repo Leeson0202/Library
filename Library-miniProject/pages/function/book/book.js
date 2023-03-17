@@ -3,9 +3,6 @@
 var jsonData = require('../../../utils/data.js');
 const app = getApp();
 import {
-    intercept
-} from 'mobx-miniprogram';
-import {
     createStoreBindings
 } from 'mobx-miniprogram-bindings'
 import {
@@ -62,6 +59,8 @@ Page({
         tableList: [],
         selectLength: 0,
         selectedSeats: {},
+        // 成功标准
+        success: false
     },
 
     /**
@@ -73,7 +72,7 @@ Page({
         this.storeBindings = createStoreBindings(this, {
             store,
             fields: ['school', 'hasSchool', 'hasLogin', 'baseUrl'],
-            actions: ['GetSchool', 'InitData','CheckError']
+            actions: ['GetSchool', 'InitData', 'CheckError']
         });
         // 获取现在的时间 初始化配置
         let hour = new Date().getHours();
@@ -121,8 +120,6 @@ Page({
             })
         }, 200);
 
-
-
         // 网络获取数据
         // 图书馆数据
         that.queryLibrary(options.libraryId);
@@ -144,7 +141,7 @@ Page({
                 data
             }) {
                 // console.log("library: ", data.data);
-                if(that.CheckError(data)) return
+                if (that.CheckError(data)) return
                 if (data.code == 200) {
                     let roomList = []
                     data.data.libraryRooms.forEach(el => {
@@ -193,7 +190,7 @@ Page({
             }) {
                 // console.log(data);
                 wx.hideLoading();
-                if(that.CheckError(data)) return
+                if (that.CheckError(data)) return
                 if (data.code == 200) {
                     data.data.librarySeats.forEach(el => {
                         el.src = el.red ? '/resources/images/library/yizi-red.svg' : '/resources/images/library/yizi-normal.svg'
@@ -360,12 +357,51 @@ Page({
     },
     // 提交预约
     handleSubmit() {
-        if (!this.data.receiveTag) {
+        let that = this;
+        if (!this.data.receiveTag || that.data.selectLength == 0) {
             this.setData({
                 receiveTag: true
             })
             return
         }
+        wx.showLoading({
+            title: '正在预约',
+        })
+        let url = that.data.baseUrl + '/receive';
+        console.log(url, Object.values(that.data.selectedSeats));
+        wx.request({
+            url: url,
+            method: "POST",
+            header: {
+                token: wx.getStorageSync('token')
+            },
+            data: Object.values(that.data.selectedSeats),
+            success({
+                data
+            }) {
+                wx.hideLoading();
+                console.log(data);
+                if (that.CheckError(data)) return;
+                if (data.code == 200) {
+                    that.setData({
+                        success: true
+                    })
+                }
+
+            },
+            fail() {
+                wx.hideLoading();
+                wx.showToast({
+                    title: '请检查网络',
+                    icon: "error"
+                })
+            }
+        })
+    },
+    successBack() {
+        wx.switchTab({
+          url: '/pages/function/function',
+        })
     },
 
     //计算最大座位数,生成影厅图大小

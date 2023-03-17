@@ -168,7 +168,7 @@ export const store = observable({
                 title: '请重新登陆',
                 icon: "none"
             })
-            this.InitData();
+            // this.InitData();
         } else {
             wx.showToast({
                 title: data.msg,

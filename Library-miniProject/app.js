@@ -19,6 +19,7 @@ App({
     },
     // 登陆检测
     loginUpdate() {
+        console.log("login Updating");
         let that = this;
         // 获取token
         let token = wx.getStorageSync('token')
@@ -57,7 +58,7 @@ App({
         })
     },
     onShow(options) {
-        // console.log("app onShow");
+        console.log("app onShow");
         // 加载缓存
         store.Launch();
         // 检测重新登陆

@@ -33,8 +33,8 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         if (uri.contains("img") || uri.contains("library") || uri.contains("login") || uri.contains("common") || uri.contains("/confirm")) {
             return true;
         }
-        if(uri.contains("error")){
-            throw new MyException(400,"没有该请求");
+        if (uri.contains("error")) {
+            throw new MyException(400, "没有该请求");
         }
         // Token 验证
         String token = request.getHeader(jwtConfig.getHeader());
@@ -43,20 +43,15 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         }
         if (StringUtils.isEmpty(token)) {
 //            log.warn(uri + " token 不能为空");
-            throw new MyException(MyException.STATUS.badToken);
+            throw new MyException(MyException.STATUS.noToken);
         }
 
         try {
             // 查询缓冲
             String userId = jwtConfig.getUsernameFromToken(token);
             String rToken = this.redisTemplate.opsForValue().get(String.format(UserTokenKeyFormat, userId)); // redis中的token
-            if (StringUtils.isEmpty(rToken) || !token.equals(rToken)) {
+            if (StringUtils.isEmpty(rToken) || !token.equals(rToken) || jwtConfig.isTokenExpired(token)) {
                 throw new MyException(MyException.STATUS.badToken);
-            }
-            // 验证token是否合法
-            if (jwtConfig.isTokenExpired(token)) {
-                log.info("token 失效: " + token);
-                return false;
             }
         } catch (Exception e) {
             throw new MyException(MyException.STATUS.badToken);

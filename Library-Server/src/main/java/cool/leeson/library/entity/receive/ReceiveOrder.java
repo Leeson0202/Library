@@ -1,7 +1,12 @@
 package cool.leeson.library.entity.receive;
 
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 /**
  * (ReceiveOrder)实体类
@@ -9,6 +14,9 @@ import java.io.Serializable;
  * @author Leeson0202
  * @since 2023-03-17 16:43:01
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReceiveOrder implements Serializable {
     private static final long serialVersionUID = 548121936339946160L;
     /**
@@ -23,31 +31,12 @@ public class ReceiveOrder implements Serializable {
      * 创建时间
      */
     private Date time;
+    /**
+     * 预约详情
+     */
+    private List<ReceiveItem> receiveItems;
+    private List<ReceiveItemResponse> receiveItemResponses;
 
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
 
 }
 

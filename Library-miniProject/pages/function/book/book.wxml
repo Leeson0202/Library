@@ -1,4 +1,4 @@
-<view>
+<view hidden="{{success}}">
     <!-- 头部 -->
     <view class="head">
         <view class="manu-label" style="background-image: url({{school.libraries[libraryIdx].background}});">
@@ -77,4 +77,14 @@
             确定预约
         </view>
     </view>
+</view>
+<view style="display:{{success?'block':'none'}};height: 100%; width: 100%;z-index: 10000;position: absolute; top: 0; background-color: #fff;">
+    <view class="success-title">
+<image class="success-img" src="/resources/images/library/success.svg" mode="heightFix"/>
+        预约成功
+    </view>
+    <view class="success-button" bindtap="successBack">
+        返回
+    </view>
+
 </view>

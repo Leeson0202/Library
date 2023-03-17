@@ -16,9 +16,19 @@
         from receive_order
         where order_id = #{orderId}
     </select>
+    <!--查询列表-->
+    <select id="queryByUserId" resultMap="ReceiveOrderMap">
+        select order_id,
+               user_id,
+               time
+        from receive_order
+        where user_id = #{userId}
+    </select>
+
 
     <!--查询指定行数据-->
-    <select id="queryAllByLimit" resultMap="ReceiveOrderMap">
+    <select id="queryAllByLimit" parameterType="cool.leeson.library.entity.receive.ReceiveOrder"
+            resultMap="ReceiveOrderMap">
         select
         order_id, user_id, time
         from receive_order
@@ -55,8 +65,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="orderId" useGeneratedKeys="true">
-        insert into receive_order(user_id, time)
-        values (#{userId}, #{time})
+        insert into receive_order(order_id, user_id, time)
+        values (#{orderId}, #{userId}, #{time})
     </insert>
 
     <insert id="insertBatch" keyProperty="orderId" useGeneratedKeys="true">

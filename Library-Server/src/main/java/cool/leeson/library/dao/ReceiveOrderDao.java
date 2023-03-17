@@ -80,5 +80,6 @@ public interface ReceiveOrderDao {
      */
     int deleteById(String orderId);
 
+    List<ReceiveOrder> queryByUserId(String userId);
 }
 

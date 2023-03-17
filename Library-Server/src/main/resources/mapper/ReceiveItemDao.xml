@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cool.leeson.library.dao.ReceiveItemDao">
+
+    <resultMap type="cool.leeson.library.entity.receive.ReceiveItem" id="ReceiveItemMap">
+        <result property="receiveId" column="receive_id" jdbcType="VARCHAR"/>
+        <result property="orderId" column="order_id" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="libraryId" column="library_id" jdbcType="VARCHAR"/>
+        <result property="roomId" column="room_id" jdbcType="VARCHAR"/>
+        <result property="seatId" column="seat_id" jdbcType="VARCHAR"/>
+        <result property="receiveDate" column="receive_date" jdbcType="TIMESTAMP"/>
+        <result property="receiveTime" column="receive_time" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ReceiveItemMap">
+        select receive_id,
+               order_id,
+               user_id,
+               library_id,
+               room_id,
+               seat_id,
+               receive_date,
+               receive_time
+        from receive_item
+        where receive_id = #{receiveId}
+    </select>
+
+    <!--查询单个 orderId-->
+    <select id="queryByOrderId" resultMap="ReceiveItemMap">
+        select receive_id,
+               order_id,
+               user_id,
+               library_id,
+               room_id,
+               seat_id,
+               receive_date,
+               receive_time
+        from receive_item
+        where order_id = #{orderId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ReceiveItemMap">
+        select
+        receive_id, order_id, user_id, library_id, room_id, seat_id, receive_date, receive_time
+        from receive_item
+        <where>
+            <if test="receiveId != null and receiveId != ''">
+                and receive_id = #{receiveId}
+            </if>
+            <if test="orderId != null and orderId != ''">
+                and order_id = #{orderId}
+            </if>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="libraryId != null and libraryId != ''">
+                and library_id = #{libraryId}
+            </if>
+            <if test="roomId != null and roomId != ''">
+                and room_id = #{roomId}
+            </if>
+            <if test="seatId != null and seatId != ''">
+                and seat_id = #{seatId}
+            </if>
+            <if test="receiveDate != null">
+                and receive_date = #{receiveDate}
+            </if>
+            <if test="receiveTime != null">
+                and receive_time = #{receiveTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from receive_item
+        <where>
+            <if test="receiveId != null and receiveId != ''">
+                and receive_id = #{receiveId}
+            </if>
+            <if test="orderId != null and orderId != ''">
+                and order_id = #{orderId}
+            </if>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="libraryId != null and libraryId != ''">
+                and library_id = #{libraryId}
+            </if>
+            <if test="roomId != null and roomId != ''">
+                and room_id = #{roomId}
+            </if>
+            <if test="seatId != null and seatId != ''">
+                and seat_id = #{seatId}
+            </if>
+            <if test="receiveDate != null">
+                and receive_date = #{receiveDate}
+            </if>
+            <if test="receiveTime != null">
+                and receive_time = #{receiveTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="receiveId" useGeneratedKeys="true">
+        insert into receive_item(receive_id, order_id, user_id, library_id, room_id, seat_id, receive_date,
+                                 receive_time)
+        values (#{receiveId}, #{orderId}, #{userId}, #{libraryId}, #{roomId}, #{seatId}, #{receiveDate}, #{receiveTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="receiveId" useGeneratedKeys="true">
+        insert into receive_item(receive_id, order_id, user_id, library_id, room_id, seat_id, receive_date,
+        receive_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.receiveId}, #{entity.orderId}, #{entity.userId}, #{entity.libraryId}, #{entity.roomId},
+            #{entity.seatId},
+            #{entity.receiveDate}, #{entity.receiveTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="receiveId" useGeneratedKeys="true">
+        insert into receive_item(order_id, user_id, library_id, room_id, seat_id, receive_date, receive_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.orderId}, #{entity.userId}, #{entity.libraryId}, #{entity.roomId}, #{entity.seatId},
+            #{entity.receiveDate}, #{entity.receiveTime})
+        </foreach>
+        on duplicate key update
+        order_id = values(order_id),
+        user_id = values(user_id),
+        library_id = values(library_id),
+        room_id = values(room_id),
+        seat_id = values(seat_id),
+        receive_date = values(receive_date),
+        receive_time = values(receive_time)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update receive_item
+        <set>
+            <if test="orderId != null and orderId != ''">
+                order_id = #{orderId},
+            </if>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId},
+            </if>
+            <if test="libraryId != null and libraryId != ''">
+                library_id = #{libraryId},
+            </if>
+            <if test="roomId != null and roomId != ''">
+                room_id = #{roomId},
+            </if>
+            <if test="seatId != null and seatId != ''">
+                seat_id = #{seatId},
+            </if>
+            <if test="receiveDate != null">
+                receive_date = #{receiveDate},
+            </if>
+            <if test="receiveTime != null">
+                receive_time = #{receiveTime},
+            </if>
+        </set>
+        where receive_id = #{receiveId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from receive_item
+        where receive_id = #{receiveId}
+    </delete>
+
+</mapper>
+
