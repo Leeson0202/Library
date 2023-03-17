@@ -53,6 +53,10 @@ public class LibrarySeat implements Serializable {
      * 高
      */
     private Integer height;
+    /**
+     * 有没有人
+     */
+    private Boolean red;
 
 
 }

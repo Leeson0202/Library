@@ -1,9 +1,12 @@
 <view>
+    <!-- 头部 -->
     <view class="head">
-        <view class="manu-label" style="background-image: url({{baseUrl+school.libraries[libraryIdx].background}});">
+        <view class="manu-label" style="background-image: url({{school.libraries[libraryIdx].background}});">
             <view class="label">{{school.libraries[libraryIdx].name}}</view>
         </view>
+        <!-- picker -->
         <view class="section">
+            <!-- 选房间 -->
             <picker class="picker-block picker-a" bindchange="bindPickerChange" value="{{roomIdx}}" range="{{roomList}}">
                 <view class="picker">
                     <view class="picker-title">
@@ -11,14 +14,15 @@
                     </view>
                 </view>
             </picker>
-
+            <!-- 今天还是明天 -->
             <picker class="picker-block picker-b" bindchange="bindPickerDateChange" range="{{dates}}">
                 <view class="picker">
                     <view class="picker-title">
-                        <image class="title-down" src="/resources/images/library/selectDown.svg" mode="heightFix" />{{date}}
+                        <image class="title-down" src="/resources/images/library/selectDown.svg" mode="heightFix" />{{today?"今天":"明天"}}
                     </view>
                 </view>
             </picker>
+            <!-- 时段 -->
             <picker class="picker-block picker-c" bindchange="bindPickerTimeChange" value="{{timeIdx}}" range="{{times}}">
                 <view class="picker">
                     <view class="picker-title">
@@ -37,31 +41,40 @@
 
             <view class='seatArea' style='width: 100%;height: 100%'>
                 <!--每个座位-->
-                <view wx:for="{{seatList}}" wx:key="index" wx:for-index="index" wx:for-item="item" class='seatTap' catchtap='handelSelect' data-id='{{item.id}}' style="left:{{(item.x-1)* seatScaleHeight}}px; top:{{(item.y-1) * seatScaleHeight}}px; width: {{seatScaleHeight}}px; height: {{seatScaleHeight}}px; -webkit-transform:rotate({{item.direction*90}}deg);">
+                <view class='seatTap' wx:for="{{seatList}}" wx:key="index" wx:for-index="index" wx:for-item="item" catchtap='handelSelect' data-seat-id='{{item.seatId}}' style="left:{{(item.x-1)* seatScaleHeight}}px; top:{{(item.y-1) * seatScaleHeight}}px; width: {{seatScaleHeight}}px; height: {{seatScaleHeight}}px; -webkit-transform:rotate({{item.direction*90}}deg);">
                     <image src="{{item.src}}" mode="widthFix" class='normal' />
 
                 </view>
 
                 <!--每个座子-->
-                <view wx:for="{{zhuoziList}}" wx:key="id" wx:for-index="index" wx:for-item="item" class='seatTap' bindtap='clickSeat' data-index='{{index}}' style="left:{{(item.x-1)* seatScaleHeight}}px; top:{{(item.y-1) * seatScaleHeight}}px; width: {{seatScaleHeight}}px; height: {{seatScaleHeight*2}}px; -webkit-transform:rotate({{item.direction*90}}deg); background-color: rgb(165, 218, 252);">
+                <view wx:for="{{tableList}}" wx:key="tableId" wx:for-index="index" wx:for-item="item" class='seatTap' style="left:{{(item.x-1)* seatScaleHeight}}px; top:{{(item.y-1) * seatScaleHeight}}px; width: {{seatScaleHeight}}px; height: {{seatScaleHeight*2}}px; -webkit-transform:rotate({{item.direction*90}}deg); background-color: rgba(165, 218, 252, 0.9);border-radius: 1rpx;">
 
 
                 </view>
-
-
-
             </view>
         </movable-view>
     </movable-area>
+
+    <!-- flix 底部 -->
     <view class="submit-block">
-        <view style="height: 100rpx;width:30%;background-color: #ddd;">
-            <view style="width: 100%; height: 100%;">
-                <image src="/resources/images/library/content.svg" style="height: 70rpx; width: 70rpx; margin-top: 15rpx; "/>
+        <view class="receive-details" hidden="{{!receiveTag}}">
+            <view class="receive-detail" wx:for="{{selectedSeats}}" wx:key="index">
+                <view style="display: inline-block;">
+                    {{item.libraryName}} · {{item.roomName}} · {{item.seatName}} · {{item.today?"今":"明"}}·{{times[item.timeIdx]}}
+                </view>
+                <image style="margin-right: 16rpx;height: 30rpx; width: 30rpx; top: 16rpx; display: inline-block; position: relative; float: right;" src="/resources/images/library/delete.svg" mode="heightFix" />
+            </view>
+            <view style="height: 30rpx; width: 100%;">
+
             </view>
         </view>
-        <view class="submit">
+        <view bindtap="checkReceive" style="height: 100rpx;width:30%;background-color: #ddd;">
+            <view style="width: 100%; height: 100%;align-items: flex-start;">
+                <image src="/resources/images/library/content.svg" style="height: 60rpx; width: 60rpx; margin-top: 18rpx; display:inline-block; position: relative;left: 0rpx;" /><text class="content-num">{{selectLength}}</text>
+            </view>
+        </view>
+        <view class="submit" bindtap="handleSubmit">
             确定预约
         </view>
-
     </view>
 </view>

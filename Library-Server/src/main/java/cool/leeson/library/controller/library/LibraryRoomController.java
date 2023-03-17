@@ -43,8 +43,8 @@ public class LibraryRoomController {
      * @return 查询结果
      */
     @GetMapping("id/{roomId}")
-    public Map<String, Object> queryByRoomId(@PathVariable("roomId") String roomId) {
-        return this.libraryRoomService.queryById(roomId);
+    public Map<String, Object> queryByRoomId(@PathVariable("roomId") String roomId, Boolean today, Integer idx) {
+        return this.libraryRoomService.queryById(roomId, today, idx);
     }
 
     /**

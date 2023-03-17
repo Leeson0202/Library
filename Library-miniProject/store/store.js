@@ -41,14 +41,30 @@ export const store = observable({
         return hasUserInfo == true ? this.userInfo.avatarUrl : "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132";
     },
     HasLogin: action(function () {
-        if (this.hasLogin !== true) {
+        console.log(this.hasLogin);
+        if (this.hasLogin != true) {
             wx.navigateTo({
                 url: '/pages/center/login/login',
             })
             return;
         }
     }),
+    HasSchool: action(function () {
+        let that = this;
+        if (!that.hasSchool) {
+            wx.showToast({
+                title: '没有绑定学校',
+                icon: "none"
+            })
+            console.log("to userInfo");
+            wx.navigateTo({
+                url: '/pages/center/userInfo/userInfo',
+            })
+            return false
+        }
+        return true
 
+    }),
 
     // 登陆主要请求
     ReLogin: action(function () {
@@ -141,7 +157,27 @@ export const store = observable({
         }
 
     }),
+    // 网络请求非200
+    CheckError: action(function (data) {
+        if (data.code == 200) {
+            return false;
+        }
+        wx.hideLoading();
+        if (data.code == 401) {
+            wx.showToast({
+                title: '请重新登陆',
+                icon: "none"
+            })
+            this.InitData();
+        } else {
+            wx.showToast({
+                title: data.msg,
+                icon: "none"
+            })
+        }
+        return true;
 
+    }),
     // 程序初始化，从storage中获取数据
     Launch: action(function () {
         const userInfo = wx.getStorageSync('userInfo');
@@ -165,7 +201,7 @@ export const store = observable({
             }
         })
     }),
-    LocalImag:action(function(uri){
+    LocalImag: action(function (uri) {
         return this.baseUrl + uri;
     }),
     // 获取access_token
@@ -207,23 +243,17 @@ export const store = observable({
             },
             header: {
                 "Content-Type": "application/x-www-form-urlencoded",
-                token:wx.getStorageSync('token')
+                token: wx.getStorageSync('token')
             },
             success(res) {
                 console.log(res.data);
                 wx.hideLoading();
-                if(res.data.code==400){
-                    wx.showToast({
-                      title: res.data.msg,
-                      icon: "error"
-                    })
-                    return
-                }
-                if(res.data.code==200){
+                if (that.CheckError(res.data)) return
+                if (res.data.code == 200) {
                     that.GetSchool();
                     wx.showToast({
-                      title: '绑定成功',
-                      icon: "success"
+                        title: '绑定成功',
+                        icon: "success"
                     })
                     wx.navigateBack();
                 }
@@ -247,11 +277,11 @@ export const store = observable({
     ChangeLoginMethod: action(function (tag) {
         this.loginMethod = tag;
     }),
-    // 退出登录
+    // 退出登录 初始化数据
     InitData: action(function () {
         wx.clearStorageSync();
         this.hasLogin = false;
-        this.hasUserInfo=false;
+        this.hasUserInfo = false;
         this.hasSchool = false;
         this.userInfo = {
             avatarUrl: "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132",
@@ -293,6 +323,7 @@ export const store = observable({
             },
             success(res) {
                 wx.hideLoading();
+                if (that.CheckError(res.data)) return
                 if (res.data.code == 200) {
                     wx.showToast({
                         title: res.data.data,
@@ -346,14 +377,8 @@ export const store = observable({
             success(res) {
                 // console.log(res.data);
                 wx.hideLoading();
-                if (res.data.code !== 200) {
-                    wx.showToast({
-                        title: res.data.msg,
-                        icon: "none"
-                    })
-                    return false;
-                }
-                if (res.data.code === 200) {
+                if (that.CheckError(res.data)) return
+                if (res.data.code == 200) {
                     wx.setStorageSync('token', res.data.token);
                     that.hasLogin = true;
                     // 是否为新用户
@@ -413,12 +438,7 @@ export const store = observable({
             },
             success(res) {
                 // console.log(res.data.userInfo);
-                if (res.data.code !== 200) {
-                    wx.showToast({
-                        title: '请稍后重试',
-                        icon: "error"
-                    })
-                }
+                if (that.CheckError(res.data)) return
                 let userInfo = res.data.userInfo;
                 that.userInfo = userInfo;
                 wx.setStorageSync('userInfo', userInfo)
@@ -429,10 +449,10 @@ export const store = observable({
         // 获取 school
         this.GetSchool();
     }),
-    // 更新用户
+    // 更新用户 上传信息 UserInfo
     UserInfoUpdate: action(function (data) {
         let that = this
-        // 上传名字 和 头像
+        // 上传userInfo
         wx.request({
             url: that.baseUrl + '/userInfo',
             method: "PUT",
@@ -442,14 +462,8 @@ export const store = observable({
             },
             data: data,
             success(res) {
-                console.log(res.data);
-                if (res.data.code !== 200) {
-                    wx.showToast({
-                        title: res.data.msg,
-                        icon: "none"
-                    })
-                    return false;
-                }
+                // console.log(res.data);
+                if (that.CheckError(res.data)) return
                 that.userInfo = res.data.userInfo;
                 wx.setStorageSync('userInfo', res.data.userInfo)
                 that.hasUserInfo = true;
@@ -480,13 +494,8 @@ export const store = observable({
                 data
             }) {
                 // console.log(data);
-                if (data.code == 500) {
-                    wx.showToast({
-                        title: data.msg,
-                        icon: "none"
-                    })
-                }
-                if (data.code == 200) {
+                if (that.CheckError(data)) return
+                if (data.code == 200 && data.data != null) {
                     that.school = data.data;
                     that.hasSchool = true;
                     wx.setStorageSync('school', data.data)

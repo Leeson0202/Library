@@ -66,8 +66,8 @@ public class SchoolService {
     public Map<String, Object> queryByUserId(String userId) {
         UserSchool userSchool = this.userSchoolDao.queryByUserId(userId);
         if (userSchool == null) {
-            log.error(userId + " 没有绑定学校");
-            return ResMap.err("没有绑定学校");
+            log.warn(userId + " 没有绑定学校");
+            return ResMap.ok();
         }
         return this.queryById(userSchool.getSchoolId());
     }

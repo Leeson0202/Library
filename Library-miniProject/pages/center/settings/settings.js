@@ -31,7 +31,7 @@ Page({
         this.storeBindings = createStoreBindings(this, {
             store,
             fields: ['userInfo', 'hasUserInfo', 'hasLogin'],
-            actions: ['GetUserInfo','InitData']
+            actions: ['GetUserInfo','InitData','CheckError']
         });
 
     },

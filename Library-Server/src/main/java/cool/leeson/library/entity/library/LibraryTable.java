@@ -1,5 +1,9 @@
 package cool.leeson.library.entity.library;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 
 /**
@@ -8,6 +12,9 @@ import java.io.Serializable;
  * @author Leeson0202
  * @since 2023-03-11 02:09:06
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class LibraryTable implements Serializable {
     private static final long serialVersionUID = 513201302054058878L;
     /**
@@ -31,6 +38,10 @@ public class LibraryTable implements Serializable {
      */
     private Integer y;
     /**
+     * 方向
+     */
+    private Integer direction;
+    /**
      * 宽
      */
     private Integer width;
@@ -38,63 +49,6 @@ public class LibraryTable implements Serializable {
      * 高
      */
     private Integer height;
-
-
-    public String getTableId() {
-        return tableId;
-    }
-
-    public void setTableId(String tableId) {
-        this.tableId = tableId;
-    }
-
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getX() {
-        return x;
-    }
-
-    public void setX(Integer x) {
-        this.x = x;
-    }
-
-    public Integer getY() {
-        return y;
-    }
-
-    public void setY(Integer y) {
-        this.y = y;
-    }
-
-    public Integer getWidth() {
-        return width;
-    }
-
-    public void setWidth(Integer width) {
-        this.width = width;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
-
-    public void setHeight(Integer height) {
-        this.height = height;
-    }
 
 }
 

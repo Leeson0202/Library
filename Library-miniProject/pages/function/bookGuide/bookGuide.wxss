@@ -41,7 +41,6 @@ page {
 }
 
 .manu {
-    min-height: calc(100% - 300rpx);
     padding: 20rpx 0;
 }
 
@@ -52,7 +51,8 @@ page {
     line-height: 55rpx;
     /* letter-spacing: 1rpx; */
 }
-.manu-rule{
+
+.manu-rule {
     padding: 40rpx 30rpx;
     font-size: 28rpx;
     line-height: 55rpx;

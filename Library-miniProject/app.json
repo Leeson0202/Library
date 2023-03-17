@@ -19,7 +19,7 @@
     ],
     "window": {
         "navigationBarBackgroundColor": "#fff",
-        "navigationBarTitleText": "我的小程序",
+        "navigationBarTitleText": "Leeson Library",
         "navigationBarTextStyle": "black",
         "backgroundColor": "#fff",
         "onReachBottomDistance": 0,

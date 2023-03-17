@@ -8,6 +8,7 @@
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="x" column="x" jdbcType="INTEGER"/>
         <result property="y" column="y" jdbcType="INTEGER"/>
+        <result property="direction" column="direction" jdbcType="INTEGER"/>
         <result property="width" column="width" jdbcType="INTEGER"/>
         <result property="height" column="height" jdbcType="INTEGER"/>
     </resultMap>
@@ -15,7 +16,7 @@
     <!--查询单个-->
     <select id="queryById" resultMap="LibraryTableMap">
         select
-          table_id, room_id, name, x, y, width, height
+          table_id, room_id, name, x, y, direction, width, height
         from library_table
         where table_id = #{tableId}
     </select>
@@ -23,7 +24,7 @@
     <!--查询单个-->
     <select id="queryByRoomId" resultMap="LibraryTableMap">
         select
-            table_id, room_id, name, x, y, width, height
+            table_id, room_id, name, x, y, direction, width, height
         from library_table
         where room_id = #{roomId}
     </select>
@@ -31,7 +32,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="LibraryTableMap">
         select
-          table_id, room_id, name, x, y, width, height
+          table_id, room_id, name, x, y, direction, width, height
         from library_table
         <where>
             <if test="tableId != null and tableId != ''">
@@ -90,12 +91,12 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="tableId" useGeneratedKeys="true">
-        insert into library_table(room_id, name, x, y, width, height)
+        insert into library_table(room_id, name, x, y, direction, width, height)
         values (#{roomId}, #{name}, #{x}, #{y}, #{width}, #{height})
     </insert>
 
     <insert id="insertBatch" keyProperty="tableId" useGeneratedKeys="true">
-        insert into library_table(room_id, name, x, y, width, height)
+        insert into library_table(room_id, name, x, y, direction, width, height)
         values
         <foreach collection="entities" item="entity" separator=",">
         (#{entity.roomId}, #{entity.name}, #{entity.x}, #{entity.y}, #{entity.width}, #{entity.height})
@@ -103,7 +104,7 @@
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="tableId" useGeneratedKeys="true">
-        insert into library_table(room_id, name, x, y, width, height)
+        insert into library_table(room_id, name, x, y, direction, width, height)
         values
         <foreach collection="entities" item="entity" separator=",">
             (#{entity.roomId}, #{entity.name}, #{entity.x}, #{entity.y}, #{entity.width}, #{entity.height})

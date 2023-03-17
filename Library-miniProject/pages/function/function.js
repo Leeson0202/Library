@@ -20,6 +20,7 @@ Page({
         let tag = e.currentTarget.dataset.tag;
         // 判断是否登陆
         this.HasLogin();
+        if (!this.HasSchool()) return;
         let url = ""
         switch (tag) {
             case "book":
@@ -43,8 +44,8 @@ Page({
     onLoad(options) {
         this.storeBindings = createStoreBindings(this, {
             store,
-            fields: ['userInfo', 'hasUserInfo', 'hasLogin'],
-            actions: ['HasLogin']
+            fields: ['userInfo', 'hasUserInfo', 'hasLogin', 'hasSchool'],
+            actions: ['HasLogin', 'HasSchool']
         });
     },
 

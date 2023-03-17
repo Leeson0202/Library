@@ -1,7 +1,7 @@
 /* pages/book/book.wxss */
 
 /* head */
-.head{
+.head {
     width: 100%;
 }
 
@@ -30,39 +30,48 @@
 .label {
     background-color: rgba(255, 255, 255, 0.2);
 }
+
 /* picker */
-.section{
+.section {
     padding: 10rpx 0;
     width: 100%;
     height: 50rpx;
     background-color: #eee;
     font-size: 24rpx;
 }
-.picker-block{
+
+.picker-block {
     display: inline-block;
 }
-.picker-a{
+
+.picker-a {
     width: 350rpx;
     margin-left: 12rpx;
     margin-right: 30rpx;
 }
-.picker-b{
+
+.picker-b {
     width: 100rpx;
     margin-right: 30rpx;
-}.picker-c{
+}
+
+.picker-c {
     width: 200rpx;
 }
-.picker{
+
+.picker {
     text-align: center;
 }
-.title-down{
+
+.title-down {
     display: inline-block;
     height: 30rpx;
     position: relative;
     top: 7rpx;
     margin-right: 12rpx;
 }
-.picker-title{
+
+.picker-title {
     display: inline-block;
     margin: auto;
     padding: 0 10rpx;
@@ -87,36 +96,75 @@
     padding: 80rpx 60rpx;
 
 }
-.seatArea{
+
+.seatArea {
     position: relative;
     z-index: 0;
 }
 
-.seatTap{
+.seatTap {
     position: absolute;
 }
+
 .normal {
     position: relative;
     margin: auto;
     margin-left: 10%;
+    margin-bottom: 10%;
     text-align: center;
     width: 80%;
-    
+
     /* height: 100%;  */
-  }
+}
 
 
 
-.submit-block{
+.submit-block {
     position: fixed;
     display: flex;
     bottom: 0;
     width: 100%;
-    height: 100rpx;
+    min-height: 100rpx;
     text-align: center;
     line-height: 100rpx;
 }
-.submit{
+
+
+.receive-details {
+    padding: 0 40rpx;
+    margin-left: 10rpx;
+    width: calc(100% - 100rpx);
+    max-height: 350rpx;
+    min-height: 100rpx;
+    position: fixed;
+    bottom: 100rpx;
+    background-color: #fff;
+    overflow: scroll;
+    border-top: 16rpx solid #fff;
+    border-top-left-radius: 16rpx;
+    border-top-right-radius: 16rpx;
+    box-shadow: 0 0 25rpx #aaa;
+    animation-duration: 10s;
+}
+
+.receive-detail {
+    height: 60rpx;
+    line-height: 60rpx;
+    font-size: 26rpx;
+    text-align: left;
+}
+
+.content-num {
+    background-color: rgb(250, 71, 71);
+    border-radius: 30%;
+    padding: 0 5rpx;
+    font-size: 16rpx;
+    position: relative;
+    bottom: 42rpx;
+    color: #fff;
+}
+
+.submit {
     width: 70%;
     background-color: rgb(141, 191, 253);
     color: #fff;
