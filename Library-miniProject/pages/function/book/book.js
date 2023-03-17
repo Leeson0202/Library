@@ -175,7 +175,7 @@ Page({
             title: '正在加载',
         })
         let that = this;
-        idx = parseInt(idx) + 1;
+        idx = parseInt(idx);
         // 请求
         let url = app.globalData.baseUrl + "/room/id/" + roomId + "?today=" + today + "&idx=" + idx;
         console.log(url);
@@ -400,7 +400,7 @@ Page({
     },
     successBack() {
         wx.switchTab({
-          url: '/pages/function/function',
+            url: '/pages/function/function',
         })
     },
 

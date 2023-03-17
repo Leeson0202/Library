@@ -1,5 +1,6 @@
 package cool.leeson.library.service.receive;
 
+import com.aliyuncs.utils.StringUtils;
 import cool.leeson.library.config.JwtConfig;
 import cool.leeson.library.dao.*;
 import cool.leeson.library.entity.receive.ReceiveItem;
@@ -9,6 +10,8 @@ import cool.leeson.library.entity.receive.ReceivePost;
 import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * (ReceiveOrder)表服务实现类
@@ -38,10 +42,15 @@ public class ReceiveService {
     @Resource
     private LibrarySeatDao librarySeatDao;
     @Resource
+    private RedisTemplate<String, String> redisTemplate;
+
+    @Resource
     private HttpServletRequest request;
 
     @Resource
     private JwtConfig jwtConfig;
+    private String seatKeyFormat = "%s:%s:%s"; // seatId:day:time   dsackacbjakcaw3:16:1
+
 
     /**
      * 提交预约订单
@@ -65,7 +74,13 @@ public class ReceiveService {
         // receiveItems
         List<ReceiveItem> receiveItems = new ArrayList<>();
         for (ReceivePost receivePost : receivePosts) {
-            Integer today = receivePost.getToday() ? 0 : 1;
+            int today = receivePost.getToday() ? 0 : 1;
+            String seatKey = String.format(seatKeyFormat, receivePost.getSeatId(), now.getDate() + today, receivePost.getTimeIdx());
+            String rSeatRecord = redisTemplate.opsForValue().get(seatKey);
+            if (!StringUtils.isEmpty(rSeatRecord) && "true".equals(rSeatRecord)) {
+                // 说明有数据
+                return ResMap.err("座位已占座，请刷新");
+            }
             Integer timeIdx = receivePost.getTimeIdx();
             ReceiveItem receiveItem = new ReceiveItem(UUID.randomUUID().toString(),
                     orderId, userId, receivePost.getLibraryId(),
@@ -82,6 +97,19 @@ public class ReceiveService {
         if (this.receiveItemDao.insertBatch(receiveItems) < receiveItems.size()) {
             throw new MyException(MyException.STATUS.err);
         }
+        // 座位信息，插入redis
+        for (ReceivePost receivePost : receivePosts) {
+            int today = receivePost.getToday() ? 0 : 1;
+            String seatKey = String.format(seatKeyFormat, receivePost.getSeatId(), now.getDate() + today, receivePost.getTimeIdx());
+            // 剩下的时间
+            long milliSecondsLeftToday = 86400000 -
+                    DateUtils.getFragmentInMilliseconds(Calendar.getInstance(), Calendar.DATE);
+            log.info(String.valueOf(milliSecondsLeftToday));
+            milliSecondsLeftToday = receivePost.getToday() ? milliSecondsLeftToday : milliSecondsLeftToday + 86400000;
+            log.info(String.valueOf(milliSecondsLeftToday));
+            redisTemplate.opsForValue().set(seatKey, "true", milliSecondsLeftToday, TimeUnit.MILLISECONDS);
+        }
+
         return this.queryById(orderId);
     }
 
