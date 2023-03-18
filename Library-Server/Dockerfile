@@ -4,7 +4,7 @@
 FROM openjdk:8-jdk-alpine
 WORKDIR /usr/local/code
 #将源码复制到下一个镜像中
-COPY Library-Server-1.0.jar /usr/local/code
+COPY ./target/Library-Server-1.0.jar /usr/local/code
 
 #声明项目所用端口
 EXPOSE 8080

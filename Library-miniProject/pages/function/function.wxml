@@ -1,31 +1,65 @@
 <!--pages/function/function.wxml-->
-
-<view class="top-notify">
-        你有一个快速预约，点击查看
-    </view>
-
-<view class="main">
-    <view class="book">
-        <view class="card-button" style="float:left; height: 240rpx; line-height: 260rpx;"
-        bindtap="bookHandel" data-tag="book">
+<view style="width: 100%; text-align: center; height: 200rpx; line-height: 200rpx;">
+    这个广告位 必须拿下
+</view>
+<!-- manu -->
+<view class="card top-manu" slot="content">
+    <view class="top-manu-item" bindtap="bookHandel" data-tag="book">
+        <image class="manu-icon" src="/resources/images/function/receive_common.svg" mode="heightFix" />
+        <view class="manu-title">
             一般预约
         </view>
-        <view style="display: inline-block; height: 300rpx;">
-            <view class="card-button" style="display: block;" 
-            bindtap="bookHandel" data-tag="fastBook">
-                快速预约
-            </view>
-            <view class="card-button" style="height: 140rpx; line-height: 140rpx;">
-                就座或离开
-            </view>
-
-        </view>
-        <view>
-            待办事项
-        </view>
-
     </view>
+    <view class="top-manu-item" bindtap="bookHandel" data-tag="fastbook">
+        <image class="manu-icon" src="/resources/images/function/receive_fast.svg" mode="heightFix" />
+        <view class="manu-title">
+            快速预约
+        </view>
+    </view>
+    <view class="top-manu-item" bindtap="bookHandel" data-tag="record">
+        <image class="manu-icon" src="/resources/images/function/receive_record.svg" mode="heightFix" />
+        <view class="manu-title">
+            预约记录
+        </view>
+    </view>
+    <view class="top-manu-item" bindtap="bookHandel" data-tag="rule">
+        <image class="manu-icon" src="/resources/images/function/receive_rule.svg" mode="heightFix" />
+        <view class="manu-title">
+            预约规则
+        </view>
+    </view>
+</view>
+<!-- 日程 -->
+<view class="receive-block">
+    <view style="font-size: 30rpx; color: #555; font-weight: 500;">
+        我的日程
+    </view>
+    <view class="items">
+        <view class="card line-item " wx:for="{{8}}" wx:key="index">
+            <view class="receive-time">
+                <view style="margin-top:24rpx; line-height: 40rpx; font-size: 26rpx; color: rgb(12, 161, 247); font-weight: 700;"> 8:00-10:00 </view>
+                <view style="margin-top:0rpx; font-size: 20rpx; line-height: 30rpx; color: #666;"> 3月18日</view>
+            </view>
+            <view class="receive-info">
+                <view style="float: left;">
+                    <view style="margin-top: 10rpx; font-size: 28rpx;line-height: 40rpx; color: #666; ">
+                        数字图书馆
+                    </view>
+                    <view style="font-size: 23rpx; color: #222;">
+                        一楼阅览室 A1001
+                    </view>
 
+                </view>
+                <view class="receive-bottons">
+                    <view>
+                        入座 | 离座
+                    </view>
 
+                </view>
+
+            </view>
+
+        </view>
+    </view>
 
 </view>

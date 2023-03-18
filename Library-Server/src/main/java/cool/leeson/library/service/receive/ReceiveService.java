@@ -104,12 +104,9 @@ public class ReceiveService {
             // 剩下的时间
             long milliSecondsLeftToday = 86400000 -
                     DateUtils.getFragmentInMilliseconds(Calendar.getInstance(), Calendar.DATE);
-            log.info(String.valueOf(milliSecondsLeftToday));
             milliSecondsLeftToday = receivePost.getToday() ? milliSecondsLeftToday : milliSecondsLeftToday + 86400000;
-            log.info(String.valueOf(milliSecondsLeftToday));
             redisTemplate.opsForValue().set(seatKey, "true", milliSecondsLeftToday, TimeUnit.MILLISECONDS);
         }
-
         return this.queryById(orderId);
     }
 

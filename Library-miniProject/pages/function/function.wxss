@@ -1,29 +1,73 @@
 /* pages/function/function.wxss */
-
-.top-notify {
-    margin: 0 20rpx 0;
-    height: 80rpx;
-    color: rgb(224, 103, 123);
+page {
+    background-color: #ffffff;
 }
 
+.top-manu {
+    margin: 15rpx 15rpx;
+    width: calc(100% - 30rpx);
+    font-size: 22rpx;
+    padding: 24rpx 0 18rpx;
 
-.main {
-    margin: auto;
-    width: 80%;
 }
 
-.book {
-    margin: auto;
+.top-manu-item {
+    width: 25%;
+    height: 100%;
     display: inline-block;
-
 }
 
-.card-button {
-    display: inline-block;
-    margin: 10rpx;
-    padding: 20rpx 40rpx;
-    box-shadow: 0 0 10rpx #ccc;
-    border-radius: 10rpx;
+.manu-icon {
+    margin: auto;
+    height: 50rpx;
+    display: block;
+}
+
+.manu-title {
+    margin-top: 10rpx;
     text-align: center;
-    background-color: #fff;
+}
+
+.receive-block {
+    margin: auto;
+    padding: 15rpx 20rpx;
+}
+
+.line-item {
+    margin-top: 16rpx;
+    height: 120rpx;
+    line-height: 50rpx;
+}
+
+.receive-time {
+    float: left;
+    width: 28%;
+    height: 100%;
+
+    border-top-left-radius: 16rpx;
+    border-bottom-left-radius: 16rpx;
+    text-align: center;
+    background-color: rgba(12, 161, 247, 0.18);
+}
+
+.receive-info {
+    float: left;
+    margin-left: 2%;
+    margin-top: 10rpx;
+    width: 70%;
+    height: 100rpx;
+
+}
+
+.receive-bottons {
+    float: right;
+    display: inline-block;
+    margin: 25rpx 30rpx;
+    padding: 0rpx 20rpx;
+    height: 50rpx;
+    line-height: 50rpx;
+    border-radius: 20rpx;
+    font-size: 20rpx;
+    background-color: rgba(12, 161, 247, 0.18);
+
 }

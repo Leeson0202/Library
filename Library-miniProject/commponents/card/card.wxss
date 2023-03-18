@@ -1,9 +1,7 @@
 /* commponents/card/card.wxss */
 .card{
-    margin: auto;
-    padding: 15rpx;
     position: relative;
-    width: calc(90% - 30rpx);
+    width: 100%;
     /* min-height: 20rpx; */
     border-radius: 16rpx;
     box-shadow: 0 0 20rpx #e2e2e2;

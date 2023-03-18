@@ -21,3 +21,12 @@
 .items>.line-item:last-child {
     border-bottom: none
 }
+
+.card {
+    position: relative;
+    width: 100%;
+    /* min-height: 20rpx; */
+    border-radius: 16rpx;
+    box-shadow: 0 0 20rpx #e2e2e2;
+    background-color: #fff;
+}

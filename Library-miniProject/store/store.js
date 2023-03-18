@@ -16,8 +16,8 @@ import {
 } from '../utils/storage'
 
 export const store = observable({
-    baseUrl: "https://library.leeson.cool",
-    // baseUrl: "http://localhost:8080",
+    // baseUrl: "https://library.leeson.cool",
+    baseUrl: "http://localhost:8080",
     header: {
         "Content-Type": "application/x-www-form-urlencoded"
     },
