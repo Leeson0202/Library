@@ -1,28 +1,28 @@
 <!--pages/function/function.wxml-->
-<view style="width: 100%; text-align: center; height: 200rpx; line-height: 200rpx;">
+<view class="ad-block" >
     这个广告位 必须拿下
 </view>
 <!-- manu -->
 <view class="card top-manu" slot="content">
-    <view class="top-manu-item" bindtap="bookHandel" data-tag="book">
+    <view class="top-manu-item" bindtap="bookHandel" data-tag="bookGuide">
         <image class="manu-icon" src="/resources/images/function/receive_common.svg" mode="heightFix" />
         <view class="manu-title">
             一般预约
         </view>
     </view>
-    <view class="top-manu-item" bindtap="bookHandel" data-tag="fastbook">
+    <view class="top-manu-item" bindtap="bookHandel" data-tag="fastBook">
         <image class="manu-icon" src="/resources/images/function/receive_fast.svg" mode="heightFix" />
         <view class="manu-title">
             快速预约
         </view>
     </view>
-    <view class="top-manu-item" bindtap="bookHandel" data-tag="record">
+    <view class="top-manu-item" bindtap="bookHandel" data-tag="bookRecord">
         <image class="manu-icon" src="/resources/images/function/receive_record.svg" mode="heightFix" />
         <view class="manu-title">
             预约记录
         </view>
     </view>
-    <view class="top-manu-item" bindtap="bookHandel" data-tag="rule">
+    <view class="top-manu-item" bindtap="bookHandel" data-tag="bookRule">
         <image class="manu-icon" src="/resources/images/function/receive_rule.svg" mode="heightFix" />
         <view class="manu-title">
             预约规则

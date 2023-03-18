@@ -1,0 +1,7 @@
+{
+    "usingComponents": {
+        "ec-canvas": "../../../ec-canvas/ec-canvas"
+    },
+    "navigationBarTitleText": "学习统计",
+    "enablePullDownRefresh": true
+}

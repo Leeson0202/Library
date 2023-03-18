@@ -23,10 +23,30 @@
 }
 
 .card {
+    margin: auto;
     position: relative;
     width: 100%;
     /* min-height: 20rpx; */
     border-radius: 16rpx;
     box-shadow: 0 0 20rpx #e2e2e2;
     background-color: #fff;
+}
+.card-item{
+    display: block;
+    margin: auto;
+    width: 90%;
+    height: 60rpx;
+    line-height: 60rpx;
+}
+
+
+/* 图表格 */
+.chart {
+    width: 100%;
+    height: 600rpx;
+}
+
+ec-canvas {
+    width: 100%;
+    height: 100%;
 }

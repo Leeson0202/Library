@@ -2,37 +2,30 @@
 
 <view>
 
-    <view style="margin-top: 20rpx;">
-        <card>
-            <view class="items" slot="content">
-                <view class="line-item" bindtap="logout">
-                    切换账号
-                </view>
-                <view class="line-item">
-                    账号安全
-                </view>
+    <view class="card" style="margin-top: 20rpx; width: 90%;">
+        <view class="items" slot="content">
+            <view class="line-item" bindtap="logout">
+                切换账号
             </view>
-        </card>
+            <view class="line-item">
+                账号安全
+            </view>
+        </view>
     </view>
-    <view style="margin-top: 30rpx;">
-        <card>
-            <view class="items" slot="content">
-                <view class="line-item">
-                    消息通知
-                </view>
-                <view class="line-item">
-                    帮助与反馈
-                </view>
-                <view class="line-item">
-                    关于
-                </view>
+    <view class="card" style="margin-top: 30rpx; width: 90%;">
+        <view class="items" slot="content">
+            <view class="line-item">
+                消息通知
             </view>
-        </card>
+            <view class="line-item">
+                帮助与反馈
+            </view>
+            <view class="line-item">
+                关于
+            </view>
+        </view>
     </view>
 
-    <view class="logout" bindtap="logout">
-
-        退出登陆
-    </view>
+    <view class="logout" bindtap="logout"> 退出登陆 </view>
 
 </view>

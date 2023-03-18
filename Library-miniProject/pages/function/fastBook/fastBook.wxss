@@ -1,0 +1,81 @@
+/* pages/function/fastBook/fastBook.wxss */
+page {
+    height: 100%;
+}
+
+.ad-block {
+    height: 300rpx;
+    font-size: 30rpx;
+    letter-spacing: 1rpx;
+    background: linear-gradient(to right bottom, rgb(252, 156, 156), rgb(199, 247, 187), rgb(142, 142, 240) 80%);
+
+}
+
+.ad-ii {
+    display: inline-block;
+    font-size: 50rpx;
+    color: rgb(170, 3, 170);
+}
+
+/* 主体部分 */
+.fast-switch {
+    float: right;
+    margin-right: 30rpx;
+    margin-top: -5rpx;
+}
+.wx-switch-input{width:42px !important;height:22px !important;}
+.wx-switch-input::before{width:40px !important;height: 20px !important;}
+.wx-switch-input::after{width: 18px !important;height: 18px !important;}
+
+/* 预约表单 */
+.items {
+    margin-top: 20rpx;
+    width: 95%;
+}
+
+.line-item {
+    width: 90%;
+}
+
+.picker-name {
+    display: inline-block;
+    width: 30%;
+    text-align: center;
+}
+
+.picker-block {
+    display: inline-block;
+    margin-left: 60rpx;
+
+}
+
+
+/* 提示消息 */
+
+.info {
+    margin: auto;
+    margin-top: 30rpx;
+    width: 90%;
+    font-size: 20rpx;
+}
+
+.fast-book-submit {
+    position: absolute;
+    bottom: 80rpx;
+    display: block;
+    margin: auto;
+    margin-top: 30rpx;
+    width: 100%;
+    text-align: center;
+}
+
+.fast-book-button {
+    width: 80%;
+    margin: auto;
+    background-color: rgba(100, 100, 100, 0.1);
+    border-radius: 10rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    font-size: 30rpx;
+    color: #444;
+}

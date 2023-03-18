@@ -1,0 +1,68 @@
+/* pages/function/bookRecord/bookRecord.wxss */
+page {
+    height: 100%;
+}
+
+.record-label {
+    height: 60rpx;
+    margin-top: 4rpx;
+}
+
+.label {
+    display: inline-block;
+    width: 25%;
+    text-align: center;
+    font-size: 28rpx;
+}
+
+.main-content {
+    padding: 10rpx 0;
+    margin: 0;
+    width: 100%;
+    background-color: #eee;
+    position: relative;
+
+}
+
+.items {
+    width: calc(95% - 40rpx);
+    padding: 10rpx 20rpx;
+}
+
+.line-item {
+    padding: 10rpx 20rpx;
+    height: 120rpx;
+
+}
+
+.line-item-title {
+    height: 50rpx;
+    line-height: 50rpx;
+    color: #888;
+    font-size: 30rpx;
+    font-weight: 600;
+    border-bottom: 4rpx solid rgb(231, 229, 229);
+}
+
+.record-status {
+    display: inline-block;
+    margin-left: 10rpx;
+    padding: 0rpx 14rpx;
+    line-height: 36rpx;
+    font-size: 18rpx;
+    border-radius: 14rpx;
+}
+
+.delete-button {
+    float: right;
+    margin-top: 32rpx;
+    width: 130rpx;
+    height: 42rpx;
+    line-height: 42rpx;
+    font-size: 22rpx;
+    font-weight: normal;
+    text-align: center;
+    color: #fff;
+    border-radius: 10rpx;
+    background-color: rgba(253, 186, 0, 0.7);
+}

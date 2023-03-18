@@ -1,47 +1,40 @@
 <!--pages/userInfo/userInfo.wxml-->
 <view>
-    <view style="margin-top: 20rpx;">
-        <card>
-            <view class="items" slot="content">
-                <view class="line-item">
-                    <button class="avatar-button" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar"
-                    style="width: 100%;height: 86rpx;"
-                    >头像
-                    </button>
-                </view>
-                <view class="line-item">
-                    <view class="label">个性签名</view>
-                    <input class="val" bindinput="handleSign"></input>
-                </view>
+    <view class="card" style="margin-top: 20rpx;width: 90%;">
+        <view class="items" slot="content">
+            <view class="line-item">
+                <button class="avatar-button" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar" style="width: 100%;height: 86rpx;">头像
+                </button>
             </view>
-        </card>
-    </view>
-    
-    <view style="margin-top: 30rpx;">
-        <card>
-            <view class="items" slot="content">
-                <view class="line-item">
-                    <view class="label">昵称</view>
-                    <input bindinput="handleName" class="label val" value="{{userInfo.nickName}}"></input>
-                </view>
-                <view class="line-item">
-                    <view class="label">年龄</view>
-                    <input class="val" bindinput="handleAge" value="{{userInfo.age!=null ?userInfo.age:''}}"></input>
-                </view>
-                <view class="line-item">
-                    <view class="label">性别</view>
-                    <input class="val" bindinput="handleGender" value="{{userInfo.gender!=null ? userInfo.gender: ''}}"></input>
-                </view>
-                <view class="line-item">
-                    <view class="label">国家</view>
-                    <input class="val" bindinput="handleCountry" value="{{userInfo.country!=null ? userInfo.country: ''}}"></input>
-                </view>
+            <view class="line-item">
+                <view class="label">个性签名</view>
+                <input class="val" bindinput="handleSign"></input>
             </view>
-        </card>
+        </view>
     </view>
-    
-    <view style="margin-top: 30rpx;">
-        <card>
+
+    <view class="card" style="margin-top: 30rpx;width: 90%;">
+        <view class="items" slot="content">
+            <view class="line-item">
+                <view class="label">昵称</view>
+                <input bindinput="handleName" class="label val" value="{{userInfo.nickName}}"></input>
+            </view>
+            <view class="line-item">
+                <view class="label">年龄</view>
+                <input class="val" bindinput="handleAge" value="{{userInfo.age!=null ?userInfo.age:''}}"></input>
+            </view>
+            <view class="line-item">
+                <view class="label">性别</view>
+                <input class="val" bindinput="handleGender" value="{{userInfo.gender!=null ? userInfo.gender: ''}}"></input>
+            </view>
+            <view class="line-item">
+                <view class="label">国家</view>
+                <input class="val" bindinput="handleCountry" value="{{userInfo.country!=null ? userInfo.country: ''}}"></input>
+            </view>
+        </view>
+    </view>
+
+    <view class="card" style="margin-top: 30rpx; width: 90%;">
             <view class="items" slot="content">
                 <view class="line-item" bindtap="bindSchool">
                     <view class="label">学校</view>
@@ -50,6 +43,5 @@
                     </view>
                 </view>
             </view>
-        </card>
     </view>
 </view>

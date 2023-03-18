@@ -1,0 +1,16 @@
+<view class="card credit">
+    <view class="in-block">
+        我的信用
+    </view>
+    <view class="in-block my-credit">
+        96
+    </view>
+    <view class="in-block tur-my-credit">
+        信用记录
+    </view>
+</view>
+<view class="rule">
+    <view style="margin-top: 16rpx; text-indent: 2em;" wx:for="{{rules}}" wx:key="index">
+        {{item}}
+    </view>
+</view>

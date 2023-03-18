@@ -1,6 +1,4 @@
 // pages/book/book.js
-
-var jsonData = require('../../../utils/data.js');
 const app = getApp();
 import {
     createStoreBindings

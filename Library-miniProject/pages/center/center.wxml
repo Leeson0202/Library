@@ -5,19 +5,18 @@
         <image id="background-image" src="http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1010/13/c6/5494373_5494373_1286955435968.jpg" mode="widthFix" />
     </view>
     <view style="position: relative; top: -60rpx;">
-
         <view class="contents">
             <!--头像和昵称-->
             <view class="avater-block-main">
                 <!-- 头像 -->
-                <view class="avater-block"  bindtap="handleTap" data-idx="userInfo">
+                <view class="avater-block" bindtap="handleTap" data-idx="userInfo">
                     <!-- 进入个人资料-->
                     <image class="avatar-image" src="{{userInfo.avatarUrl}}" mode="widthFix" />
                 </view>
                 <!--昵称-->
                 <view class="user-name-block" bindtap="handleTap" data-idx="userInfo">
                     <text>{{userInfo.nickName}}</text>
-                    <image class="user-name-image" src="../../resources/images/Author/level.svg" mode="aspectFit" wx:if="{{hasUserInfo}}"/>
+                    <image class="user-name-image" src="../../resources/images/Author/level.svg" mode="aspectFit" wx:if="{{hasUserInfo}}" />
                 </view>
             </view>
 
@@ -28,19 +27,20 @@
                     <view>学习时长</view>
                 </view>
                 <view class="user-info-bliock" style="border-left: 0.5rpx solid #ccc; border-right: 0.5rpx solid #ccc; ">
-                    <view class="user-info-num">{{userInfo.userRecord.allRank!=null  && userInfo.userRecord!=null ?userInfo.userRecord.allRank: "-"}}</view>
+                    <view class="user-info-num">{{userInfo.userRecord.allRank!=null && userInfo.userRecord!=null ?userInfo.userRecord.allRank: "-"}}</view>
                     <view>排名</view>
                 </view>
                 <view class="user-info-bliock">
-                    <view class="user-info-num">{{userInfo.userRecord.maxTime!=null  && userInfo.userRecord!=null ?userInfo.userRecord.maxTime: "-"}}</view>
+                    <view class="user-info-num">{{userInfo.userRecord.maxTime!=null && userInfo.userRecord!=null ?userInfo.userRecord.maxTime: "-"}}</view>
                     <view>单日最长</view>
                 </view>
 
             </view>
         </view>
-        <card class="info-block-a">
-            <view class="info-block" slot="content">
-                <view  bindtap="handleTap" data-idx="userInfo">
+
+        <view class="card info-block-a">
+            <view class="info-block">
+                <view bindtap="handleTap" data-idx="userInfo">
                     <image src="../../resources/images/Author/authorInfo.svg" mode="heightFix" />
                     个人资料
                 </view>
@@ -52,21 +52,18 @@
                     <image src="../../resources/images/Author/message.svg" mode="heightFix" />
                     我的消息
                 </view>
-                <view>
+                <view bindtap="handleTap" data-idx="learnCount">
                     <image src="../../resources/images/Author/learnCount.svg" mode="heightFix" />
                     学习统计
                 </view>
 
-                <view bindtap="handleTap" data-idx="settings" >
+                <view bindtap="handleTap" data-idx="settings">
                     <image src="../../resources/images/Author/setting.svg" mode="heightFix" />
                     设置
                 </view>
             </view>
-        </card>
+        </view>
         <view style="position: relative; margin-top: 100rpx;">
-            <!-- <view>
-            {{hasUserInfo}},{{HasUserInfo}}
-        </view> -->
             <button class="recall">信息反馈</button>
         </view>
 

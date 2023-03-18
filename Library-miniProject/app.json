@@ -3,19 +3,20 @@
         "pages/index/index",
         "pages/index/notify/notify",
         "pages/index/notify/notifyItem/notifyItem",
-
         "pages/function/function",
         "pages/function/bookGuide/bookGuide",
         "pages/function/book/book",
-
         "pages/center/center",
         "pages/center/login/login",
         "pages/center/login/confirm/confirm",
         "pages/center/userInfo/userInfo",
         "pages/center/cquptLogin/cquptLogin",
         "pages/center/settings/settings",
-        
-        "pages/test/test"
+        "pages/test/test",
+        "pages/function/fastBook/fastBook",
+        "pages/function/bookRecord/bookRecord",
+        "pages/function/bookRule/bookRule",
+        "pages/center/learnCount/learnCount"
     ],
     "window": {
         "navigationBarBackgroundColor": "#fff",
@@ -50,8 +51,5 @@
         ]
     },
     "style": "v2",
-    "sitemapLocation": "sitemap.json",
-    "usingComponents": {
-        "card": "/commponents/card/card"
-    }
+    "sitemapLocation": "sitemap.json"
 }

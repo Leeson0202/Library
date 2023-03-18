@@ -3,6 +3,15 @@ page {
     background-color: #ffffff;
 }
 
+.ad-block {
+    width: 100%;
+    text-align: center;
+    height: 300rpx;
+    line-height: 300rpx;
+    background: linear-gradient(to right top, rgb(162, 185, 248), rgb(235, 176, 68), rgb(213, 150, 250));
+    color: #fff;
+}
+
 .top-manu {
     margin: 15rpx 15rpx;
     width: calc(100% - 30rpx);

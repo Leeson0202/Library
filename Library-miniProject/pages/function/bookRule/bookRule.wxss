@@ -1,0 +1,36 @@
+/* pages/function/bookRule/bookRule.wxss */
+.credit {
+    margin-top: 10rpx;
+    padding: 16rpx 30rpx;
+    width: calc(95% - 60rpx);
+    height: 60rpx;
+    line-height: 60rpx;
+    font-size: 30rpx;
+}
+
+.in-block {
+    display: inline-block;
+}
+
+.my-credit {
+    margin-left: 30rpx;
+    width: 60rpx;
+    height: 46rpx;
+    line-height: 46rpx;
+    text-align: center;
+    border-radius: 20rpx;
+    font-size: 26rpx;
+    background-color: rgb(20, 248, 70);
+}
+
+.tur-my-credit {
+    float: right;
+}
+
+.rule{
+    margin: auto;
+    padding-top: 20rpx;
+    padding-bottom: 60rpx;
+    width: 90%;
+    font-size: 24rpx;
+}

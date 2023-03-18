@@ -1,4 +1,10 @@
 /**index.wxss**/
+page {
+    height: 100%;
+    width: 100%;
+    overflow-y: hidden;
+}
+
 .top-notify {
     height: 40rpx;
     /* background-color: #fcfcfc; */
@@ -22,10 +28,12 @@
         transform: translateX(3%);
         -webkit-transform: translateX(3%);
     }
+
     30% {
         transform: translateX(3%);
         -webkit-transform: translateX(3%);
     }
+
     80% {
         transform: translateX(-20%);
         -webkit-transform: translateX(-20%);
@@ -34,5 +42,99 @@
     100% {
         transform: translateX(-20%);
         -webkit-transform: translateX(-20%);
+    }
+}
+
+/* 广告 */
+
+.ad-block {
+    margin: auto;
+    width: 99%;
+    height: 300rpx;
+    border-radius: 18rpx;
+    text-align: center;
+    color: #666;
+    background: linear-gradient(to right top, rgba(74, 219, 212, 0.5), rgba(236, 155, 169, 0.5), rgba(213, 150, 250, 0.5));
+}
+
+.float-t {
+    font-size: 120rpx;
+    height: 140rpx;
+    line-height: 140rpx;
+    color: rgb(220, 220, 248);
+
+
+}
+
+.leeson {
+    position: relative;
+    top: -310rpx;
+    left: -100rpx;
+    background: linear-gradient(to right, rgb(243, 238, 238), rgb(228, 115, 181), rgb(37, 218, 73), rgb(130, 130, 238));
+    -webkit-background-clip: text;
+    color: transparent;
+    animation-name: leesonDo;
+    animation-duration: 4s;
+    z-index: 100000;
+}
+
+.library {
+    position: relative;
+    top: -280rpx;
+    left: 120rpx;
+
+    background: linear-gradient(to right, rgb(240, 236, 241), rgb(100, 140, 240), rgb(240, 139, 24), rgb(236, 38, 38));
+    -webkit-background-clip: text;
+    color: transparent;
+    animation-name: libraryDo;
+    animation-duration: 4s;
+}
+
+/* 动画代码 */
+@keyframes leesonDo {
+    0% {
+        left: 200px;
+        top: -250rpx;
+    }
+
+
+    30% {
+        font-size: 120rpx;
+        left: 0rpx;
+    }
+
+    45% {
+        font-size: 190rpx;
+        left: 0rpx;
+        top: -250rpx;
+    }
+
+    81% {
+        font-size: 190rpx;
+        left: 0rpx;
+        top: -250rpx;
+    }
+
+    100% {
+        font-size: 120rpx;
+        left: -100rpx;
+        top: -310rpx;
+    }
+}
+
+/* 动画代码 */
+@keyframes libraryDo {
+    0% {
+        left: 600rpx;
+        top: 0 rpx;
+    }
+
+    50% {
+        left: 600rpx;
+        top: 0 rpx;
+    }
+
+    80% {
+        left: 120rpx;
     }
 }

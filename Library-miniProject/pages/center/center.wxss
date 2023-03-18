@@ -98,7 +98,9 @@
 }
 
 .info-block-a {
+    margin: auto;
     position: relative;
+    width: 90%;
     top: 50rpx;
 }
 

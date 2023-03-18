@@ -1,34 +1,17 @@
-// pages/function/function.js
-//先引入
+// pages/function/bookRule/bookRule.js
 import {
     createStoreBindings
 } from 'mobx-miniprogram-bindings'
 import {
     store
-} from '../../store/store'
-
+} from '../../../store/store'
 Page({
 
     /**
      * 页面的初始数据
      */
     data: {
-
-    },
-    bookHandel(e) {
-        // console.log(e.currentTarget.dataset.tag);
-        let tag = e.currentTarget.dataset.tag;
-        // 判断是否登陆
-        this.HasLogin();
-        // if (!this.HasSchool()) return;
-        let url = "/pages/function/" + tag + "/" + tag;
-
-        console.log(url);
-        if (url !== "") {
-            wx.navigateTo({
-                url: url
-            })
-        }
+        rules: []
 
     },
 
@@ -36,11 +19,22 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad(options) {
+        // 初始化数据
+        let that = this;
         this.storeBindings = createStoreBindings(this, {
             store,
-            fields: ['userInfo', 'hasUserInfo', 'hasLogin', 'hasSchool'],
-            actions: ['HasLogin', 'HasSchool']
+            fields: ['school', 'hasSchool', 'hasLogin', 'baseUrl'],
+            actions: ['GetSchool', 'InitData', 'CheckError']
         });
+        setTimeout(this.getRules, 500);
+
+
+    },
+    getRules() {
+
+        this.setData({
+            rules: this.data.school.schoolRule.context.split("\n")
+        })
     },
 
     /**
@@ -68,7 +62,7 @@ Page({
      * 生命周期函数--监听页面卸载
      */
     onUnload() {
-        this.storeBindings.destroyStoreBindings()
+
     },
 
     /**

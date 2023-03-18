@@ -1,0 +1,65 @@
+<view class="card">
+    <view class="card-item" style="text-align: center;">
+        学习时长统计
+    </view>
+    <view class="card-item info-block">
+        <view class="info">
+            <view class="info-num">
+                50天
+            </view>
+            总时长
+        </view>
+        <view class="info">
+            <view class="info-num">
+                200h
+            </view>这学期
+        </view>
+        <view class="info">
+            <view class="info-num">
+                40h
+            </view>这周
+        </view>
+        <view class="info">
+            <view class="info-num">
+                6h
+            </view>今天
+        </view>
+
+    </view>
+
+    <view class="card-item info-block">
+        <view class="info">
+            <view class="info-num">
+                1
+            </view>
+            总排名
+        </view>
+        <view class="info">
+            <view class="info-num">
+                20
+            </view>学期排名
+        </view>
+        <view class="info">
+            <view class="info-num">
+                15
+            </view>周排名
+        </view>
+        <view class="info">
+            <view class="info-num">
+                12
+            </view>今日排名
+        </view>
+
+    </view>
+</view>
+<view class="card">
+    <view class="manu-block">
+        <view class="manu" style="background-color: {{checked==0?'#fff':'#eee'}};" bindtap="handleChange" data-check="0">过去7天</view>
+        <view class="manu" style="background-color: {{checked==1?'#fff':'#eee'}};" bindtap="handleChange" data-check="1">过去24h</view>
+    </view>
+    <!-- 图表格  -->
+    <view class="chart">
+        <ec-canvas id="mychart-count" cancas-id="mychart" ec="{{ec}}"></ec-canvas>
+    </view>
+
+</view>

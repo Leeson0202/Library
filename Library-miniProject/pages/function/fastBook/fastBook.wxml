@@ -1,0 +1,95 @@
+<view style="height: 100%; backdrop-filter:blur(100px)">
+    <!-- 头部广告 -->
+    <view class="ad-block">
+        <view style="height:100%; background-color: rgba(255, 255, 255, 0.4);">
+            <view style="margin: auto;width: 60%; padding-top: 66rpx;">
+                <view>
+                    要的就是
+                    <text class="ad-ii">自律</text>
+                </view>
+                <view style="margin-left: 40%;display: inline-block;">
+                    要的就是
+                    <text class="ad-ii" style="color: rgb(241, 83, 83);">简单
+                    </text>
+                </view>
+            </view>
+
+        </view>
+    </view>
+
+    <!-- 主体 -->
+    <view class="card items" style="line-height:90rpx;">
+        <view style="margin-left: 40rpx; display: inline-block;">
+            快速预约
+        </view>
+        <switch class="fast-switch" checked="{{switchChecked}}" bindchange="handleSwithChecked" 
+        /> 
+    </view>
+
+    <view style="min-height: calc(100% - 390rpx);display: {{switchChecked? 'block': 'none'}};">
+        <!-- 预约表单 -->
+        <view style="margin-left: 20rpx; margin-top:20rpx; line-height: 50rpx; font-size: 30rpx; color: #666;">
+            <view>
+                您的预约规则：
+            </view>
+        </view>
+        <view class="card items">
+            <view class="line-item">
+                <view class="picker-name">
+                    图书馆
+                </view>
+                <picker class="picker-block picker-a" bindchange="bindPickerLibraryChange" value="{{LibraryIdx}}" range="{{LibraryList}}">
+                    <view class="picker">
+                        <view class="picker-title">{{LibraryList[LibraryIdx]}}
+                        </view>
+                    </view>
+                </picker>
+            </view>
+            <view class="line-item">
+                <view class="picker-name">
+                    图书室
+                </view>
+                <picker class="picker-block picker-a" bindchange="bindPickerRoomChange" value="{{roomIdx}}" range="{{roomList}}">
+                    <view class="picker">
+                        <view class="picker-title">{{roomList[roomIdx]}}
+                        </view>
+                    </view>
+                </picker>
+            </view>
+            <view class="line-item">
+                <view class="picker-name">
+                    座 位
+                </view>
+                <picker class="picker-block picker-a" bindchange="bindPickerSeatChange" value="{{SeatIdx}}" range="{{SeatList}}">
+                    <view class="picker">
+                        <view class="picker-title">{{SeatList[SeatIdx]}}
+                        </view>
+                    </view>
+                </picker>
+            </view>
+
+
+        </view>
+        <!-- 提示消息 -->
+        <view class="info">
+            <view style="line-height: 32rpx;">
+                * 通过快速预约，您可以无需每天手动预约，系统自动帮您预约
+            </view>
+            <view style="line-height: 32rpx;">
+                * 预约成功后，系统将为您发送短信消息
+            </view>
+            <view style="line-height: 32rpx;">
+                * 超过3次未及时到场就坐，本月无法使用该功能
+            </view>
+            <view style="line-height: 32rpx;">
+                * 超过5次未及时到场就坐，本学期无法使用该功能
+            </view>
+        </view>
+        <view class="fast-book-submit">
+            <view class="fast-book-button">
+                保存
+            </view>
+        </view>
+
+    </view>
+</view>

@@ -16,8 +16,8 @@ import {
 } from '../utils/storage'
 
 export const store = observable({
-    // baseUrl: "https://library.leeson.cool",
-    baseUrl: "http://localhost:8080",
+    baseUrl: "https://library.leeson.cool",
+    // baseUrl: "http://localhost:8080",
     header: {
         "Content-Type": "application/x-www-form-urlencoded"
     },
@@ -41,7 +41,7 @@ export const store = observable({
         return hasUserInfo == true ? this.userInfo.avatarUrl : "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132";
     },
     HasLogin: action(function () {
-        console.log(this.hasLogin);
+        // console.log(this.hasLogin);
         if (this.hasLogin != true) {
             wx.navigateTo({
                 url: '/pages/center/login/login',

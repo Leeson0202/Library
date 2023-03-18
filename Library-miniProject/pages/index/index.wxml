@@ -1,9 +1,28 @@
 <!--index.wxml-->
 <view class="main">
+    <!-- 广告位 -->
+    <view class="ad-block">
+        <view style="height: 100%;width: 100%;">
+            <view style="display:inline-block; position: relative; line-height: 300rpx; z-index: 1000; font-size: 48rpx;">
+                欢迎使用
+            </view>
+            <view class="leeson float-t">
+                Leeson
+            </view>
+            <view class="library float-t">
+                Library
+            </view>
+
+        </view>
+    </view>
+    <!-- 消息浮动 -->
     <view class="top-notify flex-row" bindtap="notifyHandel">
         <text class="r" direction="left">{{notifyText}}</text>
     </view>
-    <button bindtap="qus">请求
-    </button>
+    <!-- 图表格  -->
+    <view class="chart">
+        <ec-canvas id="mychart-deo" cancas-id="mychart" ec="{{ec}}"></ec-canvas>
+    </view>
+
 
 </view>

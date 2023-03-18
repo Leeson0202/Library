@@ -1,0 +1,47 @@
+<!--pages/function/bookRecord/bookRecord.wxml-->
+<view style="height:100%">
+    <view class="record-label">
+        <view class="label">
+            全部
+        </view>
+        <view class="label">
+            已预约
+        </view>
+        <view class="label">
+            进行中
+        </view>
+        <view class="label">
+            已完成
+        </view>
+    </view>
+    <!-- 主体 -->
+    <view class="main-content" style="height: calc(100% - 60rpx);">
+        <view class="card items" wx:for="{{recordAll}}" wx:key="index">
+            <!-- 日期title -->
+            <view class="line-item-title">
+                {{item[index].date}}
+                <image style="float: right; height: 40rpx; margin-right: 10rpx;" src="/resources/images/receive/selectDown.svg" mode="heightFix" />
+            </view>
+            <!-- 每条记录 -->
+            <view class="line-item" wx:for="{{recordAll[index]}}" wx:key="index">
+                <view style="float: left; line-height: 50rpx;">
+                    <view style="font-size: 26rpx; color: #333;">
+                        {{item.seatName}} {{item.roomName}}
+                        <view class="record-status" style="background-color: {{item.status==-1?'rgb(202, 230, 248)':item.status==0?'rgb(248, 202, 212)':'rgb(202, 248, 210)'}};">
+                            {{item.status==-1?"已完成":item.status==0?"已预约":"进行中"}}
+                        </view>
+                    </view>
+                    <view style="font-size: 22rpx;">
+                        {{item.LibraryName}} {{item.timeIdx}}
+                    </view>
+                </view>
+                <view class="delete-button" wx:if="{{item.status==0}}">
+                取消预约
+                </view>
+
+
+            </view>
+
+        </view>
+    </view>
+</view>

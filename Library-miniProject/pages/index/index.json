@@ -1,8 +1,8 @@
 {
-    "usingComponents": {},
-    "navigationBarBackgroundColor": "#ffffff",
-    "navigationBarTextStyle": "black",
+    "usingComponents": {
+        "ec-canvas": "../../ec-canvas/ec-canvas"
+    },
     "navigationBarTitleText": "首页",
-    "backgroundTextStyle": "light"
+    "enablePullDownRefresh": true
 
 }
