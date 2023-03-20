@@ -2,12 +2,19 @@ package cool.leeson.library.service.receive;
 
 import com.aliyuncs.utils.StringUtils;
 import cool.leeson.library.config.JwtConfig;
-import cool.leeson.library.dao.*;
+import cool.leeson.library.config.RedisConfig;
+import cool.leeson.library.dao.LibraryDao;
+import cool.leeson.library.dao.LibraryRoomDao;
+import cool.leeson.library.dao.LibrarySeatDao;
+import cool.leeson.library.dao.ReceiveItemDao;
 import cool.leeson.library.entity.receive.ReceiveItem;
+import cool.leeson.library.entity.receive.ReceiveItemPost;
 import cool.leeson.library.entity.receive.ReceiveItemResponse;
-import cool.leeson.library.entity.receive.ReceiveOrder;
-import cool.leeson.library.entity.receive.ReceivePost;
 import cool.leeson.library.exceptions.MyException;
+import cool.leeson.library.service.library.LibraryRoomService;
+import cool.leeson.library.service.library.LibrarySeatService;
+import cool.leeson.library.service.library.LibraryService;
+import cool.leeson.library.service.library.SchoolService;
 import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
@@ -17,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -32,8 +38,6 @@ import java.util.concurrent.TimeUnit;
 @Transactional
 public class ReceiveService {
     @Resource
-    private ReceiveOrderDao receiveOrderDao;
-    @Resource
     private ReceiveItemDao receiveItemDao;
     @Resource
     private LibraryDao libraryDao;
@@ -41,6 +45,15 @@ public class ReceiveService {
     private LibraryRoomDao libraryRoomDao;
     @Resource
     private LibrarySeatDao librarySeatDao;
+
+    @Resource
+    private SchoolService schoolService;
+    @Resource
+    private LibraryService libraryService;
+    @Resource
+    private LibraryRoomService libraryRoomService;
+    @Resource
+    private LibrarySeatService librarySeatService;
     @Resource
     private RedisTemplate<String, String> redisTemplate;
 
@@ -49,113 +62,135 @@ public class ReceiveService {
 
     @Resource
     private JwtConfig jwtConfig;
-    private String seatKeyFormat = "%s:%s:%s"; // seatId:day:time   dsackacbjakcaw3:16:1
-
+    //    seatKey
+    private String seatKeyFormat = "%s:%s:%s"; // seatId:day:timeIdx   dsackacbjakcaw3:16:1
+    // 用户key
+    private String userKeyFormat = "%s:%s:%s";  // userId:day:timeIdx  dfjank:12:0
+    private String onlineKeyFormat = "%s:online";  // userId:online  dfjank:online
 
     /**
      * 提交预约订单
      *
-     * @param receivePosts 数据
+     * @param receiveItemPosts 数据
      * @return 实体
      */
-    public Map<String, Object> order(List<ReceivePost> receivePosts) throws MyException {
-        if (receivePosts == null || receivePosts.size() == 0)
+    public Map<String, Object> receive(List<ReceiveItemPost> receiveItemPosts, String userId) throws MyException {
+        if (receiveItemPosts == null || receiveItemPosts.size() == 0)
             throw new MyException(MyException.STATUS.requestErr);
-        log.info(receivePosts.toString());
-        // 数据
-        String userId = jwtConfig.getUsernameFromToken(request.getHeader("token"));
-        String orderId = UUID.randomUUID().toString();
+        log.info(receiveItemPosts.toString());
+        // 数据 String orderId = UUID.randomUUID().toString();
         Date now = new Date();
-        //  receiveOrder
-        ReceiveOrder receiveOrder = new ReceiveOrder();
-        receiveOrder.setOrderId(orderId);
-        receiveOrder.setUserId(userId);
-        receiveOrder.setTime(now);
-        // receiveItems
+        // 构建 receiveItems
         List<ReceiveItem> receiveItems = new ArrayList<>();
-        for (ReceivePost receivePost : receivePosts) {
-            int today = receivePost.getToday() ? 0 : 1;
-            String seatKey = String.format(seatKeyFormat, receivePost.getSeatId(), now.getDate() + today, receivePost.getTimeIdx());
+        for (ReceiveItemPost receiveItemPost : receiveItemPosts) {
+            int today = receiveItemPost.getToday() ? 0 : 1;
+            // 查询座位是否占用
+            String seatKey = String.format(seatKeyFormat, receiveItemPost.getSeatId(), now.getDate() + today, receiveItemPost.getTimeIdx());
             String rSeatRecord = redisTemplate.opsForValue().get(seatKey);
             if (!StringUtils.isEmpty(rSeatRecord) && "true".equals(rSeatRecord)) {
                 // 说明有数据
                 return ResMap.err("座位已占座，请刷新");
             }
-            Integer timeIdx = receivePost.getTimeIdx();
-            ReceiveItem receiveItem = new ReceiveItem(UUID.randomUUID().toString(),
-                    orderId, userId, receivePost.getLibraryId(),
-                    receivePost.getRoomId(), receivePost.getSeatId(),
-                    new Date(now.getYear(), now.getMonth(), now.getDate() + today),
-                    LocalTime.of(timeIdx * 2 + 8, 0, 0, 0));
+            // 查询用户在该时段是否预约
+            String userKey = String.format(userKeyFormat, userId, now.getDate() + today, receiveItemPost.getTimeIdx());
+            String rUserRecord = redisTemplate.opsForValue().get(userKey);
+            if (!StringUtils.isEmpty(rUserRecord) && "true".equals(rUserRecord)) {
+                // 说明有数据
+                return ResMap.err("您已经预约了该时段");
+            }
+            // 构建 receiveItem
+
+//            LocalTime local = LocalTime.of(timeIdx * 2 + 8, 0, 0, 0); 构建时间的
+            ReceiveItem receiveItem = new ReceiveItem(UUID.randomUUID().toString(), userId, receiveItemPost.getLibraryId(), receiveItemPost.getRoomId(), receiveItemPost.getSeatId(), new Date(now.getYear(), now.getMonth(), now.getDate() + today), receiveItemPost.getTimeIdx(), now);
             receiveItems.add(receiveItem);
-        }
-        // 插入order
-        if (this.receiveOrderDao.insert(receiveOrder) < 1) {
-            throw new MyException(MyException.STATUS.err);
         }
         // 插入 items
         if (this.receiveItemDao.insertBatch(receiveItems) < receiveItems.size()) {
             throw new MyException(MyException.STATUS.err);
         }
-        // 座位信息，插入redis
-        for (ReceivePost receivePost : receivePosts) {
-            int today = receivePost.getToday() ? 0 : 1;
-            String seatKey = String.format(seatKeyFormat, receivePost.getSeatId(), now.getDate() + today, receivePost.getTimeIdx());
+        // 座位和用户信息，插入redis
+        for (ReceiveItemPost receiveItemPost : receiveItemPosts) {
+            int today = receiveItemPost.getToday() ? 0 : 1;
+            String seatKey = String.format(seatKeyFormat, receiveItemPost.getSeatId(), now.getDate() + today, receiveItemPost.getTimeIdx());
+            String userKey = String.format(userKeyFormat, userId, now.getDate() + today, receiveItemPost.getTimeIdx());
             // 剩下的时间
-            long milliSecondsLeftToday = 86400000 -
-                    DateUtils.getFragmentInMilliseconds(Calendar.getInstance(), Calendar.DATE);
-            milliSecondsLeftToday = receivePost.getToday() ? milliSecondsLeftToday : milliSecondsLeftToday + 86400000;
+            long milliSecondsLeftToday = 86400000 - DateUtils.getFragmentInMilliseconds(Calendar.getInstance(), Calendar.DATE);
+            milliSecondsLeftToday = receiveItemPost.getToday() ? milliSecondsLeftToday : milliSecondsLeftToday + 86400000;
+            // 插入
             redisTemplate.opsForValue().set(seatKey, "true", milliSecondsLeftToday, TimeUnit.MILLISECONDS);
+            redisTemplate.opsForValue().set(userKey, "true", milliSecondsLeftToday, TimeUnit.MILLISECONDS);
         }
-        return this.queryById(orderId);
+        return this.schedule(userId);
     }
 
     /**
-     * 查询 预约订单列表 userId
+     * 获取用户的行程计划
      *
-     * @param userId userId
+     * @param userId 用户Id
      * @return 实体
-     * @throws MyException m
+     * @throws MyException ms
      */
-    public Map<String, Object> query(String userId) throws MyException {
-        List<ReceiveOrder> receiveOrders = this.receiveOrderDao.queryByUserId(userId);
-        for (ReceiveOrder receiveOrder : receiveOrders) {
-            List<ReceiveItem> receiveItems = this.receiveItemDao.queryByOrderId(receiveOrder.getOrderId());
-            receiveOrder.setReceiveItems(receiveItems);
+    public Map<String, Object> schedule(String userId) throws MyException {
+        // 先查询所有
+        List<ReceiveItem> items = this.receiveItemDao.queryByUserId(userId);
+        Date now = new Date();
+        // 时间Idx
+        int timeIndex = 0;
+        int today = 0;
+        if (now.getHours() < 10) {
+            timeIndex = 0;
+        } else if (now.getHours() >= 22) {
+            // 第二天
+            timeIndex = 0;
+            today = 1;
+        } else {
+            timeIndex = (now.getHours() - 8) / 2;
         }
-        return ResMap.ok(receiveOrders);
-    }
-
-    /**
-     * 查询 预约订单 orderId
-     *
-     * @param orderId orderId
-     * @return 实体
-     * @throws MyException m
-     */
-    public Map<String, Object> queryById(String orderId) throws MyException {
-        ReceiveOrder receiveOrder = this.receiveOrderDao.queryById(orderId);
-        if (receiveOrder == null) {
-            throw new MyException(MyException.STATUS.requestErr);
-        }
-        List<ReceiveItem> receiveItems = this.receiveItemDao.queryByOrderId(receiveOrder.getOrderId());
-        List<ReceiveItemResponse> receiveItemResponses = new ArrayList<>();
-        try {
-            for (ReceiveItem receiveItem : receiveItems) {
-                ReceiveItemResponse receiveItemResponse = new ReceiveItemResponse(receiveItem);
-                receiveItemResponse.setLibraryName(this.libraryDao.queryById(receiveItem.getLibraryId()).getName());
-                receiveItemResponse.setRoomName(this.libraryRoomDao.queryById(receiveItem.getRoomId()).getName());
-                receiveItemResponse.setSeatName(this.librarySeatDao.queryById(receiveItem.getSeatId()).getName());
-                receiveItemResponses.add(receiveItemResponse);
+        // 要展现的时间 年月日
+        Date date = new Date(now.getYear(), now.getMonth(), now.getDate() + today);
+        List<ReceiveItemResponse> responseItems = new ArrayList<>();
+        for (ReceiveItem item : items) {
+            // 比这个时间早，直接继续 日期早或index小
+            if (item.getReceiveDate().before(date) || (item.getReceiveDate().equals(date) && item.getTimeIdx() < timeIndex))
+                continue;
+            // 判断 status
+            int status = (item.getReceiveDate().equals(date) && item.getTimeIdx() == timeIndex) ? 1 : 0;
+            // 判断是否在线 online
+            String onlineKey = String.format(RedisConfig.FormatKey.ONLINE.toString(), userId);
+            String userOnline = redisTemplate.opsForValue().get(onlineKey);
+            int online = 0; // 未入座
+            if (!StringUtils.isEmpty(userOnline) && !"".equals(userOnline)) {
+                online = Integer.parseInt(userOnline); // 1入座 2 暂时离开
             }
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
-            return ResMap.put(MyException.STATUS.err);
+            // 构建
+            ReceiveItemResponse responseItem = new ReceiveItemResponse(item, status, online);
+            // date
+            String ddate = item.getReceiveDate().getMonth() + 1 + "月" + item.getReceiveDate().getDate() + "日";
+            // 获取名字
+            String libraryName = this.libraryService.querySimple(item.getLibraryId()).getName();
+            String roomName = this.libraryRoomService.querySimple(item.getRoomId()).getName();
+            String seatName = this.librarySeatService.querySimple(item.getSeatId()).getName();
+            responseItem.setDate(ddate);
+            responseItem.setLibraryName(libraryName);
+            responseItem.setRoomName(roomName);
+            responseItem.setSeatName(seatName);
+            responseItems.add(responseItem);
         }
+        // 排序
+        Collections.sort(responseItems);
+        return ResMap.ok(responseItems);
 
-        receiveOrder.setReceiveItemResponses(receiveItemResponses);
-        return ResMap.ok(receiveOrder);
     }
 
-
+    /**
+     * 获取用户的所有预约
+     *
+     * @param userId 用户Id
+     * @return 实体
+     * @throws MyException ms
+     */
+    public Map<String, Object> all(String userId) throws MyException {
+        List<ReceiveItem> items = this.receiveItemDao.queryByUserId(userId);
+        return ResMap.ok();
+    }
 }

@@ -15,6 +15,7 @@ page {
     height: 300rpx;
     background-size: 122%;
     background-position: 0rpx center 100rpx;
+
 }
 
 .title {
@@ -84,4 +85,6 @@ page {
 
 .label {
     background-color: rgba(255, 255, 255, 0.2);
+    /* background: linear-gradient(to right top, rgba(74, 219, 212, 0.1), rgba(236, 155, 169, 0.1), rgba(213, 150, 250, 0.1)); */
+    backdrop-filter: blur(0.6px);
 }

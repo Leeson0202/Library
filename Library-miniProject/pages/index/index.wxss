@@ -1,10 +1,138 @@
 /**index.wxss**/
-page {
-    height: 100%;
+
+
+.main {
     width: 100%;
+    min-height: 100%;
     overflow-y: hidden;
+    background: linear-gradient(to right top,
+            rgb(255, 250, 228),
+            rgb(225, 247, 243),
+            rgb(214, 216, 245),
+            rgb(250, 223, 248),
+            rgb(242, 243, 214))
 }
 
+
+
+@keyframes adload {
+    0% {
+        height: 300rpx;
+    }
+
+    30% {
+        height: 500rpx;
+    }
+
+    65% {
+        height: 500rpx;
+    }
+
+    90% {
+        height: 300rpx;
+    }
+}
+
+/* 广告 */
+
+.ad-block {
+    margin: auto;
+    width: 99%;
+    overflow: hidden;
+    height: 300rpx;
+    border-radius: 18rpx;
+    box-shadow: 0 10rpx 20rpx #f2f2f2;
+    text-align: center;
+    color: #666;
+    background: linear-gradient(to right top, rgba(74, 219, 212, 0.5), rgba(236, 155, 169, 0.5), rgba(213, 150, 250, 0.5));
+    animation-name: adload;
+    animation-duration: 6s;
+}
+
+.float-t {
+    font-size: 120rpx;
+    height: 140rpx;
+    line-height: 140rpx;
+    color: rgb(220, 220, 248);
+}
+
+.leeson {
+    position: relative;
+    top: -310rpx;
+    left: -100rpx;
+    background: linear-gradient(to right, rgb(243, 238, 238), rgb(228, 115, 181), rgb(37, 218, 73), rgb(130, 130, 238));
+    -webkit-background-clip: text;
+    color: transparent;
+    animation-name: leesonDo;
+    animation-duration: 6s;
+    z-index: 100000;
+}
+
+.library {
+    position: relative;
+    top: -280rpx;
+    left: 120rpx;
+
+    background: linear-gradient(to right, rgb(240, 236, 241), rgb(100, 140, 240), rgb(240, 139, 24), rgb(236, 38, 38));
+    -webkit-background-clip: text;
+    color: transparent;
+    animation-name: libraryDo;
+    animation-duration: 6s;
+}
+
+/* 动画代码 */
+@keyframes leesonDo {
+    0% {
+        left: 400px;
+        top: -100rpx;
+    }
+
+    20% {
+        left: 400px;
+        top: -100rpx;
+    }
+
+    44% {
+        font-size: 120rpx;
+        left: 0rpx;
+        top: -100rpx;
+    }
+
+    60% {
+        font-size: 190rpx;
+    }
+
+    62% {
+        font-size: 190rpx;
+        left: 0rpx;
+        top: -100rpx;
+    }
+
+    90% {
+        font-size: 120rpx;
+        left: -100rpx;
+        top: -310rpx;
+    }
+}
+
+/* 动画代码 */
+@keyframes libraryDo {
+    0% {
+        left: 600rpx;
+        top: 0 rpx;
+    }
+
+    65% {
+        left: 600rpx;
+        top: 0 rpx;
+    }
+
+    90% {
+        left: 120rpx;
+    }
+}
+
+/* 通知 */
 .top-notify {
     height: 40rpx;
     /* background-color: #fcfcfc; */
@@ -12,6 +140,7 @@ page {
     font-weight: 400;
     overflow: hidden;
     box-sizing: border-box;
+    background: #fff;
 }
 
 .r {
@@ -22,6 +151,7 @@ page {
     font-size: 26rpx;
     color: #333;
 }
+
 
 @keyframes loop {
     0% {
@@ -45,96 +175,49 @@ page {
     }
 }
 
-/* 广告 */
+/* charts */
 
-.ad-block {
-    margin: auto;
-    width: 99%;
-    height: 300rpx;
-    border-radius: 18rpx;
+.charts {
+    width: 100%;
+    min-height: 1000rpx;
+    margin-top: 300rpx;
+    line-height: 120rpx;
+    font-size: 90rpx;
     text-align: center;
-    color: #666;
-    background: linear-gradient(to right top, rgba(74, 219, 212, 0.5), rgba(236, 155, 169, 0.5), rgba(213, 150, 250, 0.5));
+    color: #888;
 }
 
-.float-t {
-    font-size: 120rpx;
-    height: 140rpx;
-    line-height: 140rpx;
-    color: rgb(220, 220, 248);
 
-
+/* 图书馆info */
+.block {
+    padding: 20rpx 0;
+    margin: 10rpx auto;
+    height: auto;
 }
 
-.leeson {
+.picker {
+    display: inline-block;
+    line-height: 50rpx;
+}
+
+.school-picker {
+    margin-left: 30rpx;
+}
+
+.select-down {
+    display: inline-block;
     position: relative;
-    top: -310rpx;
-    left: -100rpx;
-    background: linear-gradient(to right, rgb(243, 238, 238), rgb(228, 115, 181), rgb(37, 218, 73), rgb(130, 130, 238));
-    -webkit-background-clip: text;
-    color: transparent;
-    animation-name: leesonDo;
-    animation-duration: 4s;
-    z-index: 100000;
+    top: 10rpx;
+    height: 40rpx;
+    margin-right: 10rpx;
 }
 
-.library {
-    position: relative;
-    top: -280rpx;
-    left: 120rpx;
-
-    background: linear-gradient(to right, rgb(240, 236, 241), rgb(100, 140, 240), rgb(240, 139, 24), rgb(236, 38, 38));
-    -webkit-background-clip: text;
-    color: transparent;
-    animation-name: libraryDo;
-    animation-duration: 4s;
+.library-picker {
+    margin-right: 30rpx;
+    float: right;
 }
 
-/* 动画代码 */
-@keyframes leesonDo {
-    0% {
-        left: 200px;
-        top: -250rpx;
-    }
+.chart {
+    background-color: transparent;
 
-
-    30% {
-        font-size: 120rpx;
-        left: 0rpx;
-    }
-
-    45% {
-        font-size: 190rpx;
-        left: 0rpx;
-        top: -250rpx;
-    }
-
-    81% {
-        font-size: 190rpx;
-        left: 0rpx;
-        top: -250rpx;
-    }
-
-    100% {
-        font-size: 120rpx;
-        left: -100rpx;
-        top: -310rpx;
-    }
-}
-
-/* 动画代码 */
-@keyframes libraryDo {
-    0% {
-        left: 600rpx;
-        top: 0 rpx;
-    }
-
-    50% {
-        left: 600rpx;
-        top: 0 rpx;
-    }
-
-    80% {
-        left: 120rpx;
-    }
 }

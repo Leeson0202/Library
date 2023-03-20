@@ -49,13 +49,6 @@
                 },
                 {
                     "name": "",
-                    "pathName": "pages/function/book/book",
-                    "query": "",
-                    "launchMode": "default",
-                    "scene": null
-                },
-                {
-                    "name": "",
                     "pathName": "pages/function/bookGuide/bookGuide",
                     "query": "",
                     "launchMode": "default",
@@ -99,6 +92,13 @@
                 {
                     "name": "",
                     "pathName": "pages/center/learnCount/learnCount",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
+                    "name": "",
+                    "pathName": "pages/function/downUp/downUp",
                     "query": "",
                     "launchMode": "default",
                     "scene": null

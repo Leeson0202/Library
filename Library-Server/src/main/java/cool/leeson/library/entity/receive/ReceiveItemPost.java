@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReceivePost {
+public class ReceiveItemPost {
     private String libraryId;
     private String roomId;
     private String seatId;

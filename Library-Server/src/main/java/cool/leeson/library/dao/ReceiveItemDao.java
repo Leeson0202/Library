@@ -10,7 +10,7 @@ import java.util.List;
  * (ReceiveItem)表数据库访问层
  *
  * @author Leeson0202
- * @since 2023-03-17 20:22:17
+ * @since 2023-03-21 00:26:40
  */
 public interface ReceiveItemDao {
 
@@ -22,13 +22,7 @@ public interface ReceiveItemDao {
      */
     ReceiveItem queryById(String receiveId);
 
-    /**
-     * 通过orderId获取
-     *
-     * @param orderId orderId
-     * @return 实体
-     */
-    List<ReceiveItem> queryByOrderId(String orderId);
+    List<ReceiveItem> queryByUserId(String userId);
 
     /**
      * 查询指定行数据

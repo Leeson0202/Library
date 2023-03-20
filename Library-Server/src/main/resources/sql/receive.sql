@@ -1,28 +1,19 @@
 use library;
 
--- 用户预约订单
-drop table if exists receive_order;
-create table receive_order
-(
-    order_id varchar(100) primary key comment 'id',
-    user_id  varchar(100) comment '用户id',
-    `time`   datetime comment '创建时间'
-);
-
 
 -- 用户预约详细表
 drop table if exists receive_item;
 create table receive_item
 (
     receive_id   varchar(100) primary key comment 'id',
-    order_id     varchar(100) comment 'order_id',
     user_id      varchar(100) comment '用户id',
     library_id   varchar(100) comment '图书馆id',
     room_id      varchar(100) comment '图书室id',
     seat_id      varchar(100) comment '座位id',
     -- 多少号几点
     receive_date date comment '预约日期',
-    receive_time time comment '预约时间'
+    time_idx      smallint comment '预约时间',
+    `time`       datetime comment '创建时间'
 
 );
 

@@ -1,5 +1,6 @@
 // pages/function/function.js
 //先引入
+import api from '../../utils/api';
 import {
     createStoreBindings
 } from 'mobx-miniprogram-bindings'
@@ -13,6 +14,48 @@ Page({
      * 页面的初始数据
      */
     data: {
+        // receiveList: [{
+        //     receiveId: "dahaius",
+        //     timeIdx: 0,
+        //     date: "3月18日",
+        //     libraryName: "数字图书馆",
+        //     roomName: "一楼阅览室",
+        //     seatName: "A1001",
+        //     status: 1,
+        //     online: 1
+        // }, {
+        //     receiveId: "dahaius",
+        //     timeIdx: 1,
+        //     date: "3月18日",
+        //     libraryName: "数字图书馆",
+        //     roomName: "一楼阅览室",
+        //     seatName: "A1001",
+        //     status: 0
+        // }, {
+        //     receiveId: "dahaius",
+        //     timeIdx: 2,
+        //     date: "3月18日",
+        //     libraryName: "数字图书馆",
+        //     roomName: "一楼阅览室",
+        //     seatName: "A1001",
+        //     status: 0
+        // }, {
+        //     receiveId: "dahaius",
+        //     timeIdx: 3,
+        //     date: "3月18日",
+        //     libraryName: "数字图书馆",
+        //     roomName: "一楼阅览室",
+        //     seatName: "A1001",
+        //     status: 0
+        // }, {
+        //     receiveId: "dahaius",
+        //     timeIdx: 4,
+        //     date: "3月18日",
+        //     libraryName: "数字图书馆",
+        //     roomName: "一楼阅览室",
+        //     seatName: "A1001",
+        //     status: 0
+        // }, ]
 
     },
     bookHandel(e) {
@@ -20,7 +63,7 @@ Page({
         let tag = e.currentTarget.dataset.tag;
         // 判断是否登陆
         this.HasLogin();
-        // if (!this.HasSchool()) return;
+        if (!this.HasSchool()) return;
         let url = "/pages/function/" + tag + "/" + tag;
 
         console.log(url);
@@ -31,6 +74,12 @@ Page({
         }
 
     },
+    downUp() {
+        wx.navigateTo({
+            url: '/pages/function/downUp/downUp',
+        })
+
+    },
 
     /**
      * 生命周期函数--监听页面加载
@@ -39,7 +88,7 @@ Page({
         this.storeBindings = createStoreBindings(this, {
             store,
             fields: ['userInfo', 'hasUserInfo', 'hasLogin', 'hasSchool'],
-            actions: ['HasLogin', 'HasSchool']
+            actions: ['HasLogin', 'HasSchool', 'CheckError']
         });
     },
 
@@ -54,6 +103,20 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow() {
+        let that = this
+        setTimeout(that.getSchedule, 500)
+
+
+    },
+    getSchedule() {
+        let that = this
+        api.receiveSchedule().then((data) => {
+            if (store.CheckError(data)) return;
+            that.setData({
+                receiveList: data.data
+            })
+            console.log(data.data);
+        })
 
     },
 

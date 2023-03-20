@@ -38,7 +38,7 @@
                 <view class="picker-name">
                     图书馆
                 </view>
-                <picker class="picker-block picker-a" bindchange="bindPickerLibraryChange" value="{{LibraryIdx}}" range="{{LibraryList}}">
+                <picker class="picker-block" bindchange="bindPickerLibraryChange" value="{{LibraryIdx}}" range="{{LibraryList}}">
                     <view class="picker">
                         <view class="picker-title">{{LibraryList[LibraryIdx]}}
                         </view>
@@ -49,7 +49,7 @@
                 <view class="picker-name">
                     图书室
                 </view>
-                <picker class="picker-block picker-a" bindchange="bindPickerRoomChange" value="{{roomIdx}}" range="{{roomList}}">
+                <picker class="picker-block" bindchange="bindPickerRoomChange" value="{{roomIdx}}" range="{{roomList}}">
                     <view class="picker">
                         <view class="picker-title">{{roomList[roomIdx]}}
                         </view>
@@ -60,7 +60,7 @@
                 <view class="picker-name">
                     座 位
                 </view>
-                <picker class="picker-block picker-a" bindchange="bindPickerSeatChange" value="{{SeatIdx}}" range="{{SeatList}}">
+                <picker class="picker-block" bindchange="bindPickerSeatChange" value="{{SeatIdx}}" range="{{SeatList}}">
                     <view class="picker">
                         <view class="picker-title">{{SeatList[SeatIdx]}}
                         </view>

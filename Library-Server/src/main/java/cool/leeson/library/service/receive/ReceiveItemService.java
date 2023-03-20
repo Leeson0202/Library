@@ -1,19 +1,21 @@
 package cool.leeson.library.service.receive;
 
-import cool.leeson.library.entity.receive.ReceiveItem;
 import cool.leeson.library.dao.ReceiveItemDao;
-import org.springframework.stereotype.Service;
+import cool.leeson.library.entity.receive.ReceiveItem;
+import cool.leeson.library.util.ResMap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * (ReceiveItem)表服务实现类
  *
  * @author Leeson0202
- * @since 2023-03-17 20:22:17
+ * @since 2023-03-21 00:26:40
  */
 @Service("receiveItemService")
 public class ReceiveItemService {
@@ -26,8 +28,8 @@ public class ReceiveItemService {
      * @param receiveId 主键
      * @return 实例对象
      */
-    public ReceiveItem queryById(String receiveId) {
-        return this.receiveItemDao.queryById(receiveId);
+    public Map<String, Object> queryById(String receiveId) {
+        return ResMap.ok(this.receiveItemDao.queryById(receiveId));
     }
 
     /**
@@ -59,7 +61,7 @@ public class ReceiveItemService {
      * @param receiveItem 实例对象
      * @return 实例对象
      */
-    public ReceiveItem update(ReceiveItem receiveItem) {
+    public Map<String, Object> update(ReceiveItem receiveItem) {
         this.receiveItemDao.update(receiveItem);
         return this.queryById(receiveItem.getReceiveId());
     }

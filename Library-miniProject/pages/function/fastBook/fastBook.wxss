@@ -45,7 +45,8 @@ page {
 
 .picker-block {
     display: inline-block;
-    margin-left: 60rpx;
+    padding-left: 60rpx;
+    width: 60%;
 
 }
 

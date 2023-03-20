@@ -16,7 +16,8 @@
         "pages/function/fastBook/fastBook",
         "pages/function/bookRecord/bookRecord",
         "pages/function/bookRule/bookRule",
-        "pages/center/learnCount/learnCount"
+        "pages/center/learnCount/learnCount",
+        "pages/function/downUp/downUp"
     ],
     "window": {
         "navigationBarBackgroundColor": "#fff",
@@ -24,7 +25,7 @@
         "navigationBarTextStyle": "black",
         "backgroundColor": "#fff",
         "onReachBottomDistance": 0,
-        "enablePullDownRefresh": false,
+        "enablePullDownRefresh": true,
         "backgroundTextStyle": "dark"
     },
     "tabBar": {

@@ -1,5 +1,8 @@
 package cool.leeson.library.service.library;
 
+import com.alibaba.fastjson.JSON;
+import com.aliyuncs.utils.StringUtils;
+import cool.leeson.library.config.RedisConfig;
 import cool.leeson.library.dao.LibraryDao;
 import cool.leeson.library.dao.LibraryRoomDao;
 import cool.leeson.library.dao.UserSchoolDao;
@@ -10,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -31,6 +35,8 @@ public class LibraryService {
     private LibraryRoomDao libraryRoomDao;
     @Resource
     private UserSchoolDao userSchoolDao;
+    @Resource
+    private RedisTemplate<String, String> redisTemplate;
 
 
     /**
@@ -40,7 +46,7 @@ public class LibraryService {
      * @return 实例对象
      */
     public Map<String, Object> queryById(String libraryId) {
-        Library library = this.libraryDao.queryById(libraryId);
+        Library library = this.querySimple(libraryId);
         if (library == null) {
             log.warn(libraryId + " 没有该图书馆信息");
             return ResMap.err("没有该图书馆信息");
@@ -51,6 +57,25 @@ public class LibraryService {
 
 
         return ResMap.ok(library);
+    }
+
+    public Library querySimple(String libraryId) {
+        Library library;
+        String libraryKey = String.format(RedisConfig.FormatKey.INFO.toString(), libraryId);
+        String s = this.redisTemplate.opsForValue().get(libraryKey);
+
+        if (StringUtils.isEmpty(s) || "".equals(s)) {
+            library = this.libraryDao.queryById(libraryId);
+            if (library == null) {
+                return null;
+            } else {
+                // 储存到 redis
+                redisTemplate.opsForValue().set(libraryKey, JSON.toJSONString(library));
+            }
+        } else {
+            library = JSON.parseObject(s, Library.class);
+        }
+        return library;
     }
 
 

@@ -356,6 +356,7 @@ Page({
     // 提交预约
     handleSubmit() {
         let that = this;
+        if (that.data.selectedSeats.length == 0) return;
         if (!this.data.receiveTag || that.data.selectLength == 0) {
             this.setData({
                 receiveTag: true
@@ -400,6 +401,37 @@ Page({
         wx.switchTab({
             url: '/pages/function/function',
         })
+    },
+    // 删除预约
+    deleteSelected(e) {
+        let that = this
+        console.log(e.currentTarget.dataset.index);
+        let selectedSeats = this.data.selectedSeats;
+        console.log(selectedSeats[e.currentTarget.dataset.index])
+        let selectedSeat = selectedSeats[e.currentTarget.dataset.index];
+        let today = e.currentTarget.dataset.index[0] == 'A';
+        let idx = parseInt(e.currentTarget.dataset.index[1])
+        console.log(today, idx, selectedSeat.roomId == this.data.roomId && today == this.data.today && idx == this.data.timeIdx);
+
+        if (selectedSeat.roomId == this.data.roomId && today == this.data.today && idx == this.data.timeIdx) {
+            // 时间 位置都相同
+            this.data.seatList.forEach((e, index) => {
+                if (e.seatId == selectedSeat.seatId) {
+                    console.log(index, e);
+                    let s = "seatList[" + index + "].src"
+                    that.setData({
+                        [s]: '/resources/images/library/yizi-normal.svg'
+                    })
+                }
+            })
+        }
+
+        delete selectedSeats[e.currentTarget.dataset.index]
+        this.setData({
+            selectedSeats: selectedSeats,
+            selectLength: that.data.selectLength - 1
+        })
+
     },
 
     //计算最大座位数,生成影厅图大小

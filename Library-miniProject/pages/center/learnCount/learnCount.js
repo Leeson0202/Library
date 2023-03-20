@@ -12,23 +12,40 @@ Page({
      * 页面的初始数据
      */
     data: {
-        checked: 0,
+        checked: 1,
         options: [{
             xAxis: {
-                data: ['一', '二', '三', '四', '五', '六', '七']
+                type: 'category',
+                data: ['一', '二', '三', '四', '五', '六', '七'],axisTick: {
+                    alignWithLabel: true
+                  }
             },
             yAxis: {
-                type: 'value'
+                type: 'value',
+                name: '学习时间',
+                position: 'left',
+                alignTicks: true,
+                axisLine: {
+                    show: true
+                },
+                axisLabel: {
+                    formatter: '{value}h'
+                }
+            },
+            grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
             },
             series: [
-
                 {
                     type: 'bar',
                     label: {
                         show: true,
-                        position: 'top'
+                        position: 'inside'
                     },
-                    data: [120, 200, 150, 80, 70, 110, 130],
+                    data: [10, 12, 6, 8, 7, 14, 2],
                     type: 'bar',
                     showBackground: true,
                     backgroundStyle: {
@@ -41,7 +58,22 @@ Page({
                 data: ['8-10', '10-12', '12-14', '14-16', '16-18', '18-20', '20-22']
             },
             yAxis: {
-                type: 'value'
+                type: 'value',
+                name: '学习时间',
+                position: 'left',
+                alignTicks: true,
+                axisLine: {
+                    show: true
+                },
+                axisLabel: {
+                    formatter: '{value}min'
+                }
+            },
+            grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
             },
             series: [
 
@@ -49,9 +81,9 @@ Page({
                     type: 'bar',
                     label: {
                         show: true,
-                        position: 'top'
+                        position: 'inside'
                     },
-                    data: [200, 320, 150, 218, 170, 110, 330],
+                    data: [100, 80, 60, 90, 120, 110, 30],
                     type: 'bar',
                     showBackground: true,
                     backgroundStyle: {

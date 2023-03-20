@@ -80,3 +80,15 @@ page {
     background-color: rgba(12, 161, 247, 0.18);
 
 }
+
+.status-online {
+    position: relative;
+    top: -5rpx;
+    display: inline-block;
+    font-size: 18rpx;
+    background-color: rgba(247, 225, 26, 0.8);
+    padding: 0 10rpx;
+    line-height: 32rpx;
+    border-radius: 10rpx;
+    color: #333;
+}

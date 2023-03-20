@@ -58,7 +58,7 @@
         <view class="manu" style="background-color: {{checked==1?'#fff':'#eee'}};" bindtap="handleChange" data-check="1">过去24h</view>
     </view>
     <!-- 图表格  -->
-    <view class="chart">
+    <view class="chart" style="width: 90%;">
         <ec-canvas id="mychart-count" cancas-id="mychart" ec="{{ec}}"></ec-canvas>
     </view>
 

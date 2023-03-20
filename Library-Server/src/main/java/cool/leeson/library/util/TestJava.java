@@ -21,10 +21,10 @@ public class TestJava {
         // Date
         Date date = new Date();
         Date today = new Date(date.getYear(), date.getMonth(), date.getDate(), 0, 0, 0);
-        System.out.println(today + "" + today.getHours());
+        Date yesterday = new Date(date.getYear(), date.getMonth(), date.getDate() - 1, 0, 0, 0);
+        System.out.println(today);
         // LocalTime
         System.out.println(LocalTime.of(0, 0, 0, 0));
-
-
+        System.out.println(today.equals(yesterday));
     }
 }

@@ -1,25 +1,24 @@
 <!--pages/cquptLogin/cquptLogin.wxml-->
 <view class="container">
-    <view class="main">
-        <view class="title">
+    <view style="width: 100%; height: 100%;backdrop-filter: blur(2px);">
 
-            <text>登陆</text>
-        </view>
-        <view class="login-main">
-            <view class="input-block">
-                <image src="https://ids.cqupt.edu.cn/authserver/cquptDzTheme/static/web/images/user1.png" mode="heightFix" />
-                <input class="login-input" type="text" 
-                value="{{cqupt_id}}" bindinput="bindCquptId"
-                placeholder="请输入统一认证码" />
+        <view class="main">
+            <view class="title">
+                <text>登陆</text>
+            </view>
+            <view class="login-main">
+                <view class="input-block">
+                    <image src="https://ids.cqupt.edu.cn/authserver/cquptDzTheme/static/web/images/user1.png" mode="heightFix" />
+                    <input class="login-input" type="text" value="{{cqupt_id}}" bindinput="bindCquptId" placeholder="请输入统一认证码" />
 
+                </view>
+                <view class="input-block">
+                    <image src="https://ids.cqupt.edu.cn/authserver/cquptDzTheme/static/web/images/pass1.png" mode="heightFix" />
+                    <input class="login-input" type="password" value="{{password}}" bindinput="bindPassword" placeholder="初始密码为身份证后6位" />
+                </view>
+                <view class="button login-button" bindtap="login">登陆</view>
             </view>
-            <view  class="input-block">
-            <image src="https://ids.cqupt.edu.cn/authserver/cquptDzTheme/static/web/images/pass1.png" mode="heightFix" />
-                <input class="login-input" type="password" 
-                value="{{password}}" bindinput="bindPassword" placeholder="初始密码为身份证后6位" />
-            </view>
-            <button class="login-button" bindtap="login">登陆</button>
         </view>
+
     </view>
-
 </view>

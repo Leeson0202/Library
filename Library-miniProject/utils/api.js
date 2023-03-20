@@ -5,6 +5,11 @@ class Api {
     wxLogin(code) {
         return request.post('/wx/login', code)
     }
+    // 获取行程计划
+    receiveSchedule() {
+        return request.get('/receive/schedule')
+    }
+
 }
 const api = new Api()
 export default api

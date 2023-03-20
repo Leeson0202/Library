@@ -1,5 +1,8 @@
 package cool.leeson.library.service.library;
 
+import com.alibaba.fastjson.JSON;
+import com.aliyuncs.utils.StringUtils;
+import cool.leeson.library.config.RedisConfig;
 import cool.leeson.library.dao.LibraryDao;
 import cool.leeson.library.dao.SchoolDao;
 import cool.leeson.library.dao.SchoolRuleDao;
@@ -13,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -36,6 +40,8 @@ public class SchoolService {
     private LibraryDao libraryDao;
     @Resource
     private SchoolRuleDao schoolRuleDao;
+    @Resource
+    private RedisTemplate<String, String> redisTemplate;
 
     /**
      * 通过ID查询单条数据
@@ -44,7 +50,8 @@ public class SchoolService {
      * @return 实例对象
      */
     public Map<String, Object> queryById(String schoolId) {
-        School school = this.schoolDao.queryById(schoolId);
+        School school = this.querySimple(schoolId);
+
         if (school == null) {
             log.error(schoolId + " 学校不存在");
             return ResMap.err("学校不存在");
@@ -55,6 +62,25 @@ public class SchoolService {
         school.setLibraries(libraries);
         school.setSchoolRule(schoolRule);
         return ResMap.ok(school);
+    }
+
+    public School querySimple(String schoolId) {
+        School school;
+        String schoolKey = String.format(RedisConfig.FormatKey.INFO.toString(), schoolId);
+        String s = this.redisTemplate.opsForValue().get(schoolKey);
+
+        if (StringUtils.isEmpty(s) || "".equals(s)) {
+            school = this.schoolDao.queryById(schoolId);
+            if (school == null) {
+                return null;
+            } else {
+                // 储存到 redis
+                redisTemplate.opsForValue().set(schoolKey, JSON.toJSONString(school));
+            }
+        } else {
+            school = JSON.parseObject(s, School.class);
+        }
+        return school;
     }
 
     /**

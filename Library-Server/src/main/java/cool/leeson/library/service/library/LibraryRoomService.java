@@ -1,10 +1,13 @@
 package cool.leeson.library.service.library;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.utils.StringUtils;
+import cool.leeson.library.config.RedisConfig;
 import cool.leeson.library.dao.LibraryRoomDao;
 import cool.leeson.library.dao.LibrarySeatDao;
 import cool.leeson.library.dao.LibraryTableDao;
+import cool.leeson.library.entity.library.Library;
 import cool.leeson.library.entity.library.LibraryRoom;
 import cool.leeson.library.entity.library.LibrarySeat;
 import cool.leeson.library.entity.library.LibraryTable;
@@ -45,8 +48,8 @@ public class LibraryRoomService {
     /**
      * 通过 roomId 获得房间的所有信息
      *
-     * @param roomId
-     * @return
+     * @param roomId id
+     * @return 实体
      */
     public Map<String, Object> query(String roomId) {
         LibraryRoom libraryRoom = this.libraryRoomDao.queryById(roomId);
@@ -72,6 +75,26 @@ public class LibraryRoomService {
         String roomKey = String.format(roomKeyFormat, roomId);
         redisTemplate.opsForValue().set(roomKey, JSONObject.toJSONString(libraryRoom));
         return ResMap.ok(libraryRoom);
+    }
+
+
+    public LibraryRoom querySimple(String roomId) {
+        LibraryRoom room;
+        String roomKey = String.format(RedisConfig.FormatKey.INFO.toString(), roomId);
+        String s = this.redisTemplate.opsForValue().get(roomKey);
+
+        if (StringUtils.isEmpty(s) || "".equals(s)) {
+            room = this.libraryRoomDao.queryById(roomId);
+            if (room == null) {
+                return null;
+            } else {
+                // 储存到 redis
+                redisTemplate.opsForValue().set(roomKey, JSON.toJSONString(room));
+            }
+        } else {
+            room = JSON.parseObject(s, LibraryRoom.class);
+        }
+        return room;
     }
 
     /**

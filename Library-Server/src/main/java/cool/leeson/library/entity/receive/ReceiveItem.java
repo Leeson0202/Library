@@ -5,28 +5,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalTime;
 import java.util.Date;
 
 /**
  * (ReceiveItem)实体类
  *
  * @author Leeson0202
- * @since 2023-03-17 20:58:42
+ * @since 2023-03-21 00:28:36
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReceiveItem implements Serializable {
-    private static final long serialVersionUID = 853055001697951161L;
+    private static final long serialVersionUID = -35046167202956545L;
     /**
      * id
      */
     private String receiveId;
-    /**
-     * order_id
-     */
-    private String orderId;
     /**
      * 用户id
      */
@@ -50,8 +45,11 @@ public class ReceiveItem implements Serializable {
     /**
      * 预约时间
      */
-    private LocalTime receiveTime;
-
+    private Integer timeIdx;
+    /**
+     * 创建时间
+     */
+    private Date time;
 
 }
 

@@ -62,7 +62,7 @@
                 <view style="display: inline-block;">
                     {{item.libraryName}} · {{item.roomName}} · {{item.seatName}} · {{item.today?"今":"明"}}·{{times[item.timeIdx]}}
                 </view>
-                <image style="margin-right: 16rpx;height: 30rpx; width: 30rpx; top: 16rpx; display: inline-block; position: relative; float: right;" src="/resources/images/library/delete.svg" mode="heightFix" />
+                <image bindtap="deleteSelected" data-index="{{index}}" style="margin-right: 16rpx;height: 30rpx; width: 30rpx; top: 16rpx; display: inline-block; position: relative; float: right;" src="/resources/images/library/delete.svg" mode="heightFix" />
             </view>
             <view style="height: 30rpx; width: 100%;">
 

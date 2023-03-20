@@ -2,8 +2,11 @@
 
 <view class="main-container">
     <view class="head" style="background-image: url({{school.background}});">
-        <view class="title">
-            {{school.name}}
+        <view style="height:100%;background-color: rgba(250, 250, 250, 0);backdrop-filter: blur(0.6px);">
+            <view class="title">
+                {{school.name}}
+            </view>
+
         </view>
     </view>
     <view>

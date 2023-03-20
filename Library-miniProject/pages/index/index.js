@@ -49,11 +49,24 @@ function getOption() {
         series: [{
             name: 'Nightingale Chart',
             type: 'pie',
-            radius: [10, 100],
+            radius: [0, 115],
             center: ['50%', '50%'],
             roseType: 'area',
             itemStyle: {
                 borderRadius: 4
+            },
+            label: {
+              alignTo: 'edge',
+              formatter: '{name|{b}}\n{time|{c} 人}',
+              minMargin: 5,
+              edgeDistance: 10,
+              lineHeight: 15,
+              rich: {
+                time: {
+                  fontSize: 10,
+                  color: '#999'
+                }
+              }
             },
             data: [{
                     value: 40,
@@ -65,7 +78,7 @@ function getOption() {
                 },
                 {
                     value: 32,
-                    name: '其他'
+                    name: '无'
                 }
             ]
         }]

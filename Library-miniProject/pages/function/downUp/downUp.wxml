@@ -1,0 +1,18 @@
+<!--pages/function/downUp/downUp.wxml-->
+<view class="main">
+    <view class="qR">
+        <view class="qR-block">
+            <view id="qRcode">
+                <canvas type="2d" style="width: 360rpx; height: 360rpx;margin: auto;" id="myQrcode"></canvas>
+            </view>
+            <view class="info-block">
+                请使扫码二维码
+            </view>
+            <view class="button" bindtap="back" style="margin-top: 200rpx;">
+                返回
+            </view>
+
+        </view>
+    </view>
+
+</view>

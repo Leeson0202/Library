@@ -1,65 +1,75 @@
 <!--pages/function/function.wxml-->
-<view class="ad-block" >
-    这个广告位 必须拿下
-</view>
-<!-- manu -->
-<view class="card top-manu" slot="content">
-    <view class="top-manu-item" bindtap="bookHandel" data-tag="bookGuide">
-        <image class="manu-icon" src="/resources/images/function/receive_common.svg" mode="heightFix" />
-        <view class="manu-title">
-            一般预约
-        </view>
+<view>
+    <view class="ad-block">
+        这个广告位 必须拿下
     </view>
-    <view class="top-manu-item" bindtap="bookHandel" data-tag="fastBook">
-        <image class="manu-icon" src="/resources/images/function/receive_fast.svg" mode="heightFix" />
-        <view class="manu-title">
-            快速预约
-        </view>
-    </view>
-    <view class="top-manu-item" bindtap="bookHandel" data-tag="bookRecord">
-        <image class="manu-icon" src="/resources/images/function/receive_record.svg" mode="heightFix" />
-        <view class="manu-title">
-            预约记录
-        </view>
-    </view>
-    <view class="top-manu-item" bindtap="bookHandel" data-tag="bookRule">
-        <image class="manu-icon" src="/resources/images/function/receive_rule.svg" mode="heightFix" />
-        <view class="manu-title">
-            预约规则
-        </view>
-    </view>
-</view>
-<!-- 日程 -->
-<view class="receive-block">
-    <view style="font-size: 30rpx; color: #555; font-weight: 500;">
-        我的日程
-    </view>
-    <view class="items">
-        <view class="card line-item " wx:for="{{8}}" wx:key="index">
-            <view class="receive-time">
-                <view style="margin-top:24rpx; line-height: 40rpx; font-size: 26rpx; color: rgb(12, 161, 247); font-weight: 700;"> 8:00-10:00 </view>
-                <view style="margin-top:0rpx; font-size: 20rpx; line-height: 30rpx; color: #666;"> 3月18日</view>
+    <!-- manu -->
+    <view class="card top-manu" slot="content">
+        <view class="top-manu-item" bindtap="bookHandel" data-tag="bookGuide">
+            <image class="manu-icon" src="/resources/images/function/receive_common.svg" mode="heightFix" />
+            <view class="manu-title">
+                一般预约
             </view>
-            <view class="receive-info">
-                <view style="float: left;">
-                    <view style="margin-top: 10rpx; font-size: 28rpx;line-height: 40rpx; color: #666; ">
-                        数字图书馆
+        </view>
+        <view class="top-manu-item" bindtap="bookHandel" data-tag="fastBook">
+            <image class="manu-icon" src="/resources/images/function/receive_fast.svg" mode="heightFix" />
+            <view class="manu-title">
+                快速预约
+            </view>
+        </view>
+        <view class="top-manu-item" bindtap="bookHandel" data-tag="bookRecord">
+            <image class="manu-icon" src="/resources/images/function/receive_record.svg" mode="heightFix" />
+            <view class="manu-title">
+                预约记录
+            </view>
+        </view>
+        <view class="top-manu-item" bindtap="bookHandel" data-tag="bookRule">
+            <image class="manu-icon" src="/resources/images/function/receive_rule.svg" mode="heightFix" />
+            <view class="manu-title">
+                预约规则
+            </view>
+        </view>
+    </view>
+    <!-- 日程 -->
+    <view class="receive-block">
+        <view style="font-size: 30rpx; color: #555; font-weight: 500;">
+            我的计划
+        </view>
+        <view wx:if="{{receiveList==null || receiveList.length==0}}" style="width: 100%; margin: auto; margin-top: 100rpx; text-align: center; color: #ccc;">
+            没有行程
+        </view>
+        <view class="items" wx:else>
+            <view class="card line-item " wx:for="{{receiveList}}" wx:key="index">
+                <view class="receive-time">
+                    <view style="margin-top:24rpx; line-height: 40rpx; font-size: 26rpx; color:{{item.status==1?'rgba(250,0,0,0.7)':'rgb(12, 161, 247)'}}; font-weight: 700;"> {{item.timeIdx*2+8+":00-"+(item.timeIdx*2+10)+":00"}} </view>
+                    <view style="margin-top:0rpx; font-size: 20rpx; line-height: 30rpx; color: #666;"> {{item.date}}</view>
+                </view>
+                <view class="receive-info">
+                    <view style="float: left;">
+                        <view style="margin-top: 10rpx; font-size: 28rpx;line-height: 40rpx; color: #666; ">
+                            {{item.libraryName}}
+                            <view wx:if="{{item.status==1}}" style="background-color: {{item.online==0?'rgba(243, 113, 113, 0.8)':item.online==1?'rgba(94, 241, 65, 0.8)':'rgba(247, 225, 26, 0.8)'}};" class="status-online">
+                                {{item.online==0?"未入座":item.online==1?"已入座":"暂离"}}
+                            </view>
+
+                        </view>
+                        <view style="font-size: 23rpx; color: #222;">
+                            {{item.roomName+ " "+item.seatName}}
+                        </view>
+
                     </view>
-                    <view style="font-size: 23rpx; color: #222;">
-                        一楼阅览室 A1001
+                    <view class="receive-bottons" wx:if="{{item.status==1}}" bindtap="downUp">
+                        <view>
+                            入座 | 离座
+                        </view>
+
                     </view>
 
                 </view>
-                <view class="receive-bottons">
-                    <view>
-                        入座 | 离座
-                    </view>
-
-                </view>
 
             </view>
-
         </view>
+
     </view>
 
 </view>

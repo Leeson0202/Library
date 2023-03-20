@@ -1,40 +1,49 @@
 /* pages/cquptLogin/cquptLogin.wxss */
-page{
+page {
     height: 100%;
 }
-.container{
+
+.container {
     height: 100%;
     background: url('https://ids.cqupt.edu.cn/authserver/cquptDzTheme/static/web/dzimages/bg5.jpg');
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
+    /* -webkit-backdrop-filter: blur(8px); */
 }
-.main{
+
+.main {
+    margin: auto;
     width: calc(78% - 40rpx);
     margin-top: 300rpx;
     background-color: rgba(255, 255, 255, 1);
     box-shadow: 0 0 5rpx #eee;
-    border-radius: 10rpx;
+    border-radius: 20rpx;
+    /* filter: blur(1px); */
 }
-.title{
+
+.title {
     text-align: center;
-    padding: 30rpx 0 ;
+    padding: 30rpx 0;
     border-bottom: 1rpx solid #eee;
     /* background-color: #eee; */
     font-size: 38rpx;
     border-top-left-radius: 10rpx;
     border-top-right-radius: 10rpx;
 }
-.login-main{
-    padding: 10rpx ;
+
+.login-main {
+    padding: 10rpx;
     font-size: 28rpx;
 
 }
-.input-block{
+
+.input-block {
     height: 80rpx;
     margin-top: 20rpx;
 }
-.input-block > image{
+
+.input-block>image {
     display: inline-block;
     height: 80rpx;
     position: relative;
@@ -51,10 +60,8 @@ page{
     height: 60rpx;
 
 }
-.login-button{
-    margin: 60rpx 0 30rpx 0;
-    padding: 0;
-    height: 60rpx;
-    line-height: 60rpx;
-    font-size: 28rpx;
+
+.button{
+    margin-top: 60rpx;
+    margin-bottom: 50rpx;
 }
