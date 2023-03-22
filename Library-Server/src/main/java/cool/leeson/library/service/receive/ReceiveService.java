@@ -131,9 +131,12 @@ public class ReceiveService {
      * @throws MyException ms
      */
     public Map<String, Object> schedule(String userId) throws MyException {
+        log.info(userId + " 正在获取行程计划");
         // 先查询所有
         List<ReceiveItem> items = this.receiveItemDao.queryByUserId(userId);
+        log.info("用户的items：" + items.size());
         Date now = new Date();
+        log.info("现在的时间: " + now.toLocaleString());
         // 时间Idx
         int timeIndex = 0;
         int today = 0;
@@ -146,13 +149,19 @@ public class ReceiveService {
         } else {
             timeIndex = (now.getHours() - 8) / 2;
         }
+        log.info("现在的timeIndex: " + timeIndex + "; today: " + today);
         // 要展现的时间 年月日
         Date date = new Date(now.getYear(), now.getMonth(), now.getDate() + today);
         List<ReceiveItemResponse> responseItems = new ArrayList<>();
         for (ReceiveItem item : items) {
+            log.info("现在遍历第 " + items.indexOf(item) + "个");
+            log.info("item信息： " + item.getReceiveDate().toLocaleString() + " timeIdx: " + item.getTimeIdx());
+
             // 比这个时间早，直接继续 日期早或index小
-            if (item.getReceiveDate().before(date) || (item.getReceiveDate().equals(date) && item.getTimeIdx() < timeIndex))
+            if (item.getReceiveDate().before(date) || (item.getReceiveDate().equals(date) && item.getTimeIdx() < timeIndex)) {
+                log.info("这个预约在这之前，直接跳过\n-----------------");
                 continue;
+            }
             // 判断 status
             int status = (item.getReceiveDate().equals(date) && item.getTimeIdx() == timeIndex) ? 1 : 0;
             // 判断是否在线 online
@@ -162,10 +171,12 @@ public class ReceiveService {
             if (!StringUtils.isEmpty(userOnline) && !"".equals(userOnline)) {
                 online = Integer.parseInt(userOnline); // 1入座 2 暂时离开
             }
+            log.info(" status: " + status + "; online: " + online);
             // 构建
             ReceiveItemResponse responseItem = new ReceiveItemResponse(item, status, online);
             // date
             String ddate = item.getReceiveDate().getMonth() + 1 + "月" + item.getReceiveDate().getDate() + "日";
+            log.info(" 构建的日期：" + date);
             // 获取名字
             String libraryName = this.libraryService.querySimple(item.getLibraryId()).getName();
             String roomName = this.libraryRoomService.querySimple(item.getRoomId()).getName();
@@ -175,6 +186,7 @@ public class ReceiveService {
             responseItem.setRoomName(roomName);
             responseItem.setSeatName(seatName);
             responseItems.add(responseItem);
+            log.info("-------------");
         }
         // 排序
         Collections.sort(responseItems);

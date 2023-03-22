@@ -1,10 +1,11 @@
-#git作为基础镜像
 #FROM ubuntu
 #FROM openjdk:8u212-jre-alpine
 FROM openjdk:8-jdk-alpine
 WORKDIR /usr/local/code
 #将源码复制到下一个镜像中
 COPY ./target/Library-Server-1.0.jar /usr/local/code
+
+RUN echo "Asia/Shanghai" > /etc/timezone
 
 #声明项目所用端口
 EXPOSE 8080

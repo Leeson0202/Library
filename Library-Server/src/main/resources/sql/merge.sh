@@ -1,0 +1,1 @@
+cat user.sql school.sql cqupt.sql receive.sql > all.sql
