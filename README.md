@@ -2,9 +2,17 @@
 
 ### 介绍
 
-这是我的 2023 年毕业设计，做一个基于微信小程序的座位预约系统。
+这是我的 2023 年毕业设计，做一个基于微信小程序的座位预约系统，系统分用户端（小程序）和管理员端（Web）。
 
-**小程序端展示**
+#### 特点
+
+- 像选电影票一样进行选座
+- 快速预约（定时预约，短信提醒），为考研人保驾护航
+- 个人数据展示
+- 图书馆数据展示
+- 个人计划提示
+
+### **小程序端展示**
 
 - 三个 swichTable
 
@@ -22,13 +30,9 @@
 
 <img src="https://ghproxy.com/https://raw.githubusercontent.com/Leeson0202/imgRepository/main/9CDCC6FD-D483-4068-B3B7-91276DBB556F_1_102_o.jpeg" alt="9CDCC6FD-D483-4068-B3B7-91276DBB556F_1_102_o" style="width:25%;" />			<img src="https://ghproxy.com/https://raw.githubusercontent.com/Leeson0202/imgRepository/main/IMG_0018.png" alt="D9D0779C-6979-4C59-955D-9E0104BDD28E_1_102_o" style="width:25%;" />			<img src="https://ghproxy.com/https://raw.githubusercontent.com/Leeson0202/imgRepository/main/3B0C4037-2D98-487F-BF20-7DA0C23C1BF5_1_102_o.jpeg" alt="3B0C4037-2D98-487F-BF20-7DA0C23C1BF5_1_102_o" style="width: 25%;" />
 
-#### 特点
 
-- 像选电影票一样进行选座
-- 快速预约，为考研人保驾护航
-- 个人数据展示
 
-#### 系统介绍
+### 系统介绍
 
 系统分为管理员（web）和用户端（微信小程序）。
 
@@ -38,7 +42,7 @@
 - miniProject（小程序端）
 - vue（前端）
 
-[后端文档](./Library-server/README.md)
+[后端文档](./Library-Server/README.md)
 
 [小程序文档](./Library-miniProject.md)
 
