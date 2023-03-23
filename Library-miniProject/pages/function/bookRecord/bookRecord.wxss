@@ -51,7 +51,7 @@ page {
     color: #666;
     font-size: 30rpx;
     font-weight: 600;
-    border-bottom: 4rpx solid rgb(231, 229, 229);
+    border-bottom: 1rpx solid rgb(231, 229, 229);
 }
 
 .seat-room {

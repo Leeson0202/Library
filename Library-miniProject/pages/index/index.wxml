@@ -26,13 +26,13 @@
     <view class="charts">
         <view style="height: 300rpx; line-height: 300rpx;font-family:Cambria, Cochin, Georgia, Times, ‘Times New Roman’, serif;">
             <view>
-                <view style="display: inline-block;color: rgb(14, 175, 250);text-shadow: 5rpx 5rpx 10rpx rgb(14, 175, 250);">I</view> {{" "}}
-                <image style="height: 100rpx; position: relative; top: 20rpx;" src="/resources/images/love.svg" mode="heightFix"></image>{{" "}}
                 <view style="display: inline-block;color: rgba(45, 148, 62, 0.616);text-shadow: 5rpx 5rpx 10rpx rgba(45, 148, 62, 0.616);">C</view>
                 <view style="display: inline-block; color: rgba(26, 147, 156, 0.664);text-shadow: 5rpx 5rpx 10rpx rgba(26, 147, 156, 0.664)">Q</view>
                 <view style="display: inline-block;color: rgba(240, 172, 83, 0.651);text-shadow: 5rpx 5rpx 10rpx rgba(240, 172, 83, 0.651);">U</view>
                 <view style="display: inline-block;color: rgb(79, 113, 228);text-shadow: 5rpx 5rpx 10rpx rgb(79, 113, 228);">P</view>
                 <view style="display: inline-block;color: rgb(238, 63, 107);text-shadow: 5rpx 5rpx 10rpx rgb(238, 63, 107);">T</view>
+{{"  "}}
+                <image style="height: 100rpx; position: relative; top: 10rpx;" src="/resources/images/love.svg" mode="heightFix"></image>
 
             </view>
         </view>

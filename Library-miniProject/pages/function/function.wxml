@@ -35,7 +35,7 @@
         <view style="font-size: 30rpx; color: #555; font-weight: 500;">
             我的计划
         </view>
-        <view wx:if="{{receiveList==null || receiveList.length==0}}" style="width: 100%; margin: auto; margin-top: 100rpx; text-align: center; color: #ccc;">
+        <view wx:if="{{receiveList==null || receiveList.length==0}}" style="width: 100%; margin: auto; margin-top: 100rpx; padding-bottom:30rpx;text-align: center; color: #ccc;">
             没有行程
         </view>
         <view class="items" wx:else>

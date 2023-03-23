@@ -1,4 +1,4 @@
-package cool.leeson.library.util.msm;
+package cool.leeson.library.util.sms;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
@@ -8,29 +8,27 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.google.gson.Gson;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
 @Slf4j
-public class MsmUtil {
-    // 测试账号
-//    private static final String signName = "阿里云短信测试";
-    // signName
-    private static final String signName = "悠点单词";
-    /**
-     * use STS Token
-     * DefaultProfile profile = DefaultProfile.getProfile(
-     * "<your-region-id>",           // The region ID
-     * "<your-access-key-id>",       // The AccessKey ID of the RAM account
-     * "<your-access-key-secret>",   // The AccessKey Secret of the RAM account
-     * "<your-sts-token>");          // STS Token
-     **/
-    private final DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "LTAI5tPopBCUj5yt31T9QT76", "3CyKbDS07IQQKQ2SF5CFiaiBMIt8MF");
+@Setter
+@Configuration
+@ConfigurationProperties(prefix = "sms")
+@PropertySource("classpath:config/private-config.properties")
+public class SmsUtil {
+    private String signName;
+    private String regionId;
+    private String accessKeyId;
+    private String secret;
 
     // templateCode
     public static enum Opt {
@@ -50,27 +48,19 @@ public class MsmUtil {
         }
     }
 
-    private static final HashMap<Integer, String> map = new HashMap<Integer, String>() {
-        {
-            put(0, "SMS_227741458"); // 注册
-            put(1, "SMS_254210472"); // 登陆
-            put(2, "SMS_254215484"); // 修改信息
-        }
-    };
 
-    public boolean send(Opt opt, String phone, String code) {
+    public boolean send(String phone, Opt opt, String code) {
 
-        log.info(phone + " 正在发送短信。");
+        DefaultProfile profile = DefaultProfile.getProfile(regionId, accessKeyId, secret);
 
         IAcsClient client = new DefaultAcsClient(profile);
         SendSmsRequest request = new SendSmsRequest();
-        request.setSignName("SMS_154950909".equals(opt.toString())?"阿里云短信测试": signName); // 签名
+        request.setSignName("SMS_154950909".equals(opt.toString()) ? "阿里云短信测试" : signName); // 签名
         request.setTemplateCode(opt.toString());  // 注册？登陆？改？
         request.setPhoneNumbers(phone);
         request.setTemplateParam("{\"code\":\"" + code + "\"}");
 
         try {
-            log.info(phone + "正在发送。。");
             SendSmsResponse response = client.getAcsResponse(request);
             String reCode = response.getCode();
             System.out.println(new Gson().toJson(response));
@@ -131,8 +121,5 @@ public class MsmUtil {
         }
     }
 
-    public static void main(String[] args) {
-        boolean sent = new MsmUtil().send(Opt.Test, "18523681435", "234567");
-        System.out.println(sent);
-    }
+
 }

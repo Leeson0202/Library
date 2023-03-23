@@ -1,6 +1,12 @@
 package cool.leeson.library.util;
 
+import lombok.Data;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalTime;
 import java.util.Calendar;
@@ -8,6 +14,9 @@ import java.util.Date;
 
 
 public class TestJava {
+
+
+
     public static void main(String[] args) {
         System.out.println(new Date().getDate());
         Calendar c = Calendar.getInstance();
@@ -27,4 +36,6 @@ public class TestJava {
         System.out.println(LocalTime.of(0, 0, 0, 0));
         System.out.println(today.equals(yesterday));
     }
+
+
 }

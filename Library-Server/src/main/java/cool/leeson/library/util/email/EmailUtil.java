@@ -1,7 +1,10 @@
 package cool.leeson.library.util.email;
 
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import javax.mail.Session;
@@ -14,6 +17,9 @@ import java.util.regex.Pattern;
 
 @Component
 @Slf4j
+@PropertySource(value = "classpath:config/private-config.properties")
+@ConfigurationProperties(prefix = "email")
+@Setter
 public class EmailUtil {
 
 
@@ -22,33 +28,53 @@ public class EmailUtil {
      * 发件人邮箱的SMTP服务器地址
      * 前三个不可更改
      */
-    private final static String hostEmail = "asedrfa@163.com";//开启授权码的邮箱
-    private final static String AuthorizationCode = "OXMSDHWWJBHGRZPR";//授权码
-    private final static String SMTPEmail = "smtp.163.com";// 网易163邮箱的 SMTP 服务器地址
+    private String hostEmail;//开启授权码的邮箱
+    private String AuthorizationCode;//授权码
+    private String SMTPEmail;// 网易163邮箱的 SMTP 服务器地址
     private Session session;
 
-    private String destEmail = "2224351168@qq.com";// 收件人邮箱
-    private String title = "Leeson Library";// 标题
+    private String destEmail;// 收件人邮箱
+    private String title;// 标题
     private String context = "正文内容";// 正文内容
 
+    public static enum Opt {
+        Register("验证码为：%s，您正在申请邮箱注册，5分钟内有效！"),
+        Login("验证码为：%s，您正在登录，若非本人操作，请勿泄露。"),
+        Update("验证码为：%s，您正在尝试变更重要信息，请妥善保管账户信息。");
+        private final String method;
 
-    public void send(String destEmail, String title, String context) throws Exception {
+        Opt(String s) {
+            this.method = s;
+        }
+
+
+        @Override
+        public String toString() {
+            return this.method;
+        }
+    }
+
+
+    public boolean send(String destEmail, Opt opt, String code) {
         this.destEmail = destEmail;
-        this.title = title;
-        this.context = context;
-
+        this.context = String.format(opt.toString(), code);
 
         this.init();
-        //创建邮件
-        MimeMessage message = this.createEmail();
-        //使用Session获取邮件传输对象
-        Transport transport = session.getTransport();
-        //使用邮箱账号和密码连接邮件服务器
-        transport.connect(hostEmail, AuthorizationCode);
-        //发送邮件
-        transport.sendMessage(message, message.getAllRecipients());
-        //关闭连接
-        transport.close();
+        try {
+            //创建邮件
+            MimeMessage message = this.createEmail();
+            //使用Session获取邮件传输对象
+            Transport transport = session.getTransport();
+            //使用邮箱账号和密码连接邮件服务器
+            transport.connect(hostEmail, AuthorizationCode);
+            //发送邮件
+            transport.sendMessage(message, message.getAllRecipients());
+            //关闭连接
+            transport.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void init() {
@@ -92,26 +118,4 @@ public class EmailUtil {
         return false;
     }
 
-    public static void main(String[] args) throws Exception {
-        new EmailUtil().send("2224351168@qq.com", null, "hello");
-
-//        EmailUtil emailUtil = new EmailUtil();
-//        emailUtil.props.setProperty("mail.smtp.host", SMTPEmail);// 发件人的邮箱的 SMTP 服务器地址
-//        emailUtil.props.setProperty("mail.smtp.auth", "true");// 需要请求认证
-//        emailUtil.props.setProperty("mail.transport.protocol", "smtp");
-//        //根据配置创建会话对象和邮件服务器交互
-//        Session session = Session.getInstance(emailUtil.props);
-//        session.setDebug(true);// 设置为debug模式, 可以查看详细的发送日志
-//
-//        //创建邮件
-//        MimeMessage message = new EmailUtil().createEmail();
-//        //使用Session获取邮件传输对象
-//        Transport transport = session.getTransport();
-//        //使用邮箱账号和密码连接邮件服务器
-//        transport.connect(hostEmail, AuthorizationCode);
-//        //发送邮件
-//        transport.sendMessage(message, message.getAllRecipients());
-//        //关闭连接
-//        transport.close();
-    }
 }

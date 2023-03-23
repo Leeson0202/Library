@@ -9,8 +9,7 @@ import cool.leeson.library.util.HttpClientUtil;
 import cool.leeson.library.util.ResMap;
 import cool.leeson.library.util.code.CodeUtil;
 import cool.leeson.library.util.email.EmailUtil;
-import cool.leeson.library.util.email.LibraryEmailUtil;
-import cool.leeson.library.util.msm.MsmUtil;
+import cool.leeson.library.util.sms.SmsUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -27,6 +26,10 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Transactional
 public class LoginService {
+    @Resource
+    private SmsUtil smsUtil;
+    @Resource
+    private EmailUtil emailUtil;
     @Resource
     private UserDao userDao;
     @Resource
@@ -56,7 +59,7 @@ public class LoginService {
      */
     public Map<String, Object> loginTel(String tel) {
         // 检测手机号
-        if (!MsmUtil.checkMobileNum(tel)) {
+        if (!SmsUtil.checkMobileNum(tel)) {
             log.error(tel + "输入正确手机号：");
             return ResMap.err("请输入正确的手机号");
         }
@@ -68,13 +71,18 @@ public class LoginService {
             log.error(tel + "在一分钟内多次请求");
             return ResMap.err("请在1分后请求");
         }
+        // 查询是否有该用户
+        User user = this.userDao.queryByTel(tel);
         // 生成随机验证码
-        log.info(tel + "正在发送短信");
+        log.info(tel + " 正在发送短信");
         String code = CodeUtil.createCode();
         // 测试
-//        boolean send = new MsmUtil().send(MsmUtil.Opt.Test, tel, code);
+//        boolean send = new SmsUtil().send(SmsUtil.Opt.Test, tel, code);
 //        // 实际
-        boolean send = new MsmUtil().send(MsmUtil.Opt.Login, tel, code);
+
+        boolean send = false;
+        if (user == null) send = smsUtil.send(tel, SmsUtil.Opt.Register, code);
+        else send = smsUtil.send(tel, SmsUtil.Opt.Login, code);
         if (!send) {
             log.error(tel + "验证码发送失败");
             return ResMap.err("验证码发送失败");
@@ -97,7 +105,7 @@ public class LoginService {
         // tag : {0:手机， 1:邮箱， 2:新用户}
         int tag = 0; // 用于下一步操作的tag
 
-        if (!MsmUtil.checkMobileNum(tel)) {
+        if (!SmsUtil.checkMobileNum(tel)) {
             log.error(tel + "输入正确手机号");
             return ResMap.err("请输入正确的手机号");
         }
@@ -144,11 +152,15 @@ public class LoginService {
             log.error(email + "在一分钟内多次请求");
             return ResMap.err("请在1分后请求");
         }
+        // 查询用户
+        User user = this.userDao.queryByEmail(email);
 
         // 生成验证码
         log.info(email + "正在发送验证码");
         String code = CodeUtil.createCode();
-        Boolean sent = new LibraryEmailUtil().send(email, code, LibraryEmailUtil.Opt.Register);
+        boolean sent = false;
+        if (user == null) sent = emailUtil.send(email, EmailUtil.Opt.Register, code);
+        else emailUtil.send(email, EmailUtil.Opt.Login, code);
         if (!sent) {
             log.info(email + "验证码发送失败");
             return ResMap.err("验证码发送失败");
@@ -255,10 +267,7 @@ public class LoginService {
         redisTemplate.opsForValue().set(tokenKey, token, 7, TimeUnit.DAYS);
 
         // 成功后返回token
-        return ResMap
-                .ok("token", token)
-                .put("tag", tag)
-                .build();
+        return ResMap.ok("token", token).put("tag", tag).build();
     }
 
     /**
@@ -320,8 +329,7 @@ public class LoginService {
             this.userSchoolDao.update(userSchool);
         } else {
             // 没有就插入
-            if (this.cquptInfoDao.insert(cquptInfo) < 1)
-                throw new MyException("插入cquptInfo表失败");
+            if (this.cquptInfoDao.insert(cquptInfo) < 1) throw new MyException("插入cquptInfo表失败");
             UserSchool userSchool = new UserSchool(UUID.randomUUID().toString(), userId, "dcajhbadhcavacda", false);
             this.userSchoolDao.insert(userSchool);
         }

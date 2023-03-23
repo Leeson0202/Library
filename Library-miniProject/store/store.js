@@ -52,11 +52,13 @@ export const store = observable({
     HasSchool: action(function () {
         let that = this;
         if (!that.hasSchool) {
-            wx.showToast({
-                title: '没有绑定学校',
-                icon: "none"
-            })
-            console.log("to userInfo");
+            setTimeout(() => {
+                wx.showToast({
+                    title: '没有绑定学校',
+                    icon: "none"
+                })
+                
+            }, 200);
             wx.navigateTo({
                 url: '/pages/center/userInfo/userInfo',
             })
