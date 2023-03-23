@@ -49,7 +49,7 @@
                         <view style="margin-top: 10rpx; font-size: 28rpx;line-height: 40rpx; color: #666; ">
                             {{item.libraryName}}
                             <!-- 状态 -->
-                            <view wx:if="{{index==0}}" style="background-color: {{item.online==0?'rgba(243, 113, 113, 0.8)':item.online==1?'rgba(94, 241, 65, 0.8)':'rgba(247, 225, 26, 0.8)'}};" class="status-online">
+                            <view wx:if="{{index==0}}" style="background-color: {{online==0?'rgba(243, 113, 113, 0.8)':online==1?'rgba(94, 241, 65, 0.8)':'rgba(247, 225, 26, 0.8)'}};" class="status-online">
                                 {{online==0?"未入座":online==1?"已入座":"暂离"}}
                             </view>
 

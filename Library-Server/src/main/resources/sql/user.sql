@@ -90,7 +90,9 @@ create table user_learned
     user_id      varchar(100) comment 'userId',
     -- 0点
     `date`       datetime comment '日期',
-    `learn_time` smallint comment '今日的时长'
+    begin_time   datetime comment '开始时间',
+    end_time     datetime comment '结束时间',
+    `learn_time` int comment '今日的时长'
 );
 
 

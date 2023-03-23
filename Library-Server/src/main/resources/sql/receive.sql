@@ -22,7 +22,7 @@ drop table if exists user_online;
 create table user_online
 (
     user_id  varchar(100) primary key comment 'id',
-    `online` boolean comment '在座状态',
+    `online` int comment '在座状态',
     `date`   datetime comment '开始就坐时间'
 );
 
