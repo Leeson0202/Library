@@ -9,6 +9,10 @@ class Api {
     receiveSchedule() {
         return request.get('/receive/schedule')
     }
+    // 获取全部预约
+    receiveAll() {
+        return request.get('/receive')
+    }
 
 }
 const api = new Api()

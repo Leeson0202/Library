@@ -26,6 +26,8 @@ class Request {
                     "token": wx.getStorageSync('token')
                 },
                 success(res) {
+                    wx.hideLoading();
+                    wx.stopPullDownRefresh();
                     resolve(res.data)
                 },
                 fail(res) {

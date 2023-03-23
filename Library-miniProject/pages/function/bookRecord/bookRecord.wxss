@@ -1,11 +1,15 @@
 /* pages/function/bookRecord/bookRecord.wxss */
 page {
-    height: 100%;
+    height: calc(100% - 20rpx);
 }
 
 .record-label {
+    position: fixed;
+    top: 0rpx;
     height: 60rpx;
-    margin-top: 4rpx;
+    width: 100%;
+    z-index: 1000;
+    background-color: #fff;
 }
 
 .label {
@@ -15,34 +19,46 @@ page {
     font-size: 28rpx;
 }
 
+.label-bottom {
+    border-bottom: 6rpx solid rgba(9, 9, 245, 0.281);
+}
+
 .main-content {
-    padding: 10rpx 0;
-    margin: 0;
-    width: 100%;
-    background-color: #eee;
+    display: block;
     position: relative;
+    margin: 50rpx 0;
+    padding: 20rpx 0;
+    width: 100%;
 
 }
 
 .items {
+    display: block;
+    position: relative;
     width: calc(95% - 40rpx);
     padding: 10rpx 20rpx;
+    margin-bottom: 30rpx;
 }
 
 .line-item {
-    padding: 10rpx 20rpx;
+    padding: 20rpx 20rpx 0rpx;
     height: 120rpx;
-
 }
 
 .line-item-title {
     height: 50rpx;
     line-height: 50rpx;
-    color: #888;
+    color: #666;
     font-size: 30rpx;
     font-weight: 600;
     border-bottom: 4rpx solid rgb(231, 229, 229);
 }
+
+.seat-room {
+    font-size: 26rpx;
+    color: rgb(61, 59, 59);
+}
+
 
 .record-status {
     display: inline-block;
@@ -51,6 +67,11 @@ page {
     line-height: 36rpx;
     font-size: 18rpx;
     border-radius: 14rpx;
+}
+
+.library-time {
+    font-size: 24rpx;
+    color: #444;
 }
 
 .delete-button {

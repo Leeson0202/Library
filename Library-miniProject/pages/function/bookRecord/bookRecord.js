@@ -1,81 +1,33 @@
 // pages/function/bookRecord/bookRecord.js
+import api from '../../../utils/api'
 Page({
 
     /**
      * 页面的初始数据
      */
     data: {
-        recordAll: [
-            [{
-                    "LibraryName": "数字图书馆",
-                    "roomName": "一楼阅览室",
-                    "seatName": "A1023",
-                    "date": "2023-03-17",
-                    "timeIdx": "16:00-18:00",
-                    "status": 0
-                },
-                {
-                    "LibraryName": "数字图书馆",
-                    "roomName": "一楼阅览室",
-                    "seatName": "A1023",
-                    "date": "2023-03-17",
-                    "timeIdx": "12:00-14:00",
-                    status: 1
-                }, {
-                    "LibraryName": "数字图书馆",
-                    "roomName": "一楼阅览室",
-                    "seatName": "A1023",
-                    "date": "2023-03-17",
-                    "timeIdx": "10:00-12:00",
-                    "status": -1
-                },
-                {
-                    "LibraryName": "数字图书馆",
-                    "roomName": "一楼阅览室",
-                    "seatName": "A1023",
-                    "date": "2023-03-17",
-                    "timeIdx": "8:00-10:00",
-                    "status": -1
-                }
-            ]
-        ]
+        tag: 0,
+
+        recordAll: [],
+        recorded: [],
+        recording: [],
+        recordDone: []
 
     },
 
-    /**
-     * 生命周期函数--监听页面加载
-     */
-    onLoad(options) {
 
-    },
 
-    /**
-     * 生命周期函数--监听页面初次渲染完成
-     */
-    onReady() {
-
-    },
 
     /**
      * 生命周期函数--监听页面显示
      */
     onShow() {
+        // 获取数据
+        this.queryReceiveAll()
+
 
     },
 
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload() {
-
-    },
 
     /**
      * 页面相关事件处理函数--监听用户下拉动作
@@ -84,17 +36,83 @@ Page({
 
     },
 
-    /**
-     * 页面上拉触底事件的处理函数
-     */
-    onReachBottom() {
+    queryReceiveAll() {
+        let that = this
+        api.receiveAll().then(data => {
+            // console.log(data);
+            let now = new Date(new Date().setHours(0, 0, 0, 0));
+            let timeIdx = Math.floor((new Date().getHours() - 8) / 2);
+            let date = (now.getMonth + 1) + "月" + now.getDate + '日'
+            // console.log(now, timeIdx);
+            let recordAll = [],
+                itemAll = [];
+            let recorded = [],
+                itemed = [];
+            let recording = [],
+                iteming = [];
+            let recordDone = [],
+                itemDone = [];
+            data.data.forEach((el, idx) => {
+                let rDate = new Date(el.receiveDate)
+                el.date = rDate.getFullYear() + "-" + rDate.getMonth() + "-" + rDate.getDate()
+                // console.log(el.date, el.timeIdx, rDate, rDate < now, rDate.getTime() == now.getTime(), rDate > now);
+                if (rDate.getTime() < now.getTime() || (rDate.getTime() == now.getTime() && el.timeIdx < timeIdx)) {
+                    // receiveDone 已经完成
+                    if (itemDone.length > 0 && itemDone[0].receiveDate != el.receiveDate) {
+                        // 不相同
+                        // 加入recordDone
+                        recordDone.push(itemDone);
+                        itemDone = []
+                    }
+                    el.status = -1
+                    itemDone.push(el)
+                } else if (rDate.getTime() == now.getTime() && el.timeIdx == timeIdx) {
+                    if (iteming.length > 0 && iteming[0].receiveDate != el.receiveDate) {
+                        // 不相同
+                        // 加入recording
+                        recordDone.push(iteming);
+                        iteming = []
+                    }
+                    el.status = 2
+                    iteming.push(el)
+                } else if (rDate > now || (rDate.getTime() == now.getTime() && el.timeIdx > timeIdx)) {
+                    // recorded 已经预约
+                    if (itemed.length > 0 && itemed[0].receiveDate != el.receiveDate) {
+                        // 不相同
+                        // 加入recorded
+                        recorded.push(itemed);
+                        itemed = []
+                    }
+                    el.status = 0
+                    itemed.push(el)
+                }
+                if (itemAll.length > 0 && itemAll[itemAll.length - 1].receiveDate != el.receiveDate) {
+                    // 不相同
+                    // 加入recordAll
+                    recordAll.push(itemAll);
+                    itemAll = []
+                }
+                itemAll.push(el)
+            })
+            if (itemAll.length > 0) recordAll.push(itemAll)
+            if (itemed.length > 0) recorded.push(itemed)
+            if (iteming.length > 0) recording.push(iteming)
+            if (itemDone.length > 0) recordDone.push(itemDone)
 
+            that.setData({
+                recordAll: recordAll,
+                recorded: recorded,
+                recording: recording,
+                recordDone: recordDone
+            })
+        })
     },
 
-    /**
-     * 用户点击右上角分享
-     */
-    onShareAppMessage() {
-
+    // 改变tag
+    changeTag(e) {
+        this.setData({
+            tag: e.currentTarget.dataset.tag
+        })
     }
+
 })

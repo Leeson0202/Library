@@ -2,7 +2,6 @@ package cool.leeson.library.service.receive;
 
 import com.aliyuncs.utils.StringUtils;
 import cool.leeson.library.config.JwtConfig;
-import cool.leeson.library.config.RedisConfig;
 import cool.leeson.library.dao.LibraryDao;
 import cool.leeson.library.dao.LibraryRoomDao;
 import cool.leeson.library.dao.LibrarySeatDao;
@@ -78,7 +77,6 @@ public class ReceiveService {
         if (receiveItemPosts == null || receiveItemPosts.size() == 0)
             throw new MyException(MyException.STATUS.requestErr);
         log.info(receiveItemPosts.toString());
-        // 数据 String orderId = UUID.randomUUID().toString();
         Date now = new Date();
         // 构建 receiveItems
         List<ReceiveItem> receiveItems = new ArrayList<>();
@@ -133,10 +131,8 @@ public class ReceiveService {
     public Map<String, Object> schedule(String userId) throws MyException {
         log.info(userId + " 正在获取行程计划");
         // 先查询所有
-        List<ReceiveItem> items = this.receiveItemDao.queryByUserId(userId);
-        log.info("用户的items：" + items.size());
+        List<ReceiveItemResponse> items = (List<ReceiveItemResponse>) this.queryAll(userId).get("data");
         Date now = new Date();
-        log.info("现在的时间: " + now.toLocaleString());
         // 时间Idx
         int timeIndex = 0;
         int today = 0;
@@ -149,44 +145,15 @@ public class ReceiveService {
         } else {
             timeIndex = (now.getHours() - 8) / 2;
         }
-        log.info("现在的timeIndex: " + timeIndex + "; today: " + today);
         // 要展现的时间 年月日
         Date date = new Date(now.getYear(), now.getMonth(), now.getDate() + today);
         List<ReceiveItemResponse> responseItems = new ArrayList<>();
-        for (ReceiveItem item : items) {
-            log.info("现在遍历第 " + items.indexOf(item) + "个");
-            log.info("item信息： " + item.getReceiveDate().toLocaleString() + " timeIdx: " + item.getTimeIdx());
-
+        for (ReceiveItemResponse item : items) {
             // 比这个时间早，直接继续 日期早或index小
             if (item.getReceiveDate().before(date) || (item.getReceiveDate().equals(date) && item.getTimeIdx() < timeIndex)) {
-                log.info("这个预约在这之前，直接跳过\n-----------------");
                 continue;
             }
-            // 判断 status
-            int status = (item.getReceiveDate().equals(date) && item.getTimeIdx() == timeIndex) ? 1 : 0;
-            // 判断是否在线 online
-            String onlineKey = String.format(RedisConfig.FormatKey.ONLINE.toString(), userId);
-            String userOnline = redisTemplate.opsForValue().get(onlineKey);
-            int online = 0; // 未入座
-            if (!StringUtils.isEmpty(userOnline) && !"".equals(userOnline)) {
-                online = Integer.parseInt(userOnline); // 1入座 2 暂时离开
-            }
-            log.info(" status: " + status + "; online: " + online);
-            // 构建
-            ReceiveItemResponse responseItem = new ReceiveItemResponse(item, status, online);
-            // date
-            String ddate = item.getReceiveDate().getMonth() + 1 + "月" + item.getReceiveDate().getDate() + "日";
-            log.info(" 构建的日期：" + date);
-            // 获取名字
-            String libraryName = this.libraryService.querySimple(item.getLibraryId()).getName();
-            String roomName = this.libraryRoomService.querySimple(item.getRoomId()).getName();
-            String seatName = this.librarySeatService.querySimple(item.getSeatId()).getName();
-            responseItem.setDate(ddate);
-            responseItem.setLibraryName(libraryName);
-            responseItem.setRoomName(roomName);
-            responseItem.setSeatName(seatName);
-            responseItems.add(responseItem);
-            log.info("-------------");
+            responseItems.add(item);
         }
         // 排序
         Collections.sort(responseItems);
@@ -201,8 +168,30 @@ public class ReceiveService {
      * @return 实体
      * @throws MyException ms
      */
-    public Map<String, Object> all(String userId) throws MyException {
+    public Map<String, Object> queryAll(String userId) throws MyException {
+        log.info(userId + " 正在获取行程计划");
+        // 先查询所有
         List<ReceiveItem> items = this.receiveItemDao.queryByUserId(userId);
-        return ResMap.ok();
+        List<ReceiveItemResponse> responseItems = new ArrayList<>();
+        for (ReceiveItem item : items) {
+            // 构建
+            ReceiveItemResponse responseItem = new ReceiveItemResponse(item);
+            // date
+            String ddate = item.getReceiveDate().getMonth() + 1 + "月" + item.getReceiveDate().getDate() + "日";
+            // 获取名字
+            String libraryName = this.libraryService.querySimple(item.getLibraryId()).getName();
+            String roomName = this.libraryRoomService.querySimple(item.getRoomId()).getName();
+            String seatName = this.librarySeatService.querySimple(item.getSeatId()).getName();
+            responseItem.setDate(ddate);
+            responseItem.setLibraryName(libraryName);
+            responseItem.setRoomName(roomName);
+            responseItem.setSeatName(seatName);
+            responseItems.add(responseItem);
+        }
+        // 排序
+        Collections.sort(responseItems);
+        return ResMap.ok(responseItems);
     }
+
+
 }

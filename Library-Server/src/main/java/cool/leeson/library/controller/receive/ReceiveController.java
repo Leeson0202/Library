@@ -52,9 +52,15 @@ public class ReceiveController {
      * @return 实体
      */
     @GetMapping("schedule")
-    public Map<String, Object> query(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) throws MyException {
+    public Map<String, Object> schedule(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) throws MyException {
         String userId = jwtConfig.getUsernameFromToken(this.request.getHeader("token"));
         return this.receiveService.schedule(userId);
+    }
+
+    @GetMapping
+    public Map<String, Object> queryAll() throws MyException {
+        String userId = jwtConfig.getUsernameFromToken(request.getHeader("token"));
+        return this.receiveService.queryAll(userId);
     }
 
 

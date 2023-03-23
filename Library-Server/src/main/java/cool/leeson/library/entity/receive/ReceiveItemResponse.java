@@ -60,16 +60,16 @@ public class ReceiveItemResponse implements Serializable, Comparable {
     /**
      * 是不是这个时间段
      */
-    private Integer status;
+//    private Integer status;
+
     /**
      * 记录预约和就坐状态
      * 0 未入座
      * 1 已入座
      * 2 暂时离开
      */
-    private Integer online;
-
-    public ReceiveItemResponse(ReceiveItem receiveItem, int status, int online) {
+//    private Integer online;
+    public ReceiveItemResponse(ReceiveItem receiveItem) {
         this.receiveId = receiveItem.getReceiveId();
         this.userId = receiveItem.getUserId();
         this.libraryId = receiveItem.getLibraryId();
@@ -78,10 +78,14 @@ public class ReceiveItemResponse implements Serializable, Comparable {
         this.receiveDate = receiveItem.getReceiveDate();
         this.timeIdx = receiveItem.getTimeIdx();
         this.time = receiveItem.getTime();
-        this.status = status;
-        this.online = online;
     }
 
+    /**
+     * 按照时间排序 升序
+     *
+     * @param o the object to be compared.
+     * @return int
+     */
 
     @Override
     public int compareTo(Object o) {

@@ -1,47 +1,132 @@
 <!--pages/function/bookRecord/bookRecord.wxml-->
-<view style="height:100%">
+<view style="height: 100%">
     <view class="record-label">
-        <view class="label">
+        <view class="label {{tag==0?'label-bottom':''}}" bindtap="changeTag" data-tag="{{0}}">
             全部
         </view>
-        <view class="label">
+        <view class="label {{tag==1?'label-bottom':''}}" bindtap="changeTag" data-tag="{{1}}">
             已预约
         </view>
-        <view class="label">
+        <view class="label {{tag==2?'label-bottom':''}}" bindtap="changeTag" data-tag="{{2}}">
             进行中
         </view>
-        <view class="label">
+        <view class="label {{tag==3?'label-bottom':''}}" bindtap="changeTag" data-tag="{{3}}">
             已完成
         </view>
     </view>
     <!-- 主体 -->
-    <view class="main-content" style="height: calc(100% - 60rpx);">
-        <view class="card items" wx:for="{{recordAll}}" wx:key="index">
+    <scorll-view class="main-content">
+        <!-- 全部 -->
+        <view class="card items" wx:if="{{tag==0}}" wx:for="{{recordAll}}" wx:key="index">
+            <!-- 日期title -->
+            <view class="line-item-title">
+                {{recordAll[recordAll.length-1-index][0].date}}
+                <image style="float: right; height: 40rpx; margin-right: 10rpx;" src="/resources/images/receive/selectDown.svg" mode="heightFix" />
+            </view>
+            <!-- 每条记录 -->
+            <view class="line-item" wx:for="{{recordAll[recordAll.length-index-1]}}" wx:key="index">
+                <view style="float: left; line-height: 50rpx;">
+                    <view class="seat-room">
+                        {{item.seatName}} {{item.roomName}}
+                        <view class="record-status" style="background-color: {{item.status==-1?'rgb(202, 230, 248)':item.status==0?'rgb(248, 202, 212)':'rgb(202, 248, 210)'}};">
+                            {{item.status==-1?"已完成":item.status==0?"已预约":"进行中"}}
+                        </view>
+                    </view>
+                    <view class="library-time">
+                        {{item.libraryName}} {{(8+item.timeIdx*2)+":00-"+(10+item.timeIdx*2)+":00"}}
+                    </view>
+                </view>
+                <view class="delete-button" wx:if="{{item.status==0}}">
+                    取消预约
+                </view>
+
+
+            </view>
+
+        </view>
+        <!-- 已预约 -->
+        <view class="card items" wx:if="{{tag==1}}" wx:for="{{recorded}}" wx:key="index">
             <!-- 日期title -->
             <view class="line-item-title">
                 {{item[index].date}}
                 <image style="float: right; height: 40rpx; margin-right: 10rpx;" src="/resources/images/receive/selectDown.svg" mode="heightFix" />
             </view>
             <!-- 每条记录 -->
-            <view class="line-item" wx:for="{{recordAll[index]}}" wx:key="index">
+            <view class="line-item" wx:for="{{recorded[index]}}" wx:key="index">
                 <view style="float: left; line-height: 50rpx;">
-                    <view style="font-size: 26rpx; color: #333;">
+                    <view class="seat-room">
                         {{item.seatName}} {{item.roomName}}
                         <view class="record-status" style="background-color: {{item.status==-1?'rgb(202, 230, 248)':item.status==0?'rgb(248, 202, 212)':'rgb(202, 248, 210)'}};">
                             {{item.status==-1?"已完成":item.status==0?"已预约":"进行中"}}
                         </view>
                     </view>
-                    <view style="font-size: 22rpx;">
-                        {{item.LibraryName}} {{item.timeIdx}}
+                    <view class="library-time">
+                        {{item.libraryName}} {{(8+item.timeIdx*2)+":00-"+(10+item.timeIdx*2)+":00"}}
                     </view>
                 </view>
                 <view class="delete-button" wx:if="{{item.status==0}}">
-                取消预约
+                    取消预约
                 </view>
 
 
             </view>
 
         </view>
-    </view>
+        <!-- 进行中 -->
+        <view class="card items" wx:if="{{tag==2}}" wx:for="{{recording}}" wx:key="index">
+            <!-- 日期title -->
+            <view class="line-item-title">
+                {{item[index].date}}
+                <image style="float: right; height: 40rpx; margin-right: 10rpx;" src="/resources/images/receive/selectDown.svg" mode="heightFix" />
+            </view>
+            <!-- 每条记录 -->
+            <view class="line-item" wx:for="{{recording[index]}}" wx:key="index">
+                <view style="float: left; line-height: 50rpx;">
+                    <view class="seat-room">
+                        {{item.roomName}} {{item.seatName}}
+                        <view class="record-status" style="background-color: {{item.status==-1?'rgb(202, 230, 248)':item.status==0?'rgb(248, 202, 212)':'rgb(202, 248, 210)'}};">
+                            {{item.status==-1?"已完成":item.status==0?"已预约":"进行中"}}
+                        </view>
+                    </view>
+                    <view class="library-time">
+                        {{item.libraryName}} {{(8+item.timeIdx*2)+":00-"+(10+item.timeIdx*2)+":00"}}
+                    </view>
+                </view>
+                <view class="delete-button" wx:if="{{item.status==0}}">
+                    取消预约
+                </view>
+
+
+            </view>
+
+        </view>
+        <!-- 已完成 -->
+        <view class="card items" wx:if="{{tag==3}}" wx:for="{{recordDone}}" wx:key="index">
+            <!-- 日期title -->
+            <view class="line-item-title">
+                {{recordDone[recordDone.length-1-index][0].date}}
+                <image style="float: right; height: 40rpx; margin-right: 10rpx;" src="/resources/images/receive/selectDown.svg" mode="heightFix" />
+            </view>
+            <!-- 每条记录 -->
+            <view class="line-item" wx:for="{{recordDone[recordDone.length-1-index]}}" wx:key="index">
+                <view style="float: left; line-height: 50rpx;">
+                    <view class="seat-room">
+                        {{item.seatName}} {{item.roomName}}
+                        <view class="record-status" style="background-color: {{item.status==-1?'rgb(202, 230, 248)':item.status==0?'rgb(248, 202, 212)':'rgb(202, 248, 210)'}};">
+                            {{item.status==-1?"已完成":item.status==0?"已预约":"进行中"}}
+                        </view>
+                    </view>
+                    <view class="library-time">
+                        {{item.libraryName}} {{(8+item.timeIdx*2)+":00-"+(10+item.timeIdx*2)+":00"}}
+                    </view>
+                </view>
+                <view class="delete-button" wx:if="{{item.status==0}}">
+                    取消预约
+                </view>
+
+
+            </view>
+
+        </view>
+    </scorll-view>
 </view>

@@ -41,15 +41,16 @@
         <view class="items" wx:else>
             <view class="card line-item " wx:for="{{receiveList}}" wx:key="index">
                 <view class="receive-time">
-                    <view style="margin-top:24rpx; line-height: 40rpx; font-size: 26rpx; color:{{item.status==1?'rgba(250,0,0,0.7)':'rgb(12, 161, 247)'}}; font-weight: 700;"> {{item.timeIdx*2+8+":00-"+(item.timeIdx*2+10)+":00"}} </view>
+                    <view style="margin-top:24rpx; line-height: 40rpx; font-size: 26rpx; color:{{index ==0 && status==1?'rgba(250,0,0,0.7)':'rgb(12, 161, 247)'}}; font-weight: 700;"> {{item.timeIdx*2+8+":00-"+(item.timeIdx*2+10)+":00"}} </view>
                     <view style="margin-top:0rpx; font-size: 20rpx; line-height: 30rpx; color: #666;"> {{item.date}}</view>
                 </view>
                 <view class="receive-info">
                     <view style="float: left;">
                         <view style="margin-top: 10rpx; font-size: 28rpx;line-height: 40rpx; color: #666; ">
                             {{item.libraryName}}
-                            <view wx:if="{{item.status==1}}" style="background-color: {{item.online==0?'rgba(243, 113, 113, 0.8)':item.online==1?'rgba(94, 241, 65, 0.8)':'rgba(247, 225, 26, 0.8)'}};" class="status-online">
-                                {{item.online==0?"未入座":item.online==1?"已入座":"暂离"}}
+                            <!-- 状态 -->
+                            <view wx:if="{{index==0}}" style="background-color: {{item.online==0?'rgba(243, 113, 113, 0.8)':item.online==1?'rgba(94, 241, 65, 0.8)':'rgba(247, 225, 26, 0.8)'}};" class="status-online">
+                                {{online==0?"未入座":online==1?"已入座":"暂离"}}
                             </view>
 
                         </view>
@@ -58,7 +59,7 @@
                         </view>
 
                     </view>
-                    <view class="receive-bottons" wx:if="{{item.status==1}}" bindtap="downUp">
+                    <view class="receive-bottons" wx:if="{{index ==0 }}" bindtap="downUp">
                         <view>
                             入座 | 离座
                         </view>
