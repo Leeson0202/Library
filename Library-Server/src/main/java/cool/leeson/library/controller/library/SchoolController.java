@@ -52,6 +52,11 @@ public class SchoolController {
         return this.schoolService.queryById(schoolId);
     }
 
+    @GetMapping("simple")
+    public Map<String, Object> simple(String schoolId) {
+        return this.schoolService.schoolSimple(schoolId);
+    }
+
     /**
      * 新增数据
      *

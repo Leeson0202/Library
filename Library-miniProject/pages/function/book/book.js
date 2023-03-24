@@ -1,4 +1,5 @@
 // pages/book/book.js
+const app = getApp();
 import {
     createStoreBindings
 } from 'mobx-miniprogram-bindings'
@@ -117,11 +118,6 @@ Page({
                 }
             })
         }, 200);
-
-        // 网络获取数据
-        // 图书馆数据
-        that.queryLibrary(options.libraryId);
-
     },
 
 
@@ -142,7 +138,6 @@ Page({
                     roomList: roomList,
                     rooms: data.data.libraryRooms
                 })
-                console.log();
                 that.queryRoom(data.data.libraryRooms[0].roomId, that.data.today, that.data.timeIdx);
             }
         });
@@ -160,6 +155,7 @@ Page({
         idx = parseInt(idx);
         api.queryRoom(roomId, today, idx).then((data) => {
             // console.log(data);
+            if (data.data == null) return;
             data.data.librarySeats.forEach(el => {
                 el.src = el.red ? '/resources/images/library/yizi-red.svg' : '/resources/images/library/yizi-normal.svg'
             })
@@ -396,7 +392,7 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow() {
-        this.queryRoom(this.data.roomId, this.data.today, this.data.timeIdx)
+        this.queryLibrary(this.data.libraryId);
     },
 
     /**

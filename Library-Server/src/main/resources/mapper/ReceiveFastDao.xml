@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cool.leeson.library.dao.ReceiveFastDao">
+
+    <resultMap type="cool.leeson.library.entity.receive.ReceiveFast" id="ReceiveFastMap">
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="schoolId" column="school_id" jdbcType="VARCHAR"/>
+        <result property="libraryId" column="library_id" jdbcType="VARCHAR"/>
+        <result property="roomId" column="room_id" jdbcType="VARCHAR"/>
+        <result property="seatId" column="seat_id" jdbcType="VARCHAR"/>
+        <result property="open" column="open" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ReceiveFastMap">
+        select user_id,
+               school_id,
+               library_id,
+               room_id,
+               seat_id,
+               open
+        from receive_fast
+        where user_id = #{userId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ReceiveFastMap">
+        select
+        user_id, school_id, library_id, room_id, seat_id, open
+        from receive_fast
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="schoolId != null and schoolId != ''">
+                and school_id = #{schoolId}
+            </if>
+            <if test="libraryId != null and libraryId != ''">
+                and library_id = #{libraryId}
+            </if>
+            <if test="roomId != null and roomId != ''">
+                and room_id = #{roomId}
+            </if>
+            <if test="seatId != null and seatId != ''">
+                and seat_id = #{seatId}
+            </if>
+            <if test="open != null">
+                and open = #{open}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from receive_fast
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="schoolId != null and schoolId != ''">
+                and school_id = #{schoolId}
+            </if>
+            <if test="libraryId != null and libraryId != ''">
+                and library_id = #{libraryId}
+            </if>
+            <if test="roomId != null and roomId != ''">
+                and room_id = #{roomId}
+            </if>
+            <if test="seatId != null and seatId != ''">
+                and seat_id = #{seatId}
+            </if>
+            <if test="open != null">
+                and open = #{open}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="userId" useGeneratedKeys="true">
+        insert into receive_fast(user_id, school_id, library_id, room_id, seat_id, open)
+        values (#{userId}, #{schoolId}, #{libraryId}, #{roomId}, #{seatId}, #{open})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into receive_fast(school_id, library_id, room_id, seat_id, open)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.schoolId}, #{entity.libraryId}, #{entity.roomId}, #{entity.seatId}, #{entity.open})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into receive_fast(school_id, library_id, room_id, seat_id, open)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.schoolId}, #{entity.libraryId}, #{entity.roomId}, #{entity.seatId}, #{entity.open})
+        </foreach>
+        on duplicate key update
+        school_id = values(school_id),
+        library_id = values(library_id),
+        room_id = values(room_id),
+        seat_id = values(seat_id),
+        open = values(open)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update receive_fast
+        <set>
+            <if test="schoolId != null and schoolId != ''">
+                school_id = #{schoolId},
+            </if>
+            <if test="libraryId != null and libraryId != ''">
+                library_id = #{libraryId},
+            </if>
+            <if test="roomId != null and roomId != ''">
+                room_id = #{roomId},
+            </if>
+            <if test="seatId != null and seatId != ''">
+                seat_id = #{seatId},
+            </if>
+            <if test="open != null">
+                open = #{open},
+            </if>
+        </set>
+        where user_id = #{userId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from receive_fast
+        where user_id = #{userId}
+    </delete>
+
+</mapper>
+

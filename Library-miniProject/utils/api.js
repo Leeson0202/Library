@@ -11,8 +11,11 @@ class Api {
 
 
     // 获取学校信息
-    school() {
-
+    schoolSimple(schoolId) {
+        let data = {
+            schoolId: schoolId
+        }
+        return request.get('school/simple', data);
     }
     // 获取图书馆信息
     queryLibrary(libraryId) {
@@ -25,6 +28,9 @@ class Api {
             idx
         })
     }
+    /**
+     * 一般预约
+     */
     // 提交一般预约
     receive(data) {
         return request.post('/receive', data);
@@ -46,6 +52,21 @@ class Api {
         return request.put("/receive/cancel", {
             receiveId: receiveId
         });
+    }
+    /**
+     * 快速预约 
+     */
+    // 获取用的快速预约信息
+    getReceiveFast() {
+        return request.get("/receive/fast")
+    }
+    // 修改快速预约
+    updateReceiveFast(data) {
+        return request.put("/receive/fast", data)
+    }
+    //关闭快速预约
+    closeReceiveFast(){
+        return request.get("receive/fast/close")
     }
 
 }

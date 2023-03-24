@@ -1,4 +1,4 @@
-package cool.leeson.library.controller;
+package cool.leeson.library.controller.receive;
 
 import cool.leeson.library.entity.receive.ReceiveItem;
 import cool.leeson.library.service.receive.ReceiveItemService;

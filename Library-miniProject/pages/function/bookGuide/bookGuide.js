@@ -57,7 +57,6 @@ Page({
      * 生命周期函数--监听页面初次渲染完成
      */
     onReady() {
-        console.log("ready");
         setTimeout(() => {
             if(store.hasLogin!=true){
                 wx.navigateTo({
@@ -72,7 +71,6 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow() {
-        console.log("show");
         if(store.hasSchool!=true){
             let school =  wx.getStorageSync('school')
             if(school != ""){

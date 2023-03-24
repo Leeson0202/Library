@@ -33,6 +33,8 @@ Page({
         });
     },
     init() {
+        let that = this;
+        if (!that.data.hasSchool || !that.data.hasSchool) return;
         this.getSchedule();
         this.getUserOnline();
     },
@@ -42,8 +44,7 @@ Page({
      */
     onShow() {
         let that = this
-        if (!that.data.hasSchool || !that.data.hasSchool) return;
-        setTimeout(that.init, 500)
+        setTimeout(that.init, 200)
     },
 
 
