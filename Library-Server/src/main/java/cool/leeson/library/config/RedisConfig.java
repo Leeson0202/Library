@@ -23,7 +23,7 @@ public class RedisConfig {
         // 座位信息 {seatId}:{day}:{timeIdx}  true/false
         SEATRECEIVE("%s:%s:%s"),
         // 用户预约信息  {userId}:{day}:{timeIdx}  true/false
-        USERREVEIVE("%s:%s:%s"),
+        USERRECEIVE("%s:%s:%s"),
         // 用户打卡 {userId}:SEED     1分钟
         SEED("%s:online");
 

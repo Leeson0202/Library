@@ -43,6 +43,28 @@ public class LoginService {
     private UserSchoolDao userSchoolDao;
     @Resource
     private RedisTemplate<String, String> redisTemplate;
+
+    /**
+     * 测试登陆
+     *
+     * @return 测试
+     */
+    public Map<String, Object> test() {
+        String userId = "12344321";
+        String token = this.redisTemplate.opsForValue().get("12344321:token");
+        if (StringUtils.isEmpty(token)) {
+            return this.loginSuccess(userId, -1);
+        }
+        return ResMap.ok("token", token).build();
+    }
+
+    /**
+     * 更新token
+     *
+     * @param token token
+     * @return 新token
+     * @throws MyException 1
+     */
     public Map<String, Object> loginUpdate(String token) throws MyException {
         String userId = new JwtConfig().getUsernameFromToken(token);
         return this.loginSuccess(userId, -1);
@@ -334,4 +356,6 @@ public class LoginService {
         // 最后返回cquptInfo
         return ResMap.ok(cquptInfo);
     }
+
+
 }

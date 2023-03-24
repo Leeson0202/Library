@@ -1,11 +1,11 @@
 // pages/book/book.js
-const app = getApp();
 import {
     createStoreBindings
 } from 'mobx-miniprogram-bindings'
 import {
     store
 } from '../../../store/store'
+import api from '../../../utils/api'
 
 
 Page({
@@ -124,45 +124,29 @@ Page({
 
     },
 
+
     /**
      * 获取图书馆信息
      */
     queryLibrary(libraryId) {
         let that = this
-        let url = app.globalData.baseUrl + '/library/id/' + libraryId;
-        console.log(url);
-        // 获取图书馆
-        wx.request({
-            url: url,
-            method: 'GET',
-            success({
-                data
-            }) {
-                // console.log("library: ", data.data);
-                if (that.CheckError(data)) return
-                if (data.code == 200) {
-                    let roomList = []
-                    data.data.libraryRooms.forEach(el => {
-                        roomList.push(el.name)
-                    })
-                    that.setData({
-                        roomId: data.data.libraryRooms[0].roomId,
-                        roomIdx: 0,
-                        roomList: roomList,
-                        rooms: data.data.libraryRooms
-                    })
-                    console.log();
-                    that.queryRoom(data.data.libraryRooms[0].roomId, that.data.today, that.data.timeIdx);
-                }
-            },
-            fail() {
-                wx.showToast({
-                    title: '获取图书馆失败',
-                    icon: "error"
+        api.queryLibrary(libraryId).then((data) => {
+            if (data.code == 200) {
+                let roomList = []
+                data.data.libraryRooms.forEach(el => {
+                    roomList.push(el.name)
                 })
-                return
+                that.setData({
+                    roomId: data.data.libraryRooms[0].roomId,
+                    roomIdx: 0,
+                    roomList: roomList,
+                    rooms: data.data.libraryRooms
+                })
+                console.log();
+                that.queryRoom(data.data.libraryRooms[0].roomId, that.data.today, that.data.timeIdx);
             }
-        })
+        });
+
     },
 
     /**
@@ -174,53 +158,28 @@ Page({
         })
         let that = this;
         idx = parseInt(idx);
-        // 请求
-        let url = app.globalData.baseUrl + "/room/id/" + roomId + "?today=" + today + "&idx=" + idx;
-        console.log(url);
-        wx.request({
-            url: url,
-            method: "GET",
-            header: {
-                token: wx.getStorageSync('token'),
-            },
-            success({
-                data
-            }) {
-                // console.log(data);
-                wx.hideLoading();
-                if (that.CheckError(data)) return
-                if (data.code == 200) {
-                    data.data.librarySeats.forEach(el => {
-                        el.src = el.red ? '/resources/images/library/yizi-red.svg' : '/resources/images/library/yizi-normal.svg'
-                    })
-                    // 本地和数据进行对比
-                    let timeKey = that.data.today ? "A" : "B"
-                    timeKey = timeKey + that.data.timeIdx
-                    if (that.data.selectedSeats[timeKey] != undefined && that.data.selectedSeats[timeKey].libraryId == that.data.libraryId && that.data.selectedSeats[timeKey].roomId == that.data.roomId) {
-                        // 时间 地点相同
-                        data.data.librarySeats.forEach(el => {
-                            if (el.seatId == that.data.selectedSeats[timeKey].seatId) {
-                                el.src = '/resources/images/library/yizi-green.svg'
-                            }
-                        })
+        api.queryRoom(roomId, today, idx).then((data) => {
+            // console.log(data);
+            data.data.librarySeats.forEach(el => {
+                el.src = el.red ? '/resources/images/library/yizi-red.svg' : '/resources/images/library/yizi-normal.svg'
+            })
+            // 本地和数据进行对比
+            let timeKey = that.data.today ? "A" : "B"
+            timeKey = timeKey + that.data.timeIdx
+            if (that.data.selectedSeats[timeKey] != undefined && that.data.selectedSeats[timeKey].libraryId == that.data.libraryId && that.data.selectedSeats[timeKey].roomId == that.data.roomId) {
+                // 时间 地点相同
+                data.data.librarySeats.forEach(el => {
+                    if (el.seatId == that.data.selectedSeats[timeKey].seatId) {
+                        el.src = '/resources/images/library/yizi-green.svg'
                     }
-                    that.setData({
-                        room: data.data,
-                        seatList: data.data.librarySeats,
-                        tableList: data.data.libraryTables
-                    })
-                    that.getWidth(data.data);
-
-                }
-            },
-            fail() {
-                wx.hideLoading()
-                wx.showToast({
-                    title: '座位获取失败',
-                    icon: "none"
                 })
             }
-
+            that.setData({
+                room: data.data,
+                seatList: data.data.librarySeats,
+                tableList: data.data.libraryTables
+            })
+            that.getWidth(data.data);
         })
 
     },
@@ -356,43 +315,21 @@ Page({
     // 提交预约
     handleSubmit() {
         let that = this;
-        if (that.data.selectedSeats.length == 0) return;
         if (!this.data.receiveTag || that.data.selectLength == 0) {
             this.setData({
                 receiveTag: true
             })
             return
         }
+        if (that.data.selectedSeats.length == 0) return;
         wx.showLoading({
             title: '正在预约',
         })
-        let url = that.data.baseUrl + '/receive';
-        console.log(url, Object.values(that.data.selectedSeats));
-        wx.request({
-            url: url,
-            method: "POST",
-            header: {
-                token: wx.getStorageSync('token')
-            },
-            data: Object.values(that.data.selectedSeats),
-            success({
-                data
-            }) {
-                wx.hideLoading();
-                console.log(data);
-                if (that.CheckError(data)) return;
-                if (data.code == 200) {
-                    that.setData({
-                        success: true
-                    })
-                }
-
-            },
-            fail() {
-                wx.hideLoading();
-                wx.showToast({
-                    title: '请检查网络',
-                    icon: "error"
+        api.receive(Object.values(that.data.selectedSeats)).then((data) => {
+            console.log(data);
+            if (data.code == 200) {
+                that.setData({
+                    success: true
                 })
             }
         })
@@ -456,17 +393,10 @@ Page({
     },
 
     /**
-     * 生命周期函数--监听页面初次渲染完成
-     */
-    onReady() {
-
-    },
-
-    /**
      * 生命周期函数--监听页面显示
      */
     onShow() {
-
+        this.queryRoom(this.data.roomId, this.data.today, this.data.timeIdx)
     },
 
     /**
@@ -476,31 +406,15 @@ Page({
         this.storeBindings.destroyStoreBindings()
     },
 
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload() {
 
-    },
 
     /**
      * 页面相关事件处理函数--监听用户下拉动作
      */
     onPullDownRefresh() {
+        this.queryRoom(this.data.roomId, this.data.today, this.data.timeIdx)
 
     },
 
-    /**
-     * 页面上拉触底事件的处理函数
-     */
-    onReachBottom() {
 
-    },
-
-    /**
-     * 用户点击右上角分享
-     */
-    onShareAppMessage() {
-
-    }
 })

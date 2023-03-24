@@ -32,15 +32,18 @@ Page({
             actions: ['HasLogin', 'HasSchool', 'CheckError']
         });
     },
-
+    init() {
+        this.getSchedule();
+        this.getUserOnline();
+    },
 
     /**
      * 生命周期函数--监听页面显示
      */
     onShow() {
         let that = this
-        setTimeout(that.getSchedule, 500)
-
+        if (!that.data.hasSchool || !that.data.hasSchool) return;
+        setTimeout(that.init, 500)
     },
 
 
@@ -55,14 +58,29 @@ Page({
      * 页面相关事件处理函数--监听用户下拉动作
      */
     onPullDownRefresh() {
-        this.getSchedule();
+        this.init();
+    },
+    // 获取用户状态
+    getUserOnline() {
+        let that = this
+        api.online().then((data) => {
+            that.setData({
+                online: data.data.online
+            })
+        })
     },
     // 获取我的计划
     getSchedule() {
         let that = this
         api.receiveSchedule().then((data) => {
             // 判断是否为空
-            if (data.data == null || data.data.length == 0) return;
+            if (data.data == null || data.data.length == 0) {
+                that.setData({
+                    receiveList: data.data,
+                    status: 0
+                })
+                return;
+            }
             // 开始判断状态 status
             let beginDate = new Date(data.data[0].receiveDate);
             let endDate = new Date(data.data[0].receiveDate);
@@ -86,8 +104,7 @@ Page({
         // console.log(e.currentTarget.dataset.tag);
         let tag = e.currentTarget.dataset.tag;
         // 判断是否登陆
-        this.HasLogin();
-        if (!this.HasSchool()) return;
+        if (!this.HasLogin() || !this.HasSchool()) return;
         let url = "/pages/function/" + tag + "/" + tag;
 
         console.log(url);

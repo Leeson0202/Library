@@ -36,7 +36,7 @@ Page({
         this.queryReceiveAll();
 
     },
-
+    // 查询所有预约
     queryReceiveAll() {
         let that = this
         api.receiveAll().then(data => {
@@ -107,6 +107,17 @@ Page({
                 recordDone: recordDone
             })
         })
+    },
+    cancelReceive(e) {
+        console.log("cancel");
+        let receiveId = e.currentTarget.dataset.receiveId;
+        console.log(receiveId);
+        api.receiveCancel(receiveId).then((res) => {
+            if (res.code == 200) {
+                this.queryReceiveAll();
+            }
+        })
+
     },
 
     // 改变tag

@@ -156,6 +156,7 @@ page {
     line-height: 60rpx;
     font-size: 26rpx;
     text-align: left;
+    -webkit-overflow-scrolling: touch;
 }
 
 .content-num {

@@ -1,6 +1,6 @@
 // pages/function/downUp/downUp.js
 
-import drawQrcode from '../../../utils/qr/weapp.qrcode.esm.js'
+import drawQrcode from '../../../utils/qr/weapp.qrcode.min.js'
 Page({
 
     /**
@@ -15,20 +15,12 @@ Page({
      */
     onLoad(options) {},
 
-    /**
-     * 生命周期函数--监听页面初次渲染完成
-     */
-    onReady() {
-
-    },
 
     /**
      * 生命周期函数--监听页面显示
      */
     onShow() {
         this.drowQr();
-
-
     },
     drowQr() {
 
@@ -80,12 +72,7 @@ Page({
 
     },
 
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide() {
 
-    },
 
     /**
      * 生命周期函数--监听页面卸载
@@ -101,19 +88,6 @@ Page({
 
     },
 
-    /**
-     * 页面上拉触底事件的处理函数
-     */
-    onReachBottom() {
-
-    },
-
-    /**
-     * 用户点击右上角分享
-     */
-    onShareAppMessage() {
-
-    },
     back() {
         wx.switchTab({
             url: '/pages/function/function',

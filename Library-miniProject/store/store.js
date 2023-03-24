@@ -16,8 +16,8 @@ import {
 } from '../utils/storage'
 
 export const store = observable({
-    baseUrl: "https://library.leeson.cool",
-    // baseUrl: "http://localhost:8080",
+    // baseUrl: "https://library.leeson.cool",
+    baseUrl: "http://localhost:8080",
     header: {
         "Content-Type": "application/x-www-form-urlencoded"
     },
@@ -46,8 +46,9 @@ export const store = observable({
             wx.navigateTo({
                 url: '/pages/center/login/login',
             })
-            return;
+            return false;
         }
+        return true;
     }),
     HasSchool: action(function () {
         let that = this;
@@ -57,7 +58,7 @@ export const store = observable({
                     title: '没有绑定学校',
                     icon: "none"
                 })
-                
+
             }, 200);
             wx.navigateTo({
                 url: '/pages/center/userInfo/userInfo',
@@ -161,22 +162,25 @@ export const store = observable({
     }),
     // 网络请求非200
     CheckError: action(function (data) {
+        // console.log(data);
         if (data.code == 200) {
             return false;
         }
-        wx.hideLoading();
-        if (data.code == 401) {
-            wx.showToast({
-                title: '请重新登陆',
-                icon: "none"
-            })
-            // this.InitData();
-        } else {
-            wx.showToast({
-                title: data.msg,
-                icon: "none"
-            })
-        }
+        setTimeout(() => {
+            if (data.code == 401) {
+                wx.showToast({
+                    title: '请重新登陆',
+                    icon: "none"
+                })
+                this.InitData();
+            } else {
+                wx.showToast({
+                    title: data.msg,
+                    icon: "none"
+                })
+            }
+
+        }, 100)
         return true;
 
     }),
@@ -234,7 +238,7 @@ export const store = observable({
         wx.showLoading({
             title: "正在登陆"
         });
-        console.log(cqupt_id, password);
+        // console.log(cqupt_id, password);
         let url = this.baseUrl + '/user/bind/cqupt'
         wx.request({
             url: url,
@@ -295,6 +299,7 @@ export const store = observable({
     }),
     // 登陆login 发送验证码
     Login: action(function (str) {
+        // console.log(this.loginMethod+ " Login: " + str);
         if (str === null || str.length === 0) {
             wx.showToast({
                 title: '请输入',

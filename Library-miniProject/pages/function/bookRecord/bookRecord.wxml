@@ -36,7 +36,8 @@
                         {{item.libraryName}} {{(8+item.timeIdx*2)+":00-"+(10+item.timeIdx*2)+":00"}}
                     </view>
                 </view>
-                <view class="delete-button" wx:if="{{item.status==0}}">
+
+                <view class="delete-button" wx:if="{{item.status==0}}" bindtap="cancelReceive" data-receive-id="{{item.receiveId}}">
                     取消预约
                 </view>
 
@@ -64,7 +65,8 @@
                         {{item.libraryName}} {{(8+item.timeIdx*2)+":00-"+(10+item.timeIdx*2)+":00"}}
                     </view>
                 </view>
-                <view class="delete-button" wx:if="{{item.status==0}}">
+
+                <view class="delete-button" wx:if="{{item.status==0}}" bindtap="cancelReceive" data-receive-id="{{item.receiveId}}">
                     取消预约
                 </view>
 
@@ -119,9 +121,6 @@
                     <view class="library-time">
                         {{item.libraryName}} {{(8+item.timeIdx*2)+":00-"+(10+item.timeIdx*2)+":00"}}
                     </view>
-                </view>
-                <view class="delete-button" wx:if="{{item.status==0}}">
-                    取消预约
                 </view>
 
 

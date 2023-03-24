@@ -24,6 +24,11 @@ public class LoginController {
     @Resource
     private JwtConfig jwtConfig;
 
+    @GetMapping("login/test")
+    public Map<String, Object> test() throws MyException {
+        return this.loginService.test();
+    }
+
     /**
      * 更新token
      *

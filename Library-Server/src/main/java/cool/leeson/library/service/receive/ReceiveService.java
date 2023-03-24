@@ -2,6 +2,7 @@ package cool.leeson.library.service.receive;
 
 import com.aliyuncs.utils.StringUtils;
 import cool.leeson.library.config.JwtConfig;
+import cool.leeson.library.config.RedisConfig;
 import cool.leeson.library.dao.LibraryDao;
 import cool.leeson.library.dao.LibraryRoomDao;
 import cool.leeson.library.dao.LibrarySeatDao;
@@ -9,11 +10,13 @@ import cool.leeson.library.dao.ReceiveItemDao;
 import cool.leeson.library.entity.receive.ReceiveItem;
 import cool.leeson.library.entity.receive.ReceiveItemPost;
 import cool.leeson.library.entity.receive.ReceiveItemResponse;
+import cool.leeson.library.entity.user.UserOnline;
 import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.library.LibraryRoomService;
 import cool.leeson.library.service.library.LibrarySeatService;
 import cool.leeson.library.service.library.LibraryService;
 import cool.leeson.library.service.library.SchoolService;
+import cool.leeson.library.service.user.UserOnlineService;
 import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
@@ -55,6 +58,8 @@ public class ReceiveService {
     private LibrarySeatService librarySeatService;
     @Resource
     private RedisTemplate<String, String> redisTemplate;
+    @Resource
+    private UserOnlineService userOnlineService;
 
     @Resource
     private HttpServletRequest request;
@@ -76,7 +81,7 @@ public class ReceiveService {
     public Map<String, Object> receive(List<ReceiveItemPost> receiveItemPosts, String userId) throws MyException {
         if (receiveItemPosts == null || receiveItemPosts.size() == 0)
             throw new MyException(MyException.STATUS.requestErr);
-        log.info(receiveItemPosts.toString());
+//        log.info(receiveItemPosts.toString());
         Date now = new Date();
         // 构建 receiveItems
         List<ReceiveItem> receiveItems = new ArrayList<>();
@@ -119,6 +124,49 @@ public class ReceiveService {
             redisTemplate.opsForValue().set(userKey, "true", milliSecondsLeftToday, TimeUnit.MILLISECONDS);
         }
         return this.schedule(userId);
+    }
+
+    /**
+     * 取消预约
+     *
+     * @param userId    用户Id
+     * @param receiveId 预约Id
+     * @return 实体
+     * @throws MyException w
+     */
+    public Map<String, Object> cancel(String userId, String receiveId) throws MyException {
+        if (StringUtils.isEmpty(receiveId)) return ResMap.err("请上传receiveId");
+        // 查询receive
+        ReceiveItem receiveItem = this.receiveItemDao.queryById(receiveId);
+        if (receiveItem == null) {
+            throw new MyException(MyException.STATUS.requestErr);
+        }
+        // 获取取消的时间
+        Date receiveDate = receiveItem.getReceiveDate();
+        Integer timeIdx = receiveItem.getTimeIdx();
+        Date now = new Date();
+        int idx = (now.getHours() - 8) / 2;
+        Date date = new Date(now.getYear(), now.getMonth(), now.getDate());
+        // 判断时间是否相同
+        if (receiveDate.equals(date) && idx == timeIdx) {
+            // 判断用户是否在线
+            Map<String, Object> map = userOnlineService.queryById(userId);
+            UserOnline userOnline = (UserOnline) map.get("data");
+            Integer online = userOnline.getOnline();
+            if (online == 1) {
+                return ResMap.err("请离座扫码");
+            }
+            userOnline.setOnline(0);
+            userOnlineService.update(userOnline);
+        }
+        if (receiveItemDao.deleteById(receiveId) != 1) {
+            throw new MyException(MyException.STATUS.err);
+        }
+        String userKey = String.format(RedisConfig.FormatKey.USERRECEIVE.toString(), userId, receiveDate.getDate(), timeIdx);
+        String seatKey = String.format(RedisConfig.FormatKey.SEATRECEIVE.toString(), receiveItem.getSeatId(), receiveDate.getDate(), timeIdx);
+        redisTemplate.opsForValue().set(userKey, "false", 1, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(seatKey, "false", 1, TimeUnit.SECONDS);
+        return ResMap.ok();
     }
 
     /**

@@ -1,4 +1,0 @@
-<!--pages/test/test.wxml-->
-<button bindtap="GetAccessToken">
-获取access_token
-</button>

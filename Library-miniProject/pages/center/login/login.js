@@ -28,13 +28,17 @@ Page({
     },
     // 手机号或邮箱登陆 loginMethod决定
     login() {
+        if (this.data.email == 'test' || this.data.tel == 'test') {
+            this.loginTest();
+            return;
+        }
         this.Login(this.data.loginMethod == 0 ? this.data.tel : this.data.email);
     },
     onLoad() {
         this.storeBindings = createStoreBindings(this, {
             store,
-            fields: ['userInfo', 'hasUserInfo', 'baseUrl','loginMethod'],
-            actions: ["ChangeLoginMethod","Login" ]
+            fields: ['userInfo', 'hasUserInfo', 'baseUrl', 'loginMethod'],
+            actions: ["ChangeLoginMethod", 'GetUserInfo', "Login"]
         })
     },
     /**
@@ -51,13 +55,28 @@ Page({
     },
     // input双向绑定
     setEmail(e) {
-        this.setData({
+        let that = this
+        that.setData({
             email: e.detail.value
         })
     },
     // 改变登陆方式
     changeLoginMethod(e) {
         this.ChangeLoginMethod(e.currentTarget.dataset.tag)
+    },
+    loginTest() {
+        api.loginTest().then(data => {
+            wx.setStorageSync('token', data.token);
+            store.hasLogin = true;
+            this.GetUserInfo();
+            setTimeout(() => {
+                wx.switchTab({
+                    url: '/pages/center/center',
+                })
+
+            }, 200)
+        })
+
     }
 
 })

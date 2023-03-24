@@ -47,12 +47,23 @@ public class ReceiveController {
     }
 
     /**
+     * 取消预约
+     * @param receiveId 预约Id
+     */
+    @PutMapping("cancel")
+    public Map<String, Object> cancel(String receiveId) throws MyException {
+
+        String userId = jwtConfig.getUsernameFromToken(request.getHeader("token"));
+
+        return this.receiveService.cancel(userId, receiveId);
+    }
+
+    /**
      * 查询预约行程
      *
-     * @return 实体
      */
     @GetMapping("schedule")
-    public Map<String, Object> schedule(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) throws MyException {
+    public Map<String, Object> schedule() throws MyException {
         String userId = jwtConfig.getUsernameFromToken(this.request.getHeader("token"));
         return this.receiveService.schedule(userId);
     }

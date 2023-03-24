@@ -90,7 +90,9 @@ create table user_learned
     user_id      varchar(100) comment 'userId',
     -- 0点
     `date`       datetime comment '日期',
-    `learn_time` smallint comment '今日的时长'
+    begin_time   datetime comment '开始时间',
+    end_time     datetime comment '结束时间',
+    `learn_time` int comment '今日的时长'
 );
 
 
@@ -473,7 +475,7 @@ drop table if exists user_online;
 create table user_online
 (
     user_id  varchar(100) primary key comment 'id',
-    `online` boolean comment '在座状态',
+    `online` int comment '在座状态',
     `date`   datetime comment '开始就坐时间'
 );
 
