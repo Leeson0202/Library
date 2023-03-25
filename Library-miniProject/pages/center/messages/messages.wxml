@@ -1,0 +1,34 @@
+<!--pages/center/messages/messages.wxml-->
+<view class="items" style="height: 100%;width: 100%;" wx:if="{{!tag}}">
+    <view class="line-item" wx:for="{{messages}}" wx:key="index" bindtap="look" data-index="{{index}}">
+        <view style="float: left; max-width: 60%; overflow: hidden; height: 80rpx; margin-left: 20rpx;">
+            {{item.title}}
+        </view>
+        <view wx:if="{{!item.readed}}" class="point">
+        </view>
+        <view style="float: right;margin-right: 20rpx;">
+
+            <view style="display: inline-block; line-height: 80rpx; font-size: 20rpx;">
+                {{item.time}}
+            </view>
+
+
+        </view>
+
+    </view>
+</view>
+<scroll-view wx:if="{{tag}}" style="height: 100%; width: calc(100% - 40rpx); background-color: #fff; padding: 0 20rpx;" bindtap="back">
+    <view class="title">
+        {{messages[index].title}}
+
+    </view>
+    <view style="font-size: 20rpx; padding-bottom: 10rpx; border-bottom: 1rpx solid rgba(128, 128, 128, 0.103);">
+        {{messages[index].time}}
+    </view>
+    <view style="margin-top: 30rpx; text-indent: 2em; font-size: 28rpx;">
+        {{messages[index].msg}}
+    </view>
+
+
+
+</scroll-view>

@@ -1,0 +1,27 @@
+/* pages/center/messages/messages.wxss */
+.line-item {
+    height: 100rpx;
+    line-height: 100rpx;
+    font-size: 28rpx;
+}
+
+.point {
+    position: relative;
+    top: -4rpx;
+    margin-left: 10rpx;
+    display: inline-block;
+    height: 10rpx;
+    width: 10rpx;
+    background-color: rgb(21, 102, 253);
+    border-radius: 50%;
+}
+
+
+/* // 行 */
+
+.title{
+    width: 100%;
+    margin-top: 20rpx;
+    text-align: center;
+    padding-bottom: 10rpx;
+}

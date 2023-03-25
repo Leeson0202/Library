@@ -16,7 +16,11 @@
         "pages/function/bookRecord/bookRecord",
         "pages/function/bookRule/bookRule",
         "pages/center/learnCount/learnCount",
-        "pages/function/downUp/downUp"
+        "pages/function/downUp/downUp",
+        "pages/center/mycredit/mycredit",
+        "pages/center/messages/messages",
+        "pages/center/feedback/feedback",
+        "pages/center/user/user"
     ],
     "window": {
         "navigationBarBackgroundColor": "#fff",

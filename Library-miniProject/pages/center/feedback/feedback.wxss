@@ -1,0 +1,29 @@
+/* pages/center/feedback/feedback.wxss */
+.feedback-input {
+    margin: auto;
+    padding: 0rpx 24rpx;
+    width: calc(100%);
+    height: 400rpx;
+}
+
+.fixed {
+    height: 80rpx;
+    line-height: 80rpx;
+    text-align: center;
+}
+.numshow{
+    float: left;
+    margin-left: 20rpx;
+}
+.submit-button{
+    margin-right: 20rpx;
+    margin-top: 10rpx;
+    float: right;
+    width: 160rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    font-weight: 400;
+    color: #fff;
+    background-color: rgba(169, 171, 172, 0.74);
+    border-radius: 20rpx;
+}

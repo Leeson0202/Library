@@ -1,0 +1,41 @@
+<!--pages/center/mycredit/mycredit.wxml-->
+
+<view class="my-view">
+    <view class="card head-show">
+
+        <view style="float: left;">
+            <view style="float: left;">
+                <image src="{{userInfo.avatarUrl}}" mode="heightFix" style="height: 100rpx;border-radius: 16rpx;" />
+            </view>
+            <view style="float: left;line-height: 100rpx; margin-left: 20rpx;">
+                {{userInfo.nickName}}
+            </view>
+
+        </view>
+        <view class="credit" style="float: right;">
+            90
+        </view>
+    </view>
+
+    <scroll-view class="items records">
+        <view class="line-item" wx:for="{{records}}" wx:key="index">
+            <view style="float: left;">
+                <view style="line-height: 50rpx; font-size: 28rpx;">
+                    {{item.msg}}
+                </view>
+
+                <view style="margin-left: 10rpx;">
+                    {{item.date}}
+                </view>
+
+            </view>
+            <view style="float: right; line-height: 100rpx; font-size: 30rpx; margin-right: 30rpx;color: rgba(255, 0, 0, 0.808);">
+                -{{item.record}}
+            </view>
+        </view>
+
+    </scroll-view>
+
+
+
+</view>

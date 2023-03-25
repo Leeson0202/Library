@@ -7,7 +7,7 @@
             <view class="line-item" bindtap="logout">
                 切换账号
             </view>
-            <view class="line-item">
+            <view class="line-item" bindtap="toUser">
                 账号安全
             </view>
         </view>

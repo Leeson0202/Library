@@ -1,0 +1,17 @@
+/* pages/center/user/user.wxss */
+.card{
+    margin-top: 20rpx;
+    width: calc(100% - 40rpx);
+}
+.label{
+    display: inline-block;
+    width: 20%;
+    margin-left: 20rpx;
+    text-align: left;
+}
+.label-input{
+    position: relative;
+    display: inline-block;
+    width: 50%;
+    top: 10rpx;
+}

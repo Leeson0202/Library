@@ -44,11 +44,11 @@
                     <image src="../../resources/images/Author/authorInfo.svg" mode="heightFix" />
                     个人资料
                 </view>
-                <view>
+                <view  bindtap="handleTap" data-idx="mycredit">
                     <image src="../../resources/images/Author/credit.svg" mode="heightFix" />
                     我的信用
                 </view>
-                <view>
+                <view  bindtap="handleTap" data-idx="messages">
                     <image src="../../resources/images/Author/message.svg" mode="heightFix" />
                     我的消息
                 </view>
@@ -63,7 +63,7 @@
                 </view>
             </view>
         </view>
-        <view style="position: relative; margin-top: 100rpx;">
+        <view style="position: relative; margin-top: 100rpx;"  bindtap="handleTap" data-idx="feedback">
             <button class="recall">信息反馈</button>
         </view>
 

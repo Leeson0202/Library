@@ -1,0 +1,52 @@
+/* pages/center/mycredit/mycredit.wxss */
+
+
+.my-view {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    background-color: #eee;
+}
+
+.head-show {
+    position: relative;
+    display: block;
+    margin: auto;
+    margin-top: 20rpx;
+    padding: 20rpx 20rpx;
+    width: calc(100% - 60rpx);
+    height: 100rpx;
+}
+
+.credit {
+    position: relative;
+    margin: auto;
+    margin-right: 20rpx;
+    width: 100rpx;
+    height: 100rpx;
+    line-height: 100rpx;
+    text-align: center;
+    border-radius: 50%;
+    background-color: rgba(8, 252, 20, 0.507);
+    color: #fff;
+}
+
+.credit-val {
+    position: relative;
+    width: 100%;
+    background-color: rgb(247, 221, 150);
+}
+
+
+.records{
+    margin-top: 20rpx;
+    padding: 10rpx;
+    width: calc(100% - 20rpx);
+    background-color: #fff;
+}
+.line-item{
+    padding-top: 20rpx;
+    height: 110rpx;
+    font-size: 22rpx;
+    line-height: 40rpx;
+}

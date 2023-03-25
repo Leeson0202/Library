@@ -1,0 +1,19 @@
+<!--pages/center/feedback/feedback.wxml-->
+
+<view style="height: 100%; width: 100%;">
+    <view style="padding-bottom: 20rpx; border-bottom: 1rpx solid rgb(204, 203, 203);">
+        <editor class="feedback-input" placeholder="请输入反馈信息" bindinput="inputBind">
+
+        </editor>
+
+    </view>
+    <view style="margin-top: 20rpx;">
+        <view class="fixed numshow">
+            {{textNum}}/500
+        </view>
+        <view class="fixed submit-button" bindtap="submit">
+            提交
+        </view>
+
+    </view>
+</view>

@@ -1,0 +1,21 @@
+<!--pages/center/user/user.wxml-->
+
+<view>
+    <view class="card items">
+        <view class="line-item">
+            <view class="label">
+                手机号
+            </view>
+            <input class="label-input" type="number" />
+        </view>
+        <view class="line-item">
+            <view class="label">
+                邮箱</view>
+        </view>
+        <view class="line-item">
+            <view class="label">
+                密码</view>
+        </view>
+
+    </view>
+</view>
