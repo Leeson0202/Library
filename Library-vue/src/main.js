@@ -1,8 +1,24 @@
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from "vue";
+// 引入 less
+import "@/assets/css/theme.less";
+import "@/assets/css/common.css";
 
-Vue.config.productionTip = false
+//引入store
+import store from "./store";
+// router
+import router from "./router";
+// element
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
+// 组件
+import App from "./App.vue";
+
+Vue.use(ElementUI);
+
+Vue.config.productionTip = false;
 
 new Vue({
-  render: h => h(App),
-}).$mount('#app')
+    store,
+    router,
+    render: (h) => h(App),
+}).$mount("#app");

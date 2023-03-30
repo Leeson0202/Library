@@ -1,12 +1,12 @@
 package cool.leeson.library.exceptions;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class MyException extends Exception {
     private Integer code;
     private String msg;

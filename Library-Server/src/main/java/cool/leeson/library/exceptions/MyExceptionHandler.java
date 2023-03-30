@@ -19,8 +19,7 @@ public class MyExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public Map<String, Object> exceptionHandler(Exception p) {
-//        p.printStackTrace();
-        return ResMap.put(MyException.STATUS.err);
+        return new ResMap().putCode(500).putMsg("服务器错误").build();
     }
 
     /**
@@ -34,4 +33,6 @@ public class MyExceptionHandler {
         return new ResMap().putCode(p.getCode())
                 .putMsg(p.getMsg()).build();
     }
+
+
 }

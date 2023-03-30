@@ -1,11 +1,11 @@
 package cool.leeson.library.interceptor;
 
+import com.alibaba.druid.util.StringUtils;
 import cool.leeson.library.config.JwtConfig;
 import cool.leeson.library.exceptions.MyException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.annotation.Resource;
@@ -29,29 +29,30 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
-                             Object handler) throws MyException {
+                             Object handler) throws Exception {
         // 地址过滤
         String uri = request.getRequestURI();
         if (uri.contains("error")) {
-            throw new MyException(400, "没有该请求");
+            throw new MyException(400, "没有该请求 ");
         }
+
         String ipAddress = this.getIpAddress();
         log.info(ipAddress + "正在请求：" + uri);
-
-        // 登陆注册相关
-        if (uri.contains("img") || uri.contains("library") || uri.contains("login") || uri.contains("common") || uri.contains("/confirm")) {
-            return true;
+        // 哪些需要token认证
+        String[] strings = new String[]{
+                "user", "receive", "library", "room", "update", "online", "clock"};
+        boolean f = true;
+        for (String string : strings) {
+            if (uri.contains(string)) f = false;
         }
+        // 登陆注册相关
+        if (f) return true;
         // Token 验证
         String token = request.getHeader(jwtConfig.getHeader());
         if (StringUtils.isEmpty(token)) {
-            token = request.getParameter(jwtConfig.getHeader());
-        }
-        if (StringUtils.isEmpty(token)) {
-//            log.warn(uri + " token 不能为空");
             throw new MyException(MyException.STATUS.noToken);
-        }
 
+        }
         try {
             // 查询缓冲
             String userId = jwtConfig.getUsernameFromToken(token);
