@@ -1,6 +1,10 @@
 <!-- Receive -->
 <template>
-    <div class="Receive"></div>
+    <div class="Receive">
+
+
+        
+    </div>
 </template>
 
 <script>
