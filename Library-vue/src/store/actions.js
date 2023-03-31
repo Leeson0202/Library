@@ -4,16 +4,16 @@ export default {
     Launch(context, value) {
         // 更新token
         api.loginUpdate().then((data) => {
-            // console.log(data);
-            if (data.code == 200) {
+            console.log(data);
+            if (data == undefined || data.code == 401 || data.code == 402) {
+                window.localStorage.clear();
+                this.commit("launch");
+                return false;
+            } else if (data.code == 200) {
                 window.localStorage.setItem("token", data.token);
                 this.dispatch("QueryUserInfo");
                 this.commit("updateLogin", true);
                 return true;
-            } else if (data.code == 401 || data.code == 402) {
-                window.localStorage.clear();
-                this.commit("launch");
-                return false;
             }
         });
     },

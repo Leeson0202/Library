@@ -11,11 +11,7 @@
                 <div class="login-text">登录</div>
             </router-link>
             <div v-else>
-                <img
-                    class="avatar"
-                    :src="userInfo.avatarUrl"
-                    alt="头像"
-                />
+                <img class="avatar" :src="userInfo.avatarUrl" alt="头像" />
                 <div class="hover-avatar">
                     <div class="hover-item">我的资料</div>
                     <div class="hover-item">设置</div>
@@ -153,17 +149,19 @@ export default {
 
         width: 80px;
         line-height: 40px;
-        background-color: #2d72cc61;
+        background-color: #a0c5f6;
         display: none;
         color: #fff;
         font-weight: 500;
         cursor: pointer;
         border-bottom-right-radius: 5px;
         border-bottom-left-radius: 5px;
+        z-index: 999;
     }
 }
 .avatar-block:hover .hover-avatar {
     display: block;
+    z-index: 999;
 }
 .hover-item:hover {
     background-color: #2d72cc61;

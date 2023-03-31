@@ -86,6 +86,7 @@ export default {
     //生命周期 - 挂载完成（可以访问DOM元素）
     mounted() {
         let path = this.$route.path.substring(1);
+        if (path == "") path = "home";
         this.activeIndex = path;
     },
     beforeCreate() {}, //生命周期 - 创建之前

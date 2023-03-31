@@ -161,7 +161,7 @@ export default {
             });
         },
         init() {
-            if (this.$store.dispatch("Launch")) {
+            if (this.$store.state.user.hasLogin == true) {
                 // 登陆成功
                 this.$router.replace({ path: "/" });
             }
@@ -171,7 +171,8 @@ export default {
     created() {},
     //生命周期 - 挂载完成（可以访问DOM元素）
     mounted() {
-        setTimeout(this.init, 200);
+        let that = this;
+        setTimeout(that.init, 500);
     },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前

@@ -2,8 +2,8 @@
 <template>
     <div class="Index">
         <el-container style="height: 100%">
-            <el-header><Header></Header></el-header>
-            <el-container id="main-container">
+            <el-header style="z-index: 1"><Header></Header></el-header>
+            <el-container id="main-container" style="height: calc(100% - 80px);">
                 <el-aside width="180px"><Aside></Aside></el-aside>
                 <el-container>
                     <el-main>
@@ -83,6 +83,7 @@ export default {
     background-color: #d3dce6;
     color: #333;
     text-align: center;
+    height: 100%;
     line-height: 200px;
     overflow-x: hidden;
     overflow: -Scroll;
@@ -97,7 +98,6 @@ export default {
     height: 100%;
     color: #333;
     text-align: center;
-    line-height: 360px;
 }
 
 .el-container {

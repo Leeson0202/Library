@@ -17,9 +17,10 @@
                 >添加
             </el-button>
         </div>
+
         <el-table
             :data="tableData"
-            stripe="true"
+            :stripe="true"
             style="width: calc(100% - 40px); margin: 0 20px"
             @selection-change="handleSelectionChange"
         >
@@ -36,21 +37,25 @@
             <el-table-column label="标题" width="380">
                 <template slot-scope="scope">
                     <el-popover trigger="hover" placement="top">
-                        <p> {{ scope.row.context }}</p>
+                        <p>{{ scope.row.context }}</p>
                         <div slot="reference" class="name-wrapper">
                             {{ scope.row.title }}
                         </div>
                     </el-popover>
                 </template>
             </el-table-column>
-            <el-table-column label="已读" prop="view" width="100"></el-table-column>
+            <el-table-column
+                label="已读"
+                prop="view"
+                width="100"
+            ></el-table-column>
             <el-table-column align="right" style="align-items: right">
-                <template slot="header" slot-scope="scope">
+                <template slot="header">
                     <el-input
-                        v-model="search"
+                        v-model="searchValue"
                         size="mini"
                         placeholder="输入关键字搜索"
-                        style="max-width: 300px;float: left;"
+                        style="max-width: 300px; float: left"
                     />
                 </template>
                 <template slot-scope="scope">
@@ -82,6 +87,7 @@ export default {
     data() {
         //这里存放数据
         return {
+            searchValue: "",
             tableData: [
                 {
                     id: 210813,
@@ -90,7 +96,7 @@ export default {
                     title: "关于劳动节闭馆通知",
                     context:
                         "劳动节放假通知，本馆将于10.1正式放假5天，放假时间为10.1-10.5，10.6正常开馆。",
-                    view: 23,
+                    view: "23",
                 },
                 {
                     id: 211813,
@@ -99,7 +105,7 @@ export default {
                     title: "关于劳动节闭馆通知",
                     context:
                         "劳动节放假通知，本馆将于10.1正式放假5天，放假时间为10.1-10.5，10.6正常开馆。",
-                    view: 2333,
+                    view: "2333",
                 },
                 {
                     id: 210833,
@@ -108,7 +114,7 @@ export default {
                     title: "关于劳动节闭馆通知",
                     context:
                         "劳动节放假通知，本馆将于10.1正式放假5天，放假时间为10.1-10.5，10.6正常开馆。",
-                    view: 8033,
+                    view: "8033",
                 },
                 {
                     id: 210853,
@@ -117,9 +123,8 @@ export default {
                     title: "关于劳动节闭馆通知",
                     context:
                         "劳动节放假通知，本馆将于10.1正式放假5天，放假时间为10.1-10.5，10.6正常开馆。",
-                    view: 1333,
+                    view: "1333",
                 },
-                
             ],
         };
     },
@@ -141,6 +146,14 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
+        clearFilter(e, c) {},
+        search(e) {},
+        handleEdit(index, row) {
+            console.log(index, row);
+        },
+        handleDelete(index, row) {
+            console.log(index, row);
+        },
     },
     //生命周期 - 创建完成（可以访问当前this实例）
     created() {},
@@ -161,7 +174,6 @@ export default {
     line-height: 20px;
 }
 .Notification {
-
     padding: 20px 0;
     height: 100%;
     background-color: #fff;
