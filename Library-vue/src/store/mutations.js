@@ -15,4 +15,10 @@ export default {
         state.user.hasUserInfo = true;
         state.user.hasLogin = true;
     },
+    logout(state, value) {
+        state.user.hasLogin = false;
+        state.user.hasUserInfo = false;
+        state.school.hasSchool = false;
+        window.localStorage.clear();
+    },
 };

@@ -3,9 +3,9 @@ import Vue from 'vue'
 //引入Vuex
 import Vuex from 'vuex'
 // state
-import school from './stores/school'
-import user from './stores/user'
-import receive from './stores/receive'
+import school from './states/school'
+import user from './states/user'
+import receive from './states/receive'
 // action
 import actions from './actions'
 // mutation

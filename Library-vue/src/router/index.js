@@ -1,6 +1,8 @@
 import Vue from "vue";
 //引入VueRouter
 import VueRouter from "vue-router";
+// 我的子router
+import routers from "./routers";
 Vue.use(VueRouter); // 应用插件
 
 //创建router实例对象，去管理一组一组的路由规则
@@ -9,6 +11,7 @@ const router = new VueRouter({
         {
             path: "/",
             component: (resolve) => require(["@/components/Index"], resolve),
+            children: routers,
         },
         {
             path: "/login",

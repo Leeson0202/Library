@@ -1,6 +1,6 @@
-<!-- reveiveSearch -->
+<!-- Receive -->
 <template>
-    <div class='reveiveSearch'>
+    <div class='Receive'>
     
     </div>
 </template>
@@ -12,7 +12,7 @@
 
 
 export default {
-    name: "reveiveSearch",
+    name: "Receive",
     components: {},
     props: [],
     data() {
@@ -49,7 +49,9 @@ export default {
     }, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
-<style scoped>
-
+<style lang="less" scoped>
+     .Receive{
+         width: 100%;
+         height: 100%;}
 </style>
 

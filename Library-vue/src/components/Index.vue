@@ -6,7 +6,9 @@
             <el-container id="main-container">
                 <el-aside width="180px"><Aside></Aside></el-aside>
                 <el-container>
-                    <el-main>Main</el-main>
+                    <el-main>
+                        <router-view></router-view>
+                    </el-main>
                 </el-container>
             </el-container>
         </el-container>
@@ -37,7 +39,9 @@ export default {
     //生命周期 - 创建完成（可以访问当前this实例）
     created() {},
     //生命周期 - 挂载完成（可以访问DOM元素）
-    mounted() {},
+    mounted() {
+        // 获取用户和学校信息
+    },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
     beforeUpdate() {}, //生命周期 - 更新之前
@@ -56,13 +60,13 @@ export default {
     width: 100%;
     transition: 0.4s linear;
 }
-@media screen and (min-width: 1400px) {
+@media screen and (min-width: 1920px) {
     #main-container {
         width: 90%;
         transition: 0.4s linear;
     }
 }
-@media screen and (min-width: 1720px) {
+@media screen and (min-width: 2222px) {
     #main-container {
         width: 80%;
         transition: 0.4s linear;
@@ -83,9 +87,12 @@ export default {
     overflow-x: hidden;
     overflow: -Scroll;
     padding-bottom: 200px;
+    border-right: 1px solid #d3dce6 !important;
 }
 
 .el-main {
+    margin: 0;
+    padding: 7px;
     background-color: #e9eef3;
     height: 100%;
     color: #333;

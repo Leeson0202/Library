@@ -2,11 +2,13 @@
 <template>
     <div class="Aside">
         <el-menu
-            :default-openeds="['1']"
+            :default-openeds="[]"
             background-color="transparent"
             active-text-color="#2d72cc"
+            :default-active="activeIndex"
+            @select="handleSelect"
         >
-            <el-menu-item index="0">
+            <el-menu-item index="home">
                 <img
                     class="label-icon"
                     :src="require('@/assets/img/home.svg')"
@@ -22,16 +24,16 @@
                         alt=""
                     />学校管理
                 </template>
-                <el-menu-item index="1-1">通知管理</el-menu-item>
-                <el-menu-item index="1-2">图书馆管理</el-menu-item>
-                <el-menu-item index="1-3">座位管理</el-menu-item>
+                <el-menu-item index="notification">通知管理</el-menu-item>
+                <el-menu-item index="library">图书馆管理</el-menu-item>
+                <el-menu-item index="seat">座位管理</el-menu-item>
             </el-submenu>
             <el-submenu index="2">
                 <template slot="title">
                     <i class="el-icon-date"></i>预约管理
                 </template>
-                <el-menu-item index="2-1">预约管理</el-menu-item>
-                <el-menu-item index="2-2">预约查询</el-menu-item>
+                <el-menu-item index="receive">预约管理</el-menu-item>
+                <el-menu-item index="receiveSearch">预约查询</el-menu-item>
                 <el-menu-item index="2-3">选项2</el-menu-item>
             </el-submenu>
 
@@ -39,15 +41,15 @@
                 <template slot="title">
                     <i class="el-icon-bank-card"></i>信用管理
                 </template>
-                <el-menu-item index="3-1">信用查询</el-menu-item>
-                <el-menu-item index="3-2">用户查询</el-menu-item>
+                <el-menu-item index="credit">信用管理</el-menu-item>
+                <el-menu-item index="creditSearch">信用查询</el-menu-item>
             </el-submenu>
             <el-submenu index="4">
                 <template slot="title">
                     <i class="el-icon-setting"></i>设置
                 </template>
-                <el-menu-item index="3-1">我的信息</el-menu-item>
-                <el-menu-item index="3-2">学校绑定</el-menu-item>
+                <el-menu-item index="info">我的信息</el-menu-item>
+                <el-menu-item index="bind">学校绑定</el-menu-item>
             </el-submenu>
         </el-menu>
     </div>
@@ -62,18 +64,30 @@ export default {
     props: [],
     data() {
         //这里存放数据
-        return {};
+        return {
+            activeIndex: "home",
+        };
     },
     //监听属性 类似于data概念
     computed: {},
     //监控data中的数据变化
     watch: {},
     //方法集合
-    methods: {},
+    methods: {
+        handleSelect(key, keyPath) {
+            let url = "/" + keyPath[keyPath.length - 1];
+            this.$router.push({
+                path: url,
+            });
+        },
+    },
     //生命周期 - 创建完成（可以访问当前this实例）
     created() {},
     //生命周期 - 挂载完成（可以访问DOM元素）
-    mounted() {},
+    mounted() {
+        let path = this.$route.path.substring(1);
+        this.activeIndex = path;
+    },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
     beforeUpdate() {}, //生命周期 - 更新之前

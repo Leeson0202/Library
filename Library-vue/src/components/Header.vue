@@ -4,18 +4,29 @@
         <div class="web-title">Leeson Library</div>
 
         <div class="avatar-block">
-            <img
-                v-if="hasUserInfo == true"
-                class="avatar"
-                :src="userInfo.avatarUrl"
-                alt="头像"
-            />
-            <router-link v-if="hasUserInfo == false" :to="{ name: 'login' }">
+            <router-link
+                v-if="!hasLogin && !hasUserInfo"
+                :to="{ name: 'login' }"
+            >
                 <div class="login-text">登录</div>
             </router-link>
-            <div class="hover-avatar">
-                <div>我的资料</div>
-                <div>退出登陆</div>
+            <div v-else>
+                <img
+                    class="avatar"
+                    :src="userInfo.avatarUrl"
+                    alt="头像"
+                />
+                <div class="hover-avatar">
+                    <div class="hover-item">我的资料</div>
+                    <div class="hover-item">设置</div>
+                    <div
+                        class="hover-item"
+                        style="color: #ff7070"
+                        @click="logout"
+                    >
+                        退出登陆
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -44,6 +55,9 @@ export default {
         userInfo() {
             return this.$store.state.user.userInfo;
         },
+        hasLogin() {
+            return this.$store.state.user.hasLogin;
+        },
         hasUserInfo() {
             return this.$store.state.user.hasUserInfo;
         },
@@ -54,7 +68,14 @@ export default {
     //监控data中的数据变化
     watch: {},
     //方法集合
-    methods: {},
+    methods: {
+        logout() {
+            this.$store.commit("logout");
+            this.$router.push({
+                path: "login",
+            });
+        },
+    },
     //生命周期 - 创建完成（可以访问当前this实例）
     created() {},
     //生命周期 - 挂载完成（可以访问DOM元素）
@@ -76,14 +97,14 @@ export default {
     width: 100%;
     transition: 0.4s linear;
 }
-@media screen and (min-width: 1400px) {
+@media screen and (min-width: 1920px) {
     .Header {
         width: 90%;
         transition: 0.4s linear;
     }
 }
 
-@media screen and (min-width: 1720px) {
+@media screen and (min-width: 2222px) {
     .Header {
         width: 80%;
         transition: 0.4s linear;
@@ -100,32 +121,51 @@ export default {
     display: inline;
     width: 100px;
     float: right;
-    margin-right: 20px;
-    color: #ddd;
+    color: #f2f2f2;
     font-weight: 600;
 }
 .avatar-block {
     position: relative;
     margin-top: 10rpx;
-    margin-right: 30px;
+    margin-right: 10px;
     float: right;
+    width: 100px;
+    text-align: center;
 
     .avatar {
         position: relative;
+        margin: auto;
         margin-top: 7px;
-        height: 46px;
+        width: 46px;
         border-radius: 50%;
+        cursor: pointer;
     }
 
     .login-text {
+        margin: auto;
         float: right;
+        text-align: center;
         width: 50px;
         cursor: pointer;
     }
     .hover-avatar {
+        margin: auto;
+
+        width: 80px;
+        line-height: 40px;
+        background-color: #2d72cc61;
         display: none;
-        width: 100px;
-        background-color: #fff;
+        color: #fff;
+        font-weight: 500;
+        cursor: pointer;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
     }
+}
+.avatar-block:hover .hover-avatar {
+    display: block;
+}
+.hover-item:hover {
+    background-color: #2d72cc61;
 }
 </style>

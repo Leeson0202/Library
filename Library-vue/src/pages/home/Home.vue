@@ -1,11 +1,9 @@
 <!-- Home -->
 <template>
     <div class="Home">
-
-        <div></div>
-        <div></div>
-        <div></div>
-
+        <div class="rate-bin">圆饼图</div>
+        <div class="lines">折线图</div>
+        <div class="tops">排行榜</div>
     </div>
 </template>
 
@@ -19,7 +17,10 @@ export default {
     props: [],
     data() {
         //这里存放数据
-        return {};
+        return {
+
+            
+        };
     },
     //监听属性 类似于data概念
     computed: {},
@@ -44,5 +45,24 @@ export default {
 .Home {
     width: 100%;
     height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.rate-bin,
+.lines,
+.tops {
+    float: left;
+    line-height: 20px;
+    height: 100%;
+}
+.rate-bin {
+    width: 30%;
+}
+.lines {
+    width: 40%;
+    background-color: #ccc;
+}
+.tops {
+    width: 30%;
 }
 </style>

@@ -34,7 +34,9 @@
                     v-model="code"
                     placeholder="输入验证码"
                 />
-                <div class="button timer" @click="login">获取验证码</div>
+                <div class="button timer" @click="login">
+                    {{ codeButtonText }}
+                </div>
             </div>
 
             <div class="submit" @click="confirm">登陆</div>
@@ -71,9 +73,10 @@ export default {
         //这里存放数据
         return {
             loginMethod: 0,
-            tel: "",
-            email: "",
-            code: "",
+            tel: null,
+            email: null,
+            code: null,
+            codeButtonText: "获取验证码",
         };
     },
     //监听属性 类似于data概念
@@ -84,15 +87,34 @@ export default {
     methods: {
         // 获取验证码
         login() {
-            if (this.loginMethod == 0 && this.tel != null) {
+            let that = this;
+            if (this.loginMethod == 0 && this.tel != null && this.tel != "") {
                 api.loginTel(this.tel).then((data) => {
                     this.loginSuccess(data);
                 });
-            } else if (this.loginMethod == 1 && this.email != null) {
+            } else if (
+                this.loginMethod == 1 &&
+                this.email != null &&
+                this.email != ""
+            ) {
                 api.loginEmail(this.email).then((data) => {
                     this.loginSuccess(data);
                 });
+            } else {
+                Message.error(
+                    "请输入" + (this.loginMethod == 0 ? "手机号" : "邮箱")
+                );
+                return;
             }
+
+            var t = 60;
+            that.codeButtonText = "" + t + "s";
+            var timer = setInterval(function () {
+                if (--t < 0) {
+                    clearInterval(timer);
+                }
+                that.codeButtonText = "" + t + "s";
+            }, 1000);
         },
         loginSuccess(data) {
             if (data.code == 200) {
@@ -103,6 +125,14 @@ export default {
             this.loginMethod = value;
         },
         confirm() {
+            // test登陆
+            if (this.tel == "test" || this.email == "test") {
+                api.loginTest().then((data) => {
+                    this.confirmSuccess(data);
+                });
+                return;
+            }
+            // 正常登陆
             if (this.code == null) {
                 Message.warning("请输入手机号和验证码");
                 return;
@@ -118,7 +148,7 @@ export default {
             }
         },
         confirmSuccess(data) {
-            console.log(data);
+            // console.log(data);
             if (data.code != 200) {
                 Message.error("登陆失败");
                 return;
@@ -131,12 +161,9 @@ export default {
             });
         },
         init() {
-            // console.log(this.$store.state.user.hasLogin);
-            if (this.$store.state.user.hasLogin == true) {
-                // console.log("router go");
-                this.$router.replace({
-                    path: "/",
-                });
+            if (this.$store.dispatch("Launch")) {
+                // 登陆成功
+                this.$router.replace({ path: "/" });
             }
         },
     },
@@ -162,17 +189,21 @@ export default {
     padding: 10px;
     height: 100%;
     width: 100%;
+    background-color: #2d72cca1;
+    user-select: none;
 }
 .line-item {
     margin: 10px 0;
 }
 .login-block {
-    position: relative;
+    position: absolute;
+    left: calc(50% - 170px);
+    top: calc(50% - 210px);
     width: 340px;
     height: auto;
-    margin-top: 100px;
     border-radius: 10px;
     padding: 10px;
+    background-color: #fff;
     .banner {
         margin-bottom: 20px;
         line-height: 60px;
@@ -202,8 +233,10 @@ export default {
         padding-left: 10px;
     }
     .timer {
+        width: 100px;
         float: right;
         margin-right: 5%;
+        text-align: center;
     }
     .submit {
         margin: auto;
