@@ -1,9 +1,9 @@
 <!-- FirstLeftBody -->
 <template>
     <div class="FirstLeftBody">
-        <div class="card table t1" id="t1"></div>
-        <div class="card table t2" id="t2"></div>
-        <div class="card table t3" id="t3"></div>
+        <div class="card table t1" id="flb1"></div>
+        <div class="card table t2" id="flb2"></div>
+        <div class="card table t3" id="flb3"></div>
     </div>
 </template>
 
@@ -31,7 +31,7 @@ export default {
                         fontSize: 16, //主题文字字体大小，默认为18px
                     },
                     left: 6,
-                    top: 6,
+                    top: 8,
                 },
                 tooltip: {
                     trigger: "axis",
@@ -40,7 +40,7 @@ export default {
                     },
                 },
                 grid: {
-                    left: "-8%",
+                    left: "0%",
                     right: "5%",
                     top: "8%",
                     bottom: "4%",
@@ -78,6 +78,88 @@ export default {
                     },
                 ],
             },
+            opt2: {
+                title: {
+                    text: "人群统计",
+                    textStyle: {
+                        //标题内容的样式
+                        color: "#666",
+                        fontStyle: "normal", //lic主标题文字字体风格，默认normal，有italic(斜体),oblique(斜体)
+                        fontWeight: "500", //可选normal(正常)，bold(加粗)，bolder(加粗)，lighter(变细)，100|200|300|400|500...
+                        fontFamily: "san-serif", //主题文字字体，默认微软雅黑
+                        fontSize: 16, //主题文字字体大小，默认为18px
+                    },
+                    left: 6,
+                    top: 8,
+                },
+                tooltip: {
+                    trigger: "item",
+                },
+                series: [
+                    {
+                        type: "pie",
+                        radius: ["0%", "80%"],
+                        avoidLabelOverlap: false,
+                        center: ["56%", "55%"],
+                        itemStyle: {
+                            borderRadius: 6,
+                            borderWidth: 0,
+                        },
+                        label: {
+                            show: true,
+                            formatter: "{b}:{c}\n{d}%",
+                            position: "inner",
+                            textStyle: { fontSize: 10 },
+                        },
+                        data: [
+                            { value: 384, name: "学生" },
+                            { value: 80, name: "老师" },
+                            { value: 40, name: "家属" },
+                            { value: 20, name: "其他" },
+                        ],
+                    },
+                ],
+            },
+            opt3: {
+                title: {
+                    text: "性别统计",
+                    textStyle: {
+                        //标题内容的样式
+                        color: "#666",
+                        fontStyle: "normal", //lic主标题文字字体风格，默认normal，有italic(斜体),oblique(斜体)
+                        fontWeight: "500", //可选normal(正常)，bold(加粗)，bolder(加粗)，lighter(变细)，100|200|300|400|500...
+                        fontFamily: "san-serif", //主题文字字体，默认微软雅黑
+                        fontSize: 16, //主题文字字体大小，默认为18px
+                    },
+                    left: 6,
+                    top: 8,
+                },
+                tooltip: {
+                    trigger: "item",
+                },
+                series: [
+                    {
+                        type: "pie",
+                        radius: ["40%", "80%"],
+                        center: ["55%", "55%"],
+                        avoidLabelOverlap: false,
+                        itemStyle: {
+                            borderRadius: 4,
+                            borderWidth: 3,
+                        },
+                        label: {
+                            show: true,
+                            formatter: "{b}:{c}\n{d}%",
+                            position: "inner",
+                            textStyle: { fontSize: 10 },
+                        },
+                        data: [
+                            { value: 484, name: "男生" },
+                            { value: 300, name: "女生" },
+                        ],
+                    },
+                ],
+            },
         };
     },
     //监听属性 类似于data概念
@@ -90,12 +172,12 @@ export default {
     created() {},
     //生命周期 - 挂载完成（可以访问DOM元素）
     mounted() {
-        let t1 = echarts.init(document.getElementById("t1"));
-        let t2 = echarts.init(document.getElementById("t2"));
-        let t3 = echarts.init(document.getElementById("t3"));
-        t1.setOption(this.opt1);
-        // t2.setOption();
-        // t3.setOption();
+        let flb1 = echarts.init(document.getElementById("flb1"));
+        let flb2 = echarts.init(document.getElementById("flb2"));
+        let flb3 = echarts.init(document.getElementById("flb3"));
+        flb1.setOption(this.opt1);
+        flb2.setOption(this.opt2);
+        flb3.setOption(this.opt3);
     },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
@@ -115,8 +197,7 @@ export default {
 .table {
     float: left;
     height: calc(100% - 40px);
-    width: calc((100% - 80px) / 3);
-    margin: 20px 16px;
+    margin: 20px 15px;
     background-color: #fff;
 }
 .table:first-child {
@@ -124,5 +205,12 @@ export default {
 }
 .table:last-child {
     margin-right: 0;
+}
+.t1 {
+    width: calc((100% - 60px) * 0.4);
+}
+.t2,
+.t3 {
+    width: calc((100% - 60px) * 0.3);
 }
 </style>

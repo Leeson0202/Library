@@ -1,21 +1,8 @@
 <!-- FirstLeftTitle -->
 <template>
     <div class="FirstLeftTitle">
-        <div
-            style="
-                font-size: 36px;
-                font-weight: 500;
-                color: #666;
-                margin-top: 0px;
-                display: inline-block;
-                position: relative;
-                top: 6px;
-                margin-right: 20px;
-            "
-        >
-            CQUPT
-        </div>
-        <div style="display: inline-block">
+        <div class="school-name">CQUPT</div>
+        <div class="top-tools">
             <el-input
                 class="search-block"
                 placeholder="请输入内容"
@@ -77,9 +64,24 @@ export default {
     height: 100%;
     padding: 10px 20px;
     user-select: none;
+    padding-bottom: 0;
 }
-
-.search-block {
-    width: 500px;
+.school-name {
+    width: 30%;
+    text-align: center;
+    font-size: 36px;
+    font-weight: 500;
+    color: #666;
+    margin-top: 0px;
+    display: inline-block;
+    position: relative;
+    top: 6px;
+}
+.top-tools {
+    width: 70%;
+    display: inline-block;
+    .search-block {
+        width: calc(100% - 185px);
+    }
 }
 </style>
