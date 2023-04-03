@@ -28,11 +28,6 @@ export default [
         component: (resolve) => require(["@/pages/receive/Receive"], resolve),
     },
     {
-        path: "receiveSearch",
-        component: (resolve) =>
-            require(["@/pages/receive/ReceiveSearch"], resolve),
-    },
-    {
         path: "receiveRule",
         component: (resolve) =>
             require(["@/pages/receive/ReceiveRule"], resolve),

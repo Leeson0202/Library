@@ -154,6 +154,8 @@ export default {
                 return;
             }
             Message.success("登陆成功");
+            // 再次更新登陆状态
+            this.$store.dispatch("Launch");
             this.$store.commit("updateLogin", true);
             window.localStorage.setItem("token", data.token);
             this.$router.replace({

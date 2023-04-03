@@ -12,6 +12,7 @@ export default {
             } else if (data.code == 200) {
                 window.localStorage.setItem("token", data.token);
                 this.dispatch("QueryUserInfo");
+                this.dispatch("QuerySchool");
                 this.commit("updateLogin", true);
                 return true;
             }
@@ -21,6 +22,13 @@ export default {
     QueryUserInfo(context, value) {
         api.queryUserInfo().then((data) => {
             context.commit("updateUserInfo", data.userInfo);
+        });
+    },
+    // 获取学校信息
+    QuerySchool(context, value) {
+        api.querySchool().then((data) => {
+            console.log(data);
+            context.commit("updateSchool", data.data);
         });
     },
 };

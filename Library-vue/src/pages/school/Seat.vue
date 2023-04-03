@@ -90,7 +90,7 @@
         </div>
         <!-- 对话框 -->
 
-        <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+        <el-dialog title="编辑" :visible.sync="dialogFormVisible">
             <el-form :model="form" style="width: 90%;">
                 <el-form-item label="图书馆" :label-width="formLabelWidth">
                     <el-select v-model="form.region" placeholder="请选择图书馆">

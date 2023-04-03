@@ -33,6 +33,12 @@ export default {
     updateUser: (data) => http.put("api/user", data),
     // 修改用户确定-验证码
     updateUserConfirm: (code) => http.put("api/usre/comfirm", { code }),
+
+    /**
+        学校
+     */
+    // 获取学校信息
+    querySchool: () => http.get("api/school"),
 };
 
 //其实，也不一定就是params，也可以是 query 还有 data 的呀！

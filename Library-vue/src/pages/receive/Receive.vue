@@ -36,7 +36,7 @@
                                                 ? '#cfc8c8aa'
                                                 : scope.row.online == 1
                                                 ? '#6cf20baa'
-                                                : '#f2c075aa',
+                                                : '#f2c060',
                                     }"
                                 >
                                     {{

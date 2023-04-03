@@ -24,4 +24,10 @@ export default {
         state.school.hasSchool = false;
         window.localStorage.clear();
     },
+    // 更新学校信息
+    updateSchool(state, value) {
+        console.log("updateSchool +", value);
+        state.school = value;
+        state.school.hasSchool = true;
+    },
 };
