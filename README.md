@@ -4,6 +4,10 @@
 
 这是我的 2023 年毕业设计，做一个基于微信小程序的座位预约系统，系统分用户端（小程序）和管理员端（Web）。
 
+小程序    ----> 微信搜索：Leeson Library
+
+  前 端     ----> [Leeson Library](https://library.leeson.cool)
+
 #### 特点
 
 - 像选电影票一样进行选座
