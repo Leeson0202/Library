@@ -7,12 +7,16 @@
                 <el-select v-model="libraryId" clearable placeholder="请选择">
                     <el-option
                         v-for="item in libraryList"
+                        size="mini"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value"
                     >
                     </el-option>
                 </el-select>
+                <el-button style="margin-left: 16px" @click="addLibrary"
+                    >添加
+                </el-button>
             </template>
         </div>
         <!-- main -->
@@ -35,21 +39,21 @@
                     >
                     </el-table-column>
 
-                    <el-table-column prop="descs" label="标题" width="380">
+                    <el-table-column prop="descs" label="描述" width="350">
                     </el-table-column>
 
                     <el-table-column
                         prop="seatNum"
                         label="座位数量"
                         align="center"
-                        width="120"
+                        width="80"
                     >
                     </el-table-column>
 
                     <el-table-column
                         label="剩余位置"
                         prop="left"
-                        width="100"
+                        width="80"
                         align="center"
                     ></el-table-column>
                     <el-table-column align="left" style="align-items: right">
@@ -64,8 +68,14 @@
                         <template slot-scope="scope">
                             <el-button
                                 size="mini"
-                                @click="handleEdit(scope.$index, scope.row)"
+                                @click="dialogFormVisible = true"
                                 >编辑</el-button
+                            >
+                            <el-button
+                                size="mini"
+                                type="primary"
+                                @click="handleDelete(scope.$index, scope.row)"
+                                >编辑座位</el-button
                             >
                             <el-button
                                 size="mini"
@@ -78,6 +88,46 @@
                 </el-table>
             </div>
         </div>
+        <!-- 对话框 -->
+
+        <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+            <el-form :model="form" style="width: 90%;">
+                <el-form-item label="图书馆" :label-width="formLabelWidth">
+                    <el-select v-model="form.region" placeholder="请选择图书馆">
+                        <el-option
+                            label="老图书馆"
+                            value="shanghai"
+                        ></el-option>
+                        <el-option
+                            label="数字图书馆"
+                            value="beijing"
+                        ></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="房间名" :label-width="formLabelWidth">
+                    <el-input v-model="form.name" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="描述" :label-width="formLabelWidth">
+                    <el-input
+                        v-model="form.descs"
+                        autocomplete="off"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item label="座位数量" :label-width="formLabelWidth">
+                    <el-input
+                        v-model="form.seatNum"
+                        autocomplete="off"
+                    ></el-input>
+                </el-form-item>
+            </el-form>
+            <!-- 下方确定按钮 -->
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false"
+                    >保 存</el-button
+                >
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -150,6 +200,20 @@ export default {
                     },
                 ],
             },
+            // 对话框
+            dialogFormVisible: false,
+            // 对话框数据
+            form: {
+                roomId: "ajvgah",
+                name: "一楼电脑室",
+                descs: "老图书馆一楼电脑室",
+                seatNum: 100,
+                left: 20,
+                weekend: true,
+                beginTime: "",
+                endTime: "",
+            },
+            formLabelWidth: "80px",
         };
     },
     //监听属性 类似于data概念
@@ -178,6 +242,7 @@ export default {
         handleDelete(index, row) {
             console.log(index, row);
         },
+        addLibrary() {},
     },
     //生命周期 - 创建完成（可以访问当前this实例）
     created() {},

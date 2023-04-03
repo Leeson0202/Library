@@ -1,18 +1,14 @@
-<!-- CreditSearch -->
+<!-- Settings -->
 <template>
-    <div class='CreditSearch'>
-    
-    </div>
+    <div class="Settings">设置</div>
 </template>
 
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from ‘《组件路径》‘;
 
-
-
 export default {
-    name: "CreditSearch",
+    name: "Settings",
     components: {},
     props: [],
     data() {
@@ -26,32 +22,21 @@ export default {
     //方法集合
     methods: {},
     //生命周期 - 创建完成（可以访问当前this实例）
-    created() {
-
-    },
+    created() {},
     //生命周期 - 挂载完成（可以访问DOM元素）
-    mounted() {
-
-    },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    destroyed() {
-    }, //生命周期 - 销毁完成
-    activated() {
-    }, //如果页面有keep-alive缓存功能，这个函数会触发
-}
+    mounted() {},
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    destroyed() {}, //生命周期 - 销毁完成
+    activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
+};
 </script>
 <style lang="less" scoped>
-     .CreditSearch{
-         width: 100%;
-         height: 100%;}
+.Settings {
+    width: 100%;
+    height: 100%;
+}
 </style>
-

@@ -2,7 +2,7 @@
 <template>
     <div class="Aside">
         <el-menu
-            :default-openeds="[]"
+            :default-openeds="['1', '2']"
             background-color="transparent"
             active-text-color="#2d72cc"
             :default-active="activeIndex"
@@ -33,24 +33,17 @@
                     <i class="el-icon-date"></i>预约管理
                 </template>
                 <el-menu-item index="receive">预约管理</el-menu-item>
-                <el-menu-item index="receiveSearch">预约查询</el-menu-item>
-                <el-menu-item index="2-3">选项2</el-menu-item>
+                <el-menu-item index="receiveRule">预约规则</el-menu-item>
             </el-submenu>
-
-            <el-submenu index="3">
-                <template slot="title">
-                    <i class="el-icon-bank-card"></i>信用管理
-                </template>
-                <el-menu-item index="credit">信用管理</el-menu-item>
-                <el-menu-item index="creditSearch">信用查询</el-menu-item>
-            </el-submenu>
-            <el-submenu index="4">
-                <template slot="title">
-                    <i class="el-icon-setting"></i>设置
-                </template>
-                <el-menu-item index="info">我的信息</el-menu-item>
-                <el-menu-item index="bind">学校绑定</el-menu-item>
-            </el-submenu>
+            <el-menu-item index="credit">
+                <i class="el-icon-bank-card"></i>信用管理
+            </el-menu-item>
+            <el-menu-item index="feedback">
+                <i class="el-icon-bell"></i>反馈消息
+            </el-menu-item>
+            <el-menu-item index="settings"
+                ><i class="el-icon-setting"></i>设置</el-menu-item
+            >
         </el-menu>
     </div>
 </template>

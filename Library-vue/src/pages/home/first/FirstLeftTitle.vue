@@ -67,6 +67,7 @@ export default {
     padding-bottom: 0;
 }
 .school-name {
+    float: left;
     width: 30%;
     text-align: center;
     font-size: 36px;
@@ -78,10 +79,10 @@ export default {
     top: 6px;
 }
 .top-tools {
+    float: left;
     width: 70%;
-    display: inline-block;
     .search-block {
-        width: calc(100% - 185px);
+        width: calc(100% - 188px);
     }
 }
 </style>

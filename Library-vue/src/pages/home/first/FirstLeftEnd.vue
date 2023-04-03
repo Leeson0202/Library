@@ -144,7 +144,6 @@ export default {
             this.fle1.setOption(this.opt1);
             this.fle2.setOption(this.opt2);
 
-
             setTimeout(this.run, 0);
             setInterval(function () {
                 that.run();
@@ -155,11 +154,7 @@ export default {
         run() {
             let data = [];
             for (var i = 0; i < this.optDataLength; ++i) {
-                if (Math.random() > 0.9) {
-                    data[i] = Math.round(Math.random() * 2000);
-                } else {
-                    data[i] = Math.round(Math.random() * 200);
-                }
+                data[i] = Math.round(Math.random() * 200);
             }
             this.fle1.setOption({
                 series: [

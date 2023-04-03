@@ -136,6 +136,7 @@ export default {
     height: 100%;
     background-color: #fff;
     padding: 10px;
+    overflow: scroll;
 }
 .next {
     padding-left: 10px;

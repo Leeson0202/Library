@@ -14,7 +14,13 @@
                 <div class="num-show" style="display: inline-block">3,719k</div>
                 人次
             </div>
-        <div class="go"></div>
+            <div class="go">
+                <img
+                    :src="require('@/assets/img/library.jpg')"
+                    alt=""
+                    style="height: 160px"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -59,14 +65,18 @@ export default {
 
 .card {
     padding: 20px 20px;
-    background-color: #1076fc18;
+    // background-color: #1076fc18;
+    background-color: #fff;
     vertical-align: top;
     text-align: left;
 }
 .all-count {
+    position: relative;
     float: left;
     width: auto;
-    margin-left: 40px;
+    margin-left: 20px;
+    height: 140px;
+    top: calc(50% - 70px);
 }
 .all-count * {
     font-size: 11px;
@@ -76,18 +86,16 @@ export default {
     font-weight: 500;
     color: #6ca3db;
     margin-left: 20px;
-    line-height: 60px;
+    margin-top: 10px;
+    line-height: 30px;
 }
-.go{
-    display: inline;
-    position: relative;
+.go {
     float: right;
-    margin-right: 50px;
-    top: 40px;
-    height: 100px;
-    width: 100px;
-    border-top: 20px solid #fff;
-    border-right: 20px solid #fff;
-    transform: rotate(45deg);
+    position: relative;
+    margin-right: 20px;
+    float: right;
+    height: 160px;
+    width: 160px;
+    top: calc(50% - 80px);
 }
 </style>

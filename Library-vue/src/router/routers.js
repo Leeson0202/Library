@@ -32,16 +32,25 @@ export default [
         component: (resolve) =>
             require(["@/pages/receive/ReceiveSearch"], resolve),
     },
+    {
+        path: "receiveRule",
+        component: (resolve) =>
+            require(["@/pages/receive/ReceiveRule"], resolve),
+    },
 
     // credit
     {
         path: "credit",
         component: (resolve) => require(["@/pages/credit/Credit"], resolve),
     },
+    // feedback
     {
-        path: "creditSearch",
-        component: (resolve) =>
-            require(["@/pages/credit/CreditSearch"], resolve),
+        path: "feedback",
+        component: (resolve) => require(["@/pages/feedback/Feedback"], resolve),
     },
     // settings
+    {
+        path: "settings",
+        component: (resolve) => require(["@/pages/setting/Settings"], resolve),
+    },
 ];

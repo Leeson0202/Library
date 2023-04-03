@@ -100,13 +100,14 @@ export default {
     padding: 20px 20px;
     background-color: #fff;
     vertical-align: top;
+    overflow: scroll;
 }
 .title {
     font-size: 18px;
     font-weight: 500;
     height: 20px;
     color: #666;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
 }
 .list {
     .item {

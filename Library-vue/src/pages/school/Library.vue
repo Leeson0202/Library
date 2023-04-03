@@ -20,7 +20,6 @@
                 <div class="simple">{{ item.descs }}</div>
             </div>
         </el-card>
-        <!--  抽屉 -->
         <el-card
             class="library-card"
             :style="{ width: detailWidth - 40 + 'px' }"
@@ -34,6 +33,7 @@
             </div>
         </el-card>
 
+        <!--  抽屉 -->
         <el-drawer
             title="编辑图书馆"
             :visible.sync="drawer"
@@ -91,7 +91,7 @@
                                     end: '17:30',
                                 }"
                                 placeholder="选择时间"
-                                style="width: 130px"
+                                style="width: 100%"
                             >
                             </el-time-select>
                         </el-col>
@@ -105,7 +105,7 @@
                                     end: '22:00',
                                 }"
                                 placeholder="选择时间"
-                                style="width: 130px"
+                                style="width: 100%"
                             ></el-time-select>
                         </el-col>
                     </el-form-item>
@@ -263,5 +263,8 @@ export default {
 /deep/ .upload-demo > .el-upload,
 /deep/ .upload-demo > .el-upload > .el-upload-dragger {
     width: 100% !important;
+}
+/deep/ .el-drawer {
+    min-width: 400px;
 }
 </style>

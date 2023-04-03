@@ -1,6 +1,6 @@
-<!-- Credit -->
+<!-- FeedBack -->
 <template>
-    <div class="Credit">
+    <div class="FeedBack">
         <div class="menu-block">
             <el-input
                 class="input"
@@ -12,14 +12,8 @@
                 icon="el-icon-search"
                 style="float: left; margin-left: 20px"
             ></el-button>
-            <div class="setting">
-                <img
-                    style="height: 100%"
-                    :src="require('@/assets/img/setting.svg')"
-                />
-            </div>
         </div>
-        <div class="credit-show">
+        <div class="feedback-show">
             <el-empty v-if="input == ''" :image-size="200"></el-empty>
             <div v-else>
                 <el-table
@@ -35,31 +29,33 @@
                     </el-table-column>
 
                     <el-table-column
-                        prop="credit"
-                        label="信用"
-                        width="120"
-                        align="center"
+                        prop="date"
+                        label="时间"
+                        sortable
+                        width="200"
                     >
                     </el-table-column>
-                    <el-table-column prop="date" label="时间" sortable width="200">
+
+                    <el-table-column prop="title" label="标题" width="300">
                     </el-table-column>
+
                     <el-table-column
-                        prop="num"
-                        label="扣分"
+                        prop="status"
+                        label="状态"
                         width="100"
                         align="center"
                     >
                     </el-table-column>
-                    <el-table-column prop="msg" label="记录" width="300">
-                    </el-table-column>
-
-                    <el-table-column align="left" label="操作" style="align-items: right">
-                        
+                    <el-table-column
+                        align="left"
+                        label="操作"
+                        style="align-items: right"
+                    >
                         <template slot-scope="scope">
                             <el-button
                                 size="mini"
                                 @click="dialogFormVisible = true"
-                                >修改</el-button
+                                >查阅</el-button
                             >
                             <el-button
                                 size="mini"
@@ -80,40 +76,12 @@
 //例如：import 《组件名称》 from ‘《组件路径》‘;
 
 export default {
-    name: "Credit",
+    name: "FeedBack",
     components: {},
     props: [],
     data() {
         //这里存放数据
-        return {
-            input: "Leeson",
-            users: [
-                {
-                    id: "aisfygewuh",
-                    name: "Leeson",
-                    credit: 95,
-                    date: "2023-02-20 14:15:00",
-                    msg: "迟到15分钟",
-                    num: "-5",
-                },
-                {
-                    id: "aisfygewuh",
-                    name: "cquab",
-                    credit: 95,
-                    date: "2023-02-20 16:15:00",
-                    msg: "迟到15分钟",
-                    num: "-5",
-                },
-                {
-                    id: "aisfygewuh",
-                    name: "cquab",
-                    credit: 95,
-                    date: "2023-02-19 16:15:00",
-                    msg: "迟到15分钟",
-                    num: "-5",
-                },
-            ],
-        };
+        return {};
     },
     //监听属性 类似于data概念
     computed: {},
@@ -135,7 +103,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.Credit {
+.FeedBack {
     width: 100%;
     height: 100%;
     background-color: #fff;

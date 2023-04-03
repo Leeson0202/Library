@@ -7,6 +7,7 @@ Vue.use(VueRouter); // 应用插件
 
 //创建router实例对象，去管理一组一组的路由规则
 const router = new VueRouter({
+    // mode:"history",
     routes: [
         {
             path: "/",

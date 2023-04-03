@@ -14,6 +14,7 @@ module.exports = defineConfig({
     filenameHashing: false,
 
     devServer: {
+        // port: 8070,
         proxy: {
             "/api": {
                 //这里最好有一个 /
