@@ -34,6 +34,62 @@
 
 
 
+### Web管理员端展示
+
+- 登陆
+
+  ![image-20230404024244132](https://ghproxy.com/https://raw.githubusercontent.com/Leeson0202/imgRepository/main/image-20230404024244132.png)
+
+- 首页
+
+  ![image-20230404024402631](https://ghproxy.com/https://raw.githubusercontent.com/Leeson0202/imgRepository/main/image-20230404024402631.png)
+
+- 学校管理
+
+![image-20230404024431101](https://ghproxy.com/https://raw.githubusercontent.com/Leeson0202/imgRepository/main/image-20230404024431101.png)
+
+![image-20230404024448935](https://ghproxy.com/https://raw.githubusercontent.com/Leeson0202/imgRepository/main/image-20230404024448935.png)
+
+
+
+![image-20230404024459792](https://ghproxy.com/https://raw.githubusercontent.com/Leeson0202/imgRepository/main/image-20230404024459792.png)
+
+
+
+- 预约管理
+
+![image-20230404024524309](https://ghproxy.com/https://raw.githubusercontent.com/Leeson0202/imgRepository/main/image-20230404024524309.png)
+
+
+
+![image-20230404024532040](https://ghproxy.com/https://raw.githubusercontent.com/Leeson0202/imgRepository/main/image-20230404024532040.png)
+
+
+
+
+
+
+
+- 信用管理
+
+![image-20230404024550521](https://ghproxy.com/https://raw.githubusercontent.com/Leeson0202/imgRepository/main/image-20230404024550521.png)
+
+
+
+- 反馈信息
+
+![image-20230404024612807](https://ghproxy.com/https://raw.githubusercontent.com/Leeson0202/imgRepository/main/image-20230404024612807.png)
+
+- 设置
+
+![image-20230404024645660](https://ghproxy.com/https://raw.githubusercontent.com/Leeson0202/imgRepository/main/image-20230404024645660.png)
+
+![image-20230404024625052](https://ghproxy.com/https://raw.githubusercontent.com/Leeson0202/imgRepository/main/image-20230404024625052.png)
+
+
+
+
+
 ### 系统介绍
 
 系统分为管理员（web）和用户端（微信小程序）。
@@ -55,4 +111,4 @@
 ### 日志
 
 - 【2023/03/31】  小程序和后端基本完成，正在开发web管理员端。
-- 
+- 【2023/04/04】  vue界面基本完成。
