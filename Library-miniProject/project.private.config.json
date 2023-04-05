@@ -103,6 +103,13 @@
                     "query": "",
                     "launchMode": "default",
                     "scene": null
+                },
+                {
+                    "name": "",
+                    "pathName": "pages/center/login/confirm/confirm",
+                    "query": "tag=0&identify=18523681435",
+                    "launchMode": "default",
+                    "scene": null
                 }
             ]
         }

@@ -29,9 +29,7 @@ public class SchoolController {
     private SchoolService schoolService;
 
     /**
-     * 分页查询
-     *
-     * @return 查询结果
+     * 获取学校信息 token
      */
     @GetMapping
     public Map<String, Object> queryByToken() throws MyException {

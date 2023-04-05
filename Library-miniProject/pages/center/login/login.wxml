@@ -2,40 +2,39 @@
 
 
 <view>
-    <view class="login-block" wx:if="{{loginMethod==1 || loginMethod==0}}">
+    <view class="login-block" wx:if="{{tag==1 || tag==0}}">
         <view class="login-title-block">
             登陆体验更多精彩
-            <view class="login-title" wx:if="{{loginMethod==0}}">
+            <view class="login-title" wx:if="{{tag==0}}">
                 未注册手机号登录后将自动创建账号
             </view>
-            <view class="login-title" wx:if="{{loginMethod==1}}">
+            <view class="login-title" wx:if="{{tag==1}}">
                 未注册邮箱登录后将自动创建账号</view>
         </view>
         <view class="login-mian-block">
-            <view wx:if="{{loginMethod==0}}">
+            <view wx:if="{{tag==0}}">
                 <text style="display: inline-block;font-size: 32rpx;">+86</text>
-                <input class="input" type="number" focus="true" 
-                maxlength="{{11}}" placeholder="输入手机号" value="{{tel}}" bindinput="setPhone" style="margin-left: 20rpx;" />
+                <input class="input" type="number" focus="true" maxlength="{{11}}" placeholder="输入手机号" value="{{identify}}" bindinput="updateIdentify" style="margin-left: 20rpx;" />
             </view>
-            <view wx:if="{{loginMethod==1}}">
-            <input class="input" type="email" focus="true"  value="{{email}}" bindinput="setEmail" placeholder="输入邮箱" />
+            <view wx:if="{{tag==1}}">
+                <input class="input" type="email" focus="true" value="{{identify}}" bindinput="updateIdentify" placeholder="输入邮箱" />
             </view>
         </view>
         <view class="load-submit1" bindtap="login">
             发送验证码
         </view>
         <!-- 更改登陆方式 -->
-        <view wx:if="{{loginMethod==0}}" class="other-option" >
+        <view wx:if="{{tag==0}}" class="other-option">
             <view style="display: inline-block;" bindtap="changeLoginMethod" data-tag="{{1}}">
-            邮箱登陆
+                邮箱登陆
             </view>
         </view>
-        <view wx:if="{{loginMethod==1}}" class="other-option" >
+        <view wx:if="{{tag==1}}" class="other-option">
             <view style="display: inline-block;" bindtap="changeLoginMethod" data-tag="{{0}}">
-            手机号登陆
+                手机号登陆
             </view>
         </view>
     </view>
 
-    
+
 </view>

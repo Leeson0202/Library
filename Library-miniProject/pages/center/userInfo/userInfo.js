@@ -75,7 +75,7 @@ Page({
         if(Object.keys(data).length==0){
             return;
         }
-        this.UserInfoUpdate(data);
+        this.UpdateUserInfo(data);
     },
     // 照片选择
     onChooseAvatar(e) {
@@ -94,7 +94,7 @@ Page({
         this.storeBindings = createStoreBindings(this, {
             store,
             fields: ['userInfo', 'hasUserInfo', 'hasLogin','hasSchool','school'],
-            actions: ['GetUserInfo', 'UserInfoUpdate','GetSchool']
+            actions: ['GetUserInfo', 'UpdateUserInfo','GetSchool']
         });
     },
 

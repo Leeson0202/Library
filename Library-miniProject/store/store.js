@@ -10,6 +10,7 @@ import {
     action,
     observable
 } from 'mobx-miniprogram';
+import api from '../utils/api';
 import {
     setStorageSyncSecond,
     getStorageSyncTime
@@ -30,12 +31,6 @@ export const store = observable({
     },
     hasSchool: false,
     school: null,
-    // 注册相关
-    tel: "",
-    email: "",
-    // {0:手机， 1:邮箱}
-    loginMethod: 1,
-    tag: false, // 新用户
     // 计算属性
     get avatarUrl() {
         return hasUserInfo == true ? this.userInfo.avatarUrl : "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132";
@@ -68,74 +63,31 @@ export const store = observable({
         return true
 
     }),
-
-    // 登陆主要请求
-    ReLogin: action(function () {
-        let that = this;
-        // 向微信服务器发送请求 code
-
-        return new Promise((resolve, reject) => {
-            wx.login({
-                success: ({
-                    code
-                }) => {
-                    // 拿到code后，向开发者服务器请求,返回openid
-                    wx.request({
-                        url: that.baseUrl + '/wx/login',
-                        data: {
-                            code: code
-                        },
-                        method: "POST",
-                        header: {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        },
-                        success: function (res) {
-                            console.log(res.data.token);
-                            that.token = res.data.token;
-                            // 储存
-                            wx.setStorageSync("token", res.data.token);
-                            this.GetUserInfo();
-                            resolve(true);
-                        },
-                        fail: function () {
-                            reject(false);
-                        }
-                    })
-                },
-                fail() {
-                    wx.showToast({
-                        title: '请检查网络',
-                        icon: 'error'
-                    })
-                }
-            })
-        });
+    // 更新 hasLogin
+    UpdateHasLogin: action(function (tag) {
+        this.hasLogin = tag
     }),
-    // 微信头像和名称 登陆
-    WxLogin: action(function (res) {
-        const that = this;
-        wx.showLoading({
-            title: '正在登陆'
-        });
-        this.ReLogin().then((tag) => {
-            if (tag) {
-                // 储存全局变量
-                that.hasUserInfo = true;
-                that.userInfo = res
-                wx.setStorageSync('userInfo', that.userInfo)
-                that.hasUserInfo = true;
-                // 关闭弹窗并返回上一页
-                wx.hideLoading();
-                wx.navigateBack();
-            } else {
-                // 登陆失败
-                wx.hideLoading();
-                wx.showToast({
-                    title: '登陆失败，请联系管理',
-                    icon: 'error'
-                })
-            }
-        })
+    // 更新 hasUserInfo
+    UpdateHasUserInfo: action((tag) => {
+        this.hasUserInfo = tag
+    }),
+
+
+    /**
+     *  非 数据相关
+     */
+    // 清除数据 初始化数据
+    InitData: action(function () {
+        wx.clearStorageSync();
+        this.hasLogin = false;
+        this.hasUserInfo = false;
+        this.hasSchool = false;
+        this.userInfo = {
+            avatarUrl: "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132",
+            nickName: "点击登陆",
+            background: "http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1010/13/c6/5494373_5494373_1286955435968.jpg"
+        }
+        this.school = {};
 
     }),
 
@@ -192,45 +144,9 @@ export const store = observable({
             this.userInfo = userInfo;
         }
     }),
-    IsKeepAlive: action(function () {
-        wx.request({
-            url: this.baseUrl + "/alive",
-            method: "GET",
-            header: {
-                "token": wx.getStorageSync('token')
-            },
-            success(res) {
-                console.log(res);
-            },
-            fail() {
-                this.ReLogin();
-            }
-        })
-    }),
+    // 获取完整的图片地址
     LocalImag: action(function (uri) {
         return this.baseUrl + uri;
-    }),
-    // 获取access_token
-    GetAccessToken: action(function () {
-        var isTime = getStorageSyncTime('access_token');
-        if (isTime === undefined) {
-            let access_token = wx.getStorageSync('access_token')
-            return access_token;
-        }
-        wx.request({
-            url: this.baseUrl + "/wx/login/access",
-            method: "GET",
-            success(res) {
-                // 保存到storage
-                const access_token = res.data.data.access_token;
-                setStorageSyncSecond('access_token', access_token);
-                console.log(access_token);
-                return access_token;
-            },
-            fail() {
-                console.log("请求失败");
-            }
-        })
     }),
     // 登陆cqupt
     LoginCqupt: action(function (cqupt_id, password) {
@@ -275,143 +191,6 @@ export const store = observable({
         })
 
     }),
-    // 设置 hasUserInfo 【true false】
-    changeHasUserInfo: action(function (tag) {
-        this.hasUserInfo = tag;
-    }),
-    // 设置登陆方式
-    ChangeLoginMethod: action(function (tag) {
-        this.loginMethod = tag;
-    }),
-    // 退出登录 初始化数据
-    InitData: action(function () {
-        wx.clearStorageSync();
-        this.hasLogin = false;
-        this.hasUserInfo = false;
-        this.hasSchool = false;
-        this.userInfo = {
-            avatarUrl: "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132",
-            nickName: "点击登陆",
-            background: "http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1010/13/c6/5494373_5494373_1286955435968.jpg"
-        }
-        this.school = {};
-
-    }),
-    // 登陆login 发送验证码
-    Login: action(function (str) {
-        // console.log(this.loginMethod+ " Login: " + str);
-        if (str === null || str.length === 0) {
-            wx.showToast({
-                title: '请输入',
-                icon: "none"
-            })
-            return;
-        }
-        let that = this
-        that.hasLogin = false;
-        that.tag = false
-        if (that.loginMethod === 0) {
-            that.tel = str
-        } else if (that.loginMethod === 1) {
-            that.email = str
-        }
-        wx.showLoading({
-            title: '正在发送验证码',
-        })
-        let uri = that.loginMethod == 0 ? "/login/tel" : "/login/email";
-        let url = that.baseUrl + uri;
-        console.log(url);
-        wx.request({
-            url: url,
-            method: "GET",
-            data: {
-                tel: that.tel,
-                email: that.email
-            },
-            success(res) {
-                wx.hideLoading();
-                if (that.CheckError(res.data)) return
-                if (res.data.code == 200) {
-                    wx.showToast({
-                        title: res.data.data,
-                        icon: "none"
-                    })
-                    wx.navigateTo({
-                        url: '/pages/center/login/confirm/confirm',
-                    })
-                } else {
-                    wx.showToast({
-                        title: res.data.msg,
-                        icon: "none"
-                    })
-                }
-            },
-            fail() {
-                wx.hideLoading();
-                wx.showToast({
-                    title: '请连接网络',
-                    icon: "none"
-                })
-            }
-        })
-
-    }),
-    // 登陆验证
-    Confirm: action(function (code) {
-        let that = this;
-        that.hasLogin = false;
-        that.tag = false;
-        // 检测
-        if (code === null || code.length < 6) {
-            wx.showToast({
-                title: '请输入完整的验证码',
-                icon: "none"
-            })
-        }
-        let url = that.baseUrl + (that.loginMethod === 0 ? "/confirm/tel" : "/confirm/email");
-        console.log(url);
-        wx.showLoading({
-            title: '正在登陆',
-        })
-        wx.request({
-            url: url,
-            method: "GET",
-            data: {
-                tel: that.tel,
-                email: that.email,
-                code: code
-            },
-            success(res) {
-                // console.log(res.data);
-                wx.hideLoading();
-                if (that.CheckError(res.data)) return
-                if (res.data.code == 200) {
-                    wx.setStorageSync('token', res.data.token);
-                    that.hasLogin = true;
-                    // 是否为新用户
-                    if (res.data.tag !== that.loginMethod) {
-                        that.tag = true;
-                    } else {
-                        that.GetUserInfo();
-                        wx.showToast({
-                            title: '登陆成功',
-                            icon: "success"
-                        });
-                        wx.reLaunch({
-                            url: '/pages/center/center',
-                        })
-                    }
-                }
-            },
-            fail() {
-                wx.hideLoading();
-                wx.showToast({
-                    title: '请检查网络',
-                    icon: "error"
-                })
-            }
-        })
-    }),
 
     /** 获取实体 */
     // 设置头像 和昵称
@@ -425,7 +204,7 @@ export const store = observable({
             nickName: nickName
         }
         // 更新用户信息
-        this.UserInfoUpdate(data);
+        this.UpdateUserInfo(data);
         wx.reLaunch({
             url: '/pages/center/center',
         })
@@ -457,33 +236,17 @@ export const store = observable({
         this.GetSchool();
     }),
     // 更新用户 上传信息 UserInfo
-    UserInfoUpdate: action(function (data) {
+    UpdateUserInfo: action(function (data) {
         let that = this
         // 上传userInfo
-        wx.request({
-            url: that.baseUrl + '/userInfo',
-            method: "PUT",
-            header: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "token": wx.getStorageSync('token')
-            },
-            data: data,
-            success(res) {
-                // console.log(res.data);
-                if (that.CheckError(res.data)) return
-                that.userInfo = res.data.userInfo;
-                wx.setStorageSync('userInfo', res.data.userInfo)
-                that.hasUserInfo = true;
-                wx.showToast({
-                    title: '保存成功',
-                    icon: "success"
-                })
-            },
-            fail() {
-                wx.showToast({
-                    title: '上传失败，请重试',
-                })
-            }
+        api.updateUserInfo(data).then(data => {
+            that.userInfo = data.userInfo;
+            wx.setStorageSync('userInfo', data.userInfo)
+            that.hasUserInfo = true;
+            wx.showToast({
+                title: '保存成功',
+                icon: "success"
+            })
         })
     }),
     // 获取学校

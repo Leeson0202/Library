@@ -20,6 +20,7 @@ export default {
     /**
      * 用户
      */
+    
     // 获取用户信息 UserInfo
     queryUserInfo: () => http.get("api/userInfo"),
     // 更新用户信息

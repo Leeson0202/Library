@@ -39,7 +39,7 @@ Page({
     // 查询所有预约
     queryReceiveAll() {
         let that = this
-        api.receiveAll().then(data => {
+        api.queryReceives().then(data => {
             // console.log(data);
             let now = new Date(new Date().setHours(0, 0, 0, 0));
             let timeIdx = Math.floor((new Date().getHours() - 8) / 2);
@@ -112,7 +112,7 @@ Page({
         console.log("cancel");
         let receiveId = e.currentTarget.dataset.receiveId;
         console.log(receiveId);
-        api.receiveCancel(receiveId).then((res) => {
+        api.cancelReceive(receiveId).then((res) => {
             if (res.code == 200) {
                 this.queryReceiveAll();
             }

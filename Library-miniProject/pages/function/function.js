@@ -33,18 +33,15 @@ Page({
         });
     },
     init() {
-        let that = this;
-        if (!that.data.hasSchool || !that.data.hasSchool) return;
-        this.getSchedule();
-        this.getUserOnline();
+        // console.log(this);
+        if (!store.hasSchool || !store.hasSchool) return;
+        getSchedule();
+        getUserOnline();
     },
 
-    /**
-     * 生命周期函数--监听页面显示
-     */
     onShow() {
         let that = this
-        setTimeout(that.init, 200)
+        setTimeout(that.init, 500)
     },
 
 
@@ -73,7 +70,7 @@ Page({
     // 获取我的计划
     getSchedule() {
         let that = this
-        api.receiveSchedule().then((data) => {
+        api.queryReceiveSchedule().then((data) => {
             // 判断是否为空
             if (data.data == null || data.data.length == 0) {
                 that.setData({

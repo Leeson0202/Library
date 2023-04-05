@@ -100,7 +100,7 @@ Page({
         wx.showLoading({
             title: '正在加载',
         })
-        api.getReceiveFast().then(data => {
+        api.queryReceiveFast().then(data => {
 
             console.log(data);
             let libraryIdx = 0,
