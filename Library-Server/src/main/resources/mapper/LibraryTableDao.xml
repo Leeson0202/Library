@@ -15,16 +15,27 @@
 
     <!--查询单个-->
     <select id="queryById" resultMap="LibraryTableMap">
-        select
-          table_id, room_id, name, x, y, direction, width, height
+        select table_id,
+               room_id,
+               name,
+               x,
+               y,
+               direction,
+               width,
+               height
         from library_table
         where table_id = #{tableId}
     </select>
 
-    <!--查询单个-->
     <select id="queryByRoomId" resultMap="LibraryTableMap">
-        select
-            table_id, room_id, name, x, y, direction, width, height
+        select table_id,
+               room_id,
+               name,
+               x,
+               y,
+               direction,
+               width,
+               height
         from library_table
         where room_id = #{roomId}
     </select>
@@ -32,7 +43,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="LibraryTableMap">
         select
-          table_id, room_id, name, x, y, direction, width, height
+        table_id, room_id, name, x, y, direction, width, height
         from library_table
         <where>
             <if test="tableId != null and tableId != ''">
@@ -49,6 +60,9 @@
             </if>
             <if test="y != null">
                 and y = #{y}
+            </if>
+            <if test="direction != null">
+                and direction = #{direction}
             </if>
             <if test="width != null">
                 and width = #{width}
@@ -80,6 +94,9 @@
             <if test="y != null">
                 and y = #{y}
             </if>
+            <if test="direction != null">
+                and direction = #{direction}
+            </if>
             <if test="width != null">
                 and width = #{width}
             </if>
@@ -91,15 +108,16 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="tableId" useGeneratedKeys="true">
-        insert into library_table(room_id, name, x, y, direction, width, height)
-        values (#{roomId}, #{name}, #{x}, #{y}, #{width}, #{height})
+        insert into library_table(table_id, room_id, name, x, y, direction, width, height)
+        values (#{tableId}, #{roomId}, #{name}, #{x}, #{y}, #{direction}, #{width}, #{height})
     </insert>
 
     <insert id="insertBatch" keyProperty="tableId" useGeneratedKeys="true">
         insert into library_table(room_id, name, x, y, direction, width, height)
         values
         <foreach collection="entities" item="entity" separator=",">
-        (#{entity.roomId}, #{entity.name}, #{entity.x}, #{entity.y}, #{entity.width}, #{entity.height})
+            (#{entity.roomId}, #{entity.name}, #{entity.x}, #{entity.y}, #{entity.direction}, #{entity.width},
+            #{entity.height})
         </foreach>
     </insert>
 
@@ -107,13 +125,15 @@
         insert into library_table(room_id, name, x, y, direction, width, height)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.roomId}, #{entity.name}, #{entity.x}, #{entity.y}, #{entity.width}, #{entity.height})
+            (#{entity.roomId}, #{entity.name}, #{entity.x}, #{entity.y}, #{entity.direction}, #{entity.width},
+            #{entity.height})
         </foreach>
         on duplicate key update
         room_id = values(room_id),
         name = values(name),
         x = values(x),
         y = values(y),
+        direction = values(direction),
         width = values(width),
         height = values(height)
     </insert>
@@ -134,6 +154,9 @@
             <if test="y != null">
                 y = #{y},
             </if>
+            <if test="direction != null">
+                direction = #{direction},
+            </if>
             <if test="width != null">
                 width = #{width},
             </if>
@@ -146,7 +169,9 @@
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete from library_table where table_id = #{tableId}
+        delete
+        from library_table
+        where table_id = #{tableId}
     </delete>
 
 </mapper>

@@ -7,7 +7,6 @@ import cool.leeson.library.config.RedisConfig;
 import cool.leeson.library.dao.LibraryRoomDao;
 import cool.leeson.library.dao.LibrarySeatDao;
 import cool.leeson.library.dao.LibraryTableDao;
-import cool.leeson.library.entity.library.Library;
 import cool.leeson.library.entity.library.LibraryRoom;
 import cool.leeson.library.entity.library.LibrarySeat;
 import cool.leeson.library.entity.library.LibraryTable;
@@ -20,10 +19,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * (LibraryRoom)表服务实现类
@@ -42,8 +38,6 @@ public class LibraryRoomService {
     private LibraryTableDao libraryTableDao;
     @Resource
     private RedisTemplate<String, String> redisTemplate;
-    private String roomKeyFormat = "%s:roomId"; // roomId:day:time   dsackacbjakcaw3:16:1
-    private String seatKeyFormat = "%s:%s:%s"; // seatId:day:time   dsackacbjakcaw3:16:1
 
     /**
      * 通过 roomId 获得房间的所有信息
@@ -72,7 +66,7 @@ public class LibraryRoomService {
         libraryRoom.setLibrarySeats(librarySeat);
         libraryRoom.setLibraryTables(libraryTables);
         // 加入缓存
-        String roomKey = String.format(roomKeyFormat, roomId);
+        String roomKey = String.format(RedisConfig.FormatKey.INFO.toString(), roomId);
         redisTemplate.opsForValue().set(roomKey, JSONObject.toJSONString(libraryRoom));
         return ResMap.ok(libraryRoom);
     }
@@ -116,14 +110,14 @@ public class LibraryRoomService {
             day = c.getTime().getDate();
         }
         // 查缓存
-        String roomKey = String.format(roomKeyFormat, roomId);
+        String roomKey = String.format(RedisConfig.FormatKey.INFO.toString(), roomId);
         String room = redisTemplate.opsForValue().get(roomKey);//格式化JSON数据
         LibraryRoom libraryRoom = null;
         if (!StringUtils.isEmpty(room)) {
             // 非空 继续查缓冲 获取seat
             libraryRoom = JSONObject.parseObject(room, LibraryRoom.class);
             for (LibrarySeat seat : libraryRoom.getLibrarySeats()) {
-                String seatKey = String.format(seatKeyFormat, seat.getSeatId(), day, idx);
+                String seatKey = String.format(RedisConfig.FormatKey.INFO.toString(), seat.getSeatId(), day, idx);
                 String s = redisTemplate.opsForValue().get(seatKey);
                 // 有就直接拿出来用
                 seat.setRed("true".equals(s));
@@ -172,9 +166,13 @@ public class LibraryRoomService {
      * @param libraryRoom 实例对象
      * @return 实例对象
      */
-    public LibraryRoom insert(LibraryRoom libraryRoom) {
+    public Map<String, Object> insert(LibraryRoom libraryRoom) {
+        if (StringUtils.isEmpty(libraryRoom.getLibraryId())) ResMap.err("libraryId不能为空");
+        String roomId = UUID.randomUUID().toString();
+        libraryRoom.setRoomId(roomId);
         this.libraryRoomDao.insert(libraryRoom);
-        return libraryRoom;
+        this.rmCache(roomId); // 删除缓存
+        return ResMap.ok(libraryRoom);
     }
 
     /**
@@ -184,7 +182,10 @@ public class LibraryRoomService {
      * @return 实例对象
      */
     public Map<String, Object> update(LibraryRoom libraryRoom) {
+        if (StringUtils.isEmpty(libraryRoom.getRoomId())) ResMap.err("roomId不能为空");
         this.libraryRoomDao.update(libraryRoom);
+
+        this.rmCache(libraryRoom.getRoomId()); // 删除缓存
         return this.query(libraryRoom.getRoomId());
     }
 
@@ -194,7 +195,17 @@ public class LibraryRoomService {
      * @param roomId 主键
      * @return 是否成功
      */
-    public boolean deleteById(String roomId) {
-        return this.libraryRoomDao.deleteById(roomId) > 0;
+    public Map<String, Object> deleteById(String roomId) {
+        if (StringUtils.isEmpty(roomId)) ResMap.err("roomId不能为空");
+        if (this.libraryRoomDao.deleteById(roomId) > 0) {
+            return ResMap.ok();
+        }
+        this.rmCache(roomId); // 删除缓存
+        return ResMap.err();
+    }
+
+    private void rmCache(String roomId) {
+        String roomKey = String.format(RedisConfig.FormatKey.INFO.toString(), roomId);
+        redisTemplate.delete(roomKey);
     }
 }

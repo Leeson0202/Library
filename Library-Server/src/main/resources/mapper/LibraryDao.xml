@@ -8,23 +8,36 @@
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="descs" column="descs" jdbcType="VARCHAR"/>
         <result property="background" column="background" jdbcType="VARCHAR"/>
+        <result property="weekend" column="weekend" jdbcType="INTEGER"/>
+        <result property="beginTime" column="begin_time" jdbcType="VARCHAR"/>
+        <result property="endTime" column="end_time" jdbcType="VARCHAR"/>
+        <result property="tt" column="tt" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="LibraryMap">
-        select
-          library_id, school_id, name, descs, background
+        select library_id,
+               school_id,
+               name,
+               descs,
+               background,
+               weekend,
+               begin_time,
+               end_time,
+               tt
         from library
         where library_id = #{libraryId}
     </select>
-
-    <!--查询单个-->
     <select id="queryBySchoolId" resultMap="LibraryMap">
         select library_id,
                school_id,
                name,
                descs,
-               background
+               background,
+               weekend,
+               begin_time,
+               end_time,
+               tt
         from library
         where school_id = #{schoolId}
     </select>
@@ -32,7 +45,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="LibraryMap">
         select
-          library_id, school_id, name, descs, background
+        library_id, school_id, name, descs, background, weekend, begin_time, end_time, tt
         from library
         <where>
             <if test="libraryId != null and libraryId != ''">
@@ -49,6 +62,18 @@
             </if>
             <if test="background != null and background != ''">
                 and background = #{background}
+            </if>
+            <if test="weekend != null">
+                and weekend = #{weekend}
+            </if>
+            <if test="beginTime != null">
+                and begin_time = #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and end_time = #{endTime}
+            </if>
+            <if test="tt != null">
+                and tt = #{tt}
             </if>
         </where>
         limit #{pageable.offset}, #{pageable.pageSize}
@@ -74,34 +99,53 @@
             <if test="background != null and background != ''">
                 and background = #{background}
             </if>
+            <if test="weekend != null">
+                and weekend = #{weekend}
+            </if>
+            <if test="beginTime != null">
+                and begin_time = #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and end_time = #{endTime}
+            </if>
+            <if test="tt != null">
+                and tt = #{tt}
+            </if>
         </where>
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="libraryId" useGeneratedKeys="true">
-        insert into library(school_id, name, descs, background)
-        values (#{schoolId}, #{name}, #{descs}, #{background})
+        insert into library(library_id, school_id, name, descs, background, weekend, begin_time, end_time, tt)
+        values (#{libraryId}, #{schoolId}, #{name}, #{descs}, #{background}, #{weekend}, #{beginTime}, #{endTime},
+                #{tt})
     </insert>
 
     <insert id="insertBatch" keyProperty="libraryId" useGeneratedKeys="true">
-        insert into library(school_id, name, descs, background)
+        insert into library(school_id, name, descs, background, weekend, begin_time, end_time, tt)
         values
         <foreach collection="entities" item="entity" separator=",">
-        (#{entity.schoolId}, #{entity.name}, #{entity.descs}, #{entity.background})
+            (#{entity.schoolId}, #{entity.name}, #{entity.descs}, #{entity.background}, #{entity.weekend},
+            #{entity.beginTime}, #{entity.endTime}, #{entity.tt})
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="libraryId" useGeneratedKeys="true">
-        insert into library(school_id, name, descs, background)
+        insert into library(school_id, name, descs, background, weekend, begin_time, end_time, tt)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.schoolId}, #{entity.name}, #{entity.descs}, #{entity.background})
+            (#{entity.schoolId}, #{entity.name}, #{entity.descs}, #{entity.background}, #{entity.weekend},
+            #{entity.beginTime}, #{entity.endTime}, #{entity.tt})
         </foreach>
         on duplicate key update
         school_id = values(school_id),
         name = values(name),
         descs = values(descs),
-        background = values(background)
+        background = values(background),
+        weekend = values(weekend),
+        begin_time = values(begin_time),
+        end_time = values(end_time),
+        tt = values(tt)
     </insert>
 
     <!--通过主键修改数据-->
@@ -120,13 +164,27 @@
             <if test="background != null and background != ''">
                 background = #{background},
             </if>
+            <if test="weekend != null">
+                weekend = #{weekend},
+            </if>
+            <if test="beginTime != null">
+                begin_time = #{beginTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="tt != null">
+                tt = #{tt},
+            </if>
         </set>
         where library_id = #{libraryId}
     </update>
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete from library where library_id = #{libraryId}
+        delete
+        from library
+        where library_id = #{libraryId}
     </delete>
 
 </mapper>

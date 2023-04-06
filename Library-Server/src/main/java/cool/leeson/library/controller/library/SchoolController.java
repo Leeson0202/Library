@@ -1,10 +1,9 @@
 package cool.leeson.library.controller.library;
 
-import cool.leeson.library.config.JwtConfig;
 import cool.leeson.library.entity.library.School;
 import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.library.SchoolService;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -19,6 +18,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("school")
+@Slf4j
 public class SchoolController {
     @Resource
     private HttpServletRequest request;
@@ -33,9 +33,7 @@ public class SchoolController {
      */
     @GetMapping
     public Map<String, Object> queryByToken() throws MyException {
-        // 解析token获取userId
-        String userId = new JwtConfig().getUsernameFromToken(request.getHeader("token"));
-        return this.schoolService.queryByUserId(userId);
+        return this.schoolService.queryByUserId((String) request.getAttribute("userId"));
     }
 
     /**
@@ -62,8 +60,8 @@ public class SchoolController {
      * @return 新增结果
      */
     @PostMapping
-    public ResponseEntity<School> add(School school) {
-        return ResponseEntity.ok(this.schoolService.insert(school));
+    public Map<String, Object> add(School school) throws MyException {
+        return this.schoolService.insert(school, (String) request.getAttribute("userId"));
     }
 
     /**
@@ -74,18 +72,18 @@ public class SchoolController {
      */
     @PutMapping
     public Map<String, Object> edit(School school) {
-        return this.schoolService.update(school);
+        return this.schoolService.update(school, (String) request.getAttribute("userId"));
     }
 
     /**
      * 删除数据
      *
-     * @param id 主键
+     * @param schoolId 主键
      * @return 删除是否成功
      */
     @DeleteMapping
-    public ResponseEntity<Boolean> deleteById(String id) {
-        return ResponseEntity.ok(this.schoolService.deleteById(id));
+    public Map<String, Object> deleteById(String schoolId) {
+        return this.schoolService.deleteById(schoolId, (String) request.getAttribute("userId"));
     }
 
 }

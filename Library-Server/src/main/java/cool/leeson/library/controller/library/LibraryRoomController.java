@@ -2,7 +2,6 @@ package cool.leeson.library.controller.library;
 
 import cool.leeson.library.entity.library.LibraryRoom;
 import cool.leeson.library.service.library.LibraryRoomService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -54,8 +53,8 @@ public class LibraryRoomController {
      * @return 新增结果
      */
     @PostMapping
-    public ResponseEntity<LibraryRoom> add(LibraryRoom libraryRoom) {
-        return ResponseEntity.ok(this.libraryRoomService.insert(libraryRoom));
+    public Map<String, Object> add(LibraryRoom libraryRoom) {
+        return this.libraryRoomService.insert(libraryRoom);
     }
 
     /**
@@ -73,12 +72,12 @@ public class LibraryRoomController {
     /**
      * 删除数据
      *
-     * @param id 主键
+     * @param roomId 主键
      * @return 删除是否成功
      */
     @DeleteMapping
-    public ResponseEntity<Boolean> deleteById(String id) {
-        return ResponseEntity.ok(this.libraryRoomService.deleteById(id));
+    public Map<String, Object> deleteById(String roomId) {
+        return this.libraryRoomService.deleteById(roomId);
     }
 
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * (LibrarySeat)表服务实现类
@@ -83,9 +84,16 @@ public class LibrarySeatService {
      * @param librarySeat 实例对象
      * @return 实例对象
      */
-    public LibrarySeat insert(LibrarySeat librarySeat) {
-        this.librarySeatDao.insert(librarySeat);
-        return librarySeat;
+    public Map<String, Object> insert(LibrarySeat librarySeat) {
+        String seatId = UUID.randomUUID().toString();
+        librarySeat.setSeatId(seatId);
+        if (this.librarySeatDao.insert(librarySeat) == 0) {
+            return ResMap.err();
+        }
+        // 删除缓存
+        this.rmCache(seatId);
+
+        return this.queryById(seatId);
     }
 
     /**
@@ -96,6 +104,8 @@ public class LibrarySeatService {
      */
     public Map<String, Object> update(LibrarySeat librarySeat) {
         this.librarySeatDao.update(librarySeat);
+        // 删除缓存
+        this.rmCache(librarySeat.getSeatId());
         return this.queryById(librarySeat.getSeatId());
     }
 
@@ -105,7 +115,18 @@ public class LibrarySeatService {
      * @param seatId 主键
      * @return 是否成功
      */
-    public boolean deleteById(String seatId) {
-        return this.librarySeatDao.deleteById(seatId) > 0;
+    public Map<String, Object> deleteById(String seatId) {
+        if (this.librarySeatDao.deleteById(seatId) > 0) {
+            return ResMap.ok();
+        }
+        // 删除缓存
+        this.rmCache(seatId);
+
+        return ResMap.err();
+    }
+
+    private void rmCache(String seatId) {
+        String roomKey = String.format(RedisConfig.FormatKey.INFO.toString(), seatId);
+        redisTemplate.delete(roomKey);
     }
 }

@@ -10,11 +10,9 @@ import cool.leeson.library.entity.library.simple.RoomSimple;
 import cool.leeson.library.entity.library.simple.SchoolSimple;
 import cool.leeson.library.entity.library.simple.SeatSimple;
 import cool.leeson.library.entity.user.UserSchool;
+import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +20,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * (School)表服务实现类
@@ -143,22 +142,11 @@ public class SchoolService {
         UserSchool userSchool = this.userSchoolDao.queryByUserId(userId);
         if (userSchool == null) {
             log.warn(userId + " 没有绑定学校");
-            return ResMap.ok();
+            return ResMap.err("请绑定学校");
         }
         return this.queryById(userSchool.getSchoolId());
     }
 
-    /**
-     * 分页查询
-     *
-     * @param school      筛选条件
-     * @param pageRequest 分页对象
-     * @return 查询结果
-     */
-    public Page<School> queryByPage(School school, PageRequest pageRequest) {
-        long total = this.schoolDao.count(school);
-        return new PageImpl<>(this.schoolDao.queryAllByLimit(school, pageRequest), pageRequest, total);
-    }
 
     /**
      * 新增数据
@@ -166,9 +154,28 @@ public class SchoolService {
      * @param school 实例对象
      * @return 实例对象
      */
-    public School insert(School school) {
-        this.schoolDao.insert(school);
-        return school;
+    public Map<String, Object> insert(School school, String userId) throws MyException {
+        // 添加学校
+        // 1。 查看用户是否管理学校
+        UserSchool userSchool = this.userSchoolDao.queryByUserId(userId);
+        if (userSchool != null) {
+            return ResMap.err("您已绑定学校");
+        }
+        // 2。 插入学校
+
+        String schoolId = UUID.randomUUID().toString();
+
+        school.setSchoolId(schoolId);
+        if (this.userSchoolDao.insert(new UserSchool(UUID.randomUUID().toString(), userId, schoolId, true)) == 0) {
+            log.error("插入userSchool失败");
+            throw new MyException(MyException.STATUS.err);
+        }
+        if (this.schoolDao.insert(school) == 0) {
+            log.error("插入school失败");
+            throw new MyException(MyException.STATUS.err);
+        }
+        // 3。 返回
+        return ResMap.ok(this.queryById(schoolId));
     }
 
     /**
@@ -177,8 +184,20 @@ public class SchoolService {
      * @param school 实例对象
      * @return 实例对象
      */
-    public Map<String, Object> update(School school) {
-        this.schoolDao.update(school);
+    public Map<String, Object> update(School school, String userId) {
+        UserSchool userSchool = this.userSchoolDao.queryByUserId(userId);
+        if (userSchool == null || !userSchool.getManagement()) {
+            log.error(userId + "没有管理的学校");
+            return ResMap.err("没有管理的学校");
+        }
+        school.setSchoolId(userSchool.getSchoolId());
+        if (this.schoolDao.update(school) == 0) {
+            log.error(userId + " 修改school失败");
+        }
+        // 删除缓存
+        String schoolKey = String.format(RedisConfig.FormatKey.INFO.toString(), userSchool.getSchoolId());
+        this.redisTemplate.delete(schoolKey);
+
         return ResMap.ok(this.queryById(school.getSchoolId()));
     }
 
@@ -189,8 +208,28 @@ public class SchoolService {
      * @return 是否成功
      */
 
-    public boolean deleteById(String schoolId) {
-        return this.schoolDao.deleteById(schoolId) > 0;
+    public Map<String, Object> deleteById(String schoolId, String userId) {
+        UserSchool userSchool = this.userSchoolDao.queryByUserId(userId);
+        if (userSchool == null) {
+            log.error(userId + "没有管理的学校");
+            return ResMap.err("没有管理的学校");
+        }
+        if (!userSchool.getSchoolId().equals(schoolId)) {
+            log.error("学校id错误");
+            return ResMap.err("输入的学校Id错误");
+        }
+        if (this.userSchoolDao.deleteById(userSchool.getId()) == 0) {
+            log.info("删除学校失败");
+            return ResMap.err("删除学校失败");
+        }
+        if (this.schoolDao.deleteById(schoolId) == 0) {
+            log.info("删除学校失败");
+            return ResMap.err("删除学校失败");
+        }
+        // 删除缓存
+        String schoolKey = String.format(RedisConfig.FormatKey.INFO.toString(), userSchool.getSchoolId());
+        this.redisTemplate.delete(schoolKey);
+        return ResMap.ok();
     }
 
 }

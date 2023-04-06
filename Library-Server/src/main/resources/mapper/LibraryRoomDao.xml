@@ -8,9 +8,6 @@
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="descs" column="descs" jdbcType="VARCHAR"/>
         <result property="seatNum" column="seat_num" jdbcType="INTEGER"/>
-        <result property="weekend" column="weekend" jdbcType="INTEGER"/>
-        <result property="beginTime" column="begin_time" jdbcType="VARCHAR"/>
-        <result property="endTime" column="end_time" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--查询单个-->
@@ -19,23 +16,18 @@
                library_id,
                name,
                descs,
-               seat_num,
-               weekend,
-               begin_time,
-               end_time
+               seat_num
         from library_room
         where room_id = #{roomId}
     </select>
-    <!--查询单个-->
+
+    <!--查询-->
     <select id="queryByLibraryId" resultMap="LibraryRoomMap">
         select room_id,
                library_id,
                name,
                descs,
-               seat_num,
-               weekend,
-               begin_time,
-               end_time
+               seat_num
         from library_room
         where library_id = #{libraryId}
     </select>
@@ -43,7 +35,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="LibraryRoomMap">
         select
-        room_id, library_id, name, descs, seat_num, weekend, begin_time, end_time
+        room_id, library_id, name, descs, seat_num
         from library_room
         <where>
             <if test="roomId != null and roomId != ''">
@@ -60,15 +52,6 @@
             </if>
             <if test="seatNum != null">
                 and seat_num = #{seatNum}
-            </if>
-            <if test="weekend != null">
-                and weekend = #{weekend}
-            </if>
-            <if test="beginTime != null">
-                and begin_time = #{beginTime}
-            </if>
-            <if test="endTime != null">
-                and end_time = #{endTime}
             </if>
         </where>
         limit #{pageable.offset}, #{pageable.pageSize}
@@ -94,48 +77,34 @@
             <if test="seatNum != null">
                 and seat_num = #{seatNum}
             </if>
-            <if test="weekend != null">
-                and weekend = #{weekend}
-            </if>
-            <if test="beginTime != null">
-                and begin_time = #{beginTime}
-            </if>
-            <if test="endTime != null">
-                and end_time = #{endTime}
-            </if>
         </where>
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="roomId" useGeneratedKeys="true">
-        insert into library_room(library_id, name, descs, seat_num, weekend, begin_time, end_time)
-        values (#{libraryId}, #{name}, #{descs}, #{seatNum}, #{weekend}, #{beginTime}, #{endTime})
+        insert into library_room(room_id, library_id, name, descs, seat_num)
+        values (#{roomId}, #{libraryId}, #{name}, #{descs}, #{seatNum})
     </insert>
 
     <insert id="insertBatch" keyProperty="roomId" useGeneratedKeys="true">
-        insert into library_room(library_id, name, descs, seat_num, weekend, begin_time, end_time)
+        insert into library_room(library_id, name, descs, seat_num)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.libraryId}, #{entity.name}, #{entity.descs}, #{entity.seatNum}, #{entity.weekend},
-            #{entity.beginTime}, #{entity.endTime})
+            (#{entity.libraryId}, #{entity.name}, #{entity.descs}, #{entity.seatNum})
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="roomId" useGeneratedKeys="true">
-        insert into library_room(library_id, name, descs, seat_num, weekend, begin_time, end_time)
+        insert into library_room(library_id, name, descs, seat_num)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.libraryId}, #{entity.name}, #{entity.descs}, #{entity.seatNum}, #{entity.weekend},
-            #{entity.beginTime}, #{entity.endTime})
+            (#{entity.libraryId}, #{entity.name}, #{entity.descs}, #{entity.seatNum})
         </foreach>
         on duplicate key update
         library_id = values(library_id),
         name = values(name),
         descs = values(descs),
-        seat_num = values(seat_num),
-        weekend = values(weekend),
-        begin_time = values(begin_time),
-        end_time = values(end_time)
+        seat_num = values(seat_num)
     </insert>
 
     <!--通过主键修改数据-->
@@ -153,15 +122,6 @@
             </if>
             <if test="seatNum != null">
                 seat_num = #{seatNum},
-            </if>
-            <if test="weekend != null">
-                weekend = #{weekend},
-            </if>
-            <if test="beginTime != null">
-                begin_time = #{beginTime},
-            </if>
-            <if test="endTime != null">
-                end_time = #{endTime},
             </if>
         </set>
         where room_id = #{roomId}

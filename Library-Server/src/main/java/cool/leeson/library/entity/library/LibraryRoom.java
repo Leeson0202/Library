@@ -39,18 +39,6 @@ public class LibraryRoom implements Serializable {
      * 座位数量
      */
     private Integer seatNum;
-    /**
-     * 周末是否开放
-     */
-    private Boolean weekend;
-    /**
-     * 每日开放开始时间
-     */
-    private LocalTime beginTime;
-    /**
-     * 每日开放结束时间
-     */
-    private LocalTime endTime;
     // 椅子
     private List<LibrarySeat> librarySeats;
     // 桌子

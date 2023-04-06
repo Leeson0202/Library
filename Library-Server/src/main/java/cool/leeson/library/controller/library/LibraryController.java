@@ -2,7 +2,6 @@ package cool.leeson.library.controller.library;
 
 import cool.leeson.library.entity.library.Library;
 import cool.leeson.library.service.library.LibraryService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -37,6 +36,11 @@ public class LibraryController {
         return this.libraryService.queryBySchoolId(schoolId);
     }
 
+    @GetMapping
+    public Map<String, Object> queryByToken() {
+        return this.libraryService.queryByUserId((String) request.getAttribute("userId"));
+    }
+
 
     /**
      * 通过主键查询单条数据
@@ -56,8 +60,8 @@ public class LibraryController {
      * @return 新增结果
      */
     @PostMapping
-    public ResponseEntity<Library> add(Library library) {
-        return ResponseEntity.ok(this.libraryService.insert(library));
+    public Map<String, Object> add(Library library) {
+        return this.libraryService.insert(library, (String) request.getAttribute("userId"));
     }
 
     /**
@@ -68,18 +72,18 @@ public class LibraryController {
      */
     @PutMapping
     public Map<String, Object> edit(Library library) {
-        return this.libraryService.update(library);
+        return this.libraryService.update(library, (String) request.getAttribute("userId"));
     }
 
     /**
      * 删除数据
      *
-     * @param id 主键
+     * @param libraryId 主键
      * @return 删除是否成功
      */
     @DeleteMapping
-    public ResponseEntity<Boolean> deleteById(String id) {
-        return ResponseEntity.ok(this.libraryService.deleteById(id));
+    public Map<String, Object> deleteById(String libraryId) {
+        return this.libraryService.deleteById(libraryId);
     }
 
 }

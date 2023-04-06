@@ -30,6 +30,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
                              Object handler) throws Exception {
+
         // 地址过滤
         String uri = request.getRequestURI();
         if (uri.contains("error")) {
@@ -37,18 +38,21 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         }
 
         String ipAddress = this.getIpAddress();
-        log.info(ipAddress + "正在请求：" + uri);
-        // 哪些需要token认证
-        String[] strings = new String[]{
-                "user", "receive", "library", "room", "update", "online", "clock"};
-        boolean f = true;
-        for (String string : strings) {
-            if (uri.contains(string)) f = false;
+        log.info(ipAddress + "正在请求：" + request.getMethod() + " " + uri);
+        // 哪些不需要token认证
+        String[] dismiss = new String[]{
+                "/login", "/confirm", "/update"};
+        boolean f = false;
+        for (String string : dismiss) {
+            if (uri.contains(string)) {
+                f = true;
+                break;
+            }
         }
         // 登陆注册相关
         if (f) return true;
         // Token 验证
-        String token = request.getHeader(jwtConfig.getHeader());
+        String token = request.getHeader("token");
         if (StringUtils.isEmpty(token)) {
             throw new MyException(MyException.STATUS.noToken);
 
@@ -59,6 +63,10 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             String rToken = this.redisTemplate.opsForValue().get(String.format(UserTokenKeyFormat, userId)); // redis中的token
             if (StringUtils.isEmpty(rToken) || !token.equals(rToken) || jwtConfig.isTokenExpired(token)) {
                 throw new MyException(MyException.STATUS.badToken);
+            }
+            // userId 写进去
+            if (StringUtils.isEmpty((String) request.getAttribute("userId"))) {
+                request.setAttribute("userId", userId);
             }
         } catch (Exception e) {
             throw new MyException(MyException.STATUS.badToken);

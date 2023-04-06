@@ -40,27 +40,22 @@ public class ReceiveController {
      */
     @PostMapping
     public Map<String, Object> receive(@RequestBody List<ReceiveItemPost> receives) throws MyException {
-
-        String userId = jwtConfig.getUsernameFromToken(request.getHeader("token"));
-
-        return this.receiveService.receive(receives, userId);
+        return this.receiveService.receive(receives, (String) request.getAttribute("userId"));
     }
 
     /**
      * 取消预约
+     *
      * @param receiveId 预约Id
      */
     @PutMapping("cancel")
     public Map<String, Object> cancel(String receiveId) throws MyException {
 
-        String userId = jwtConfig.getUsernameFromToken(request.getHeader("token"));
-
-        return this.receiveService.cancel(userId, receiveId);
+        return this.receiveService.cancel( (String) request.getAttribute("userId"), receiveId);
     }
 
     /**
      * 查询预约行程
-     *
      */
     @GetMapping("schedule")
     public Map<String, Object> schedule() throws MyException {

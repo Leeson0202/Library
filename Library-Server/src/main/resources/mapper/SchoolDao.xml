@@ -68,8 +68,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="schoolId" useGeneratedKeys="true">
-        insert into school(name, descs, icon, background)
-        values (#{name}, #{descs}, #{icon}, #{background})
+        insert into school(school_id, name, descs, icon, background)
+        values (#{schoolId}, #{name}, #{descs}, #{icon}, #{background})
     </insert>
 
     <insert id="insertBatch" keyProperty="schoolId" useGeneratedKeys="true">

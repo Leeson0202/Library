@@ -106,8 +106,8 @@ create table user_school
     management bool default false comment '是否管理'
 );
 
-insert into user_school
-values ('knadjcva', '12344321', 'dcajhbadhcavacda', true);
+# insert into user_school
+# values ('knadjcva', '12344321', 'dcajhbadhcavacda', true);
 
 
 

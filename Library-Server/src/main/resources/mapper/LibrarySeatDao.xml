@@ -103,8 +103,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="seatId" useGeneratedKeys="true">
-        insert into library_seat(room_id, name, repair, x, y, direction, width, height)
-        values (#{roomId}, #{name}, #{repair}, #{x}, #{y}, #{direction}, #{width}, #{height})
+        insert into library_seat(seat_id, room_id, name, repair, x, y, direction, width, height)
+        values (#{seatId}, #{roomId}, #{name}, #{repair}, #{x}, #{y}, #{direction}, #{width}, #{height})
     </insert>
 
     <insert id="insertBatch" keyProperty="seatId" useGeneratedKeys="true">
