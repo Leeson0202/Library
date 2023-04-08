@@ -1,4 +1,4 @@
-package cool.leeson.library.controller;
+package cool.leeson.library.controller.library;
 
 import cool.leeson.library.entity.library.LibraryTable;
 import cool.leeson.library.service.library.LibraryTableService;

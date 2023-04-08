@@ -2,21 +2,21 @@ package cool.leeson.library.service.library;
 
 import com.alibaba.fastjson.JSON;
 import com.aliyuncs.utils.StringUtils;
-import cool.leeson.library.config.RedisConfig;
 import cool.leeson.library.dao.*;
 import cool.leeson.library.entity.library.*;
 import cool.leeson.library.entity.library.simple.LibrarySimple;
 import cool.leeson.library.entity.library.simple.RoomSimple;
 import cool.leeson.library.entity.library.simple.SchoolSimple;
 import cool.leeson.library.entity.library.simple.SeatSimple;
+import cool.leeson.library.entity.tools.RedisTool;
 import cool.leeson.library.entity.user.UserSchool;
 import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +32,8 @@ import java.util.UUID;
 @Slf4j
 public class SchoolService {
     @Resource
+    private HttpServletRequest request;
+    @Resource
     private SchoolDao schoolDao;
     @Resource
     private UserSchoolDao userSchoolDao;
@@ -44,7 +46,7 @@ public class SchoolService {
     @Resource
     private SchoolRuleDao schoolRuleDao;
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTool redisTool;
 
     /**
      * 通过ID查询单条数据
@@ -53,10 +55,10 @@ public class SchoolService {
      * @return 实例对象
      */
     public Map<String, Object> queryById(String schoolId) {
-        School school = this.querySimple(schoolId);
+        School school = this.queryInfo(schoolId);
 
         if (school == null) {
-            log.error(schoolId + " 学校不存在");
+            log.warn(schoolId + " 学校不存在");
             return ResMap.err("学校不存在");
         }
         // 查询图书馆 及 预约规则
@@ -67,11 +69,11 @@ public class SchoolService {
         return ResMap.ok(school);
     }
 
-    public Map<String, Object> schoolSimple(String schoolId) {
+    public Map<String, Object> querySimple(String schoolId) {
         if (StringUtils.isEmpty(schoolId)) return ResMap.err("schoolId 为空");
         SchoolSimple schoolSimple;
-        String schoolSimpleKey = String.format(schoolId + ":simple", schoolId);
-        String s = this.redisTemplate.opsForValue().get(schoolSimpleKey);
+        String schoolSimpleKey = String.format(RedisTool.FormatKey.SIMPLE.toString(), schoolId);
+        String s = this.redisTool.get(schoolSimpleKey);
         // 有的话直接解析返回
         if (!StringUtils.isEmpty(s)) {
             schoolSimple = JSON.parseObject(s, SchoolSimple.class);
@@ -80,6 +82,7 @@ public class SchoolService {
         // 查找数据库
 
         School school = this.schoolDao.queryById(schoolId);
+        if (school == null) return ResMap.err("没有图书馆信息");
         schoolSimple = new SchoolSimple(school);
         // 获取学校
         List<Library> libraries = this.libraryDao.queryBySchoolId(schoolId);
@@ -108,15 +111,15 @@ public class SchoolService {
             librarySimpleList.add(librarySimple);
         }
         schoolSimple.setLibrarySimpleList(librarySimpleList);
-        redisTemplate.opsForValue().set(schoolSimpleKey, JSON.toJSONString(schoolSimple));
+        this.redisTool.set(schoolSimpleKey, schoolSimple);
         return ResMap.ok(schoolSimple);
 
     }
 
-    public School querySimple(String schoolId) {
+    public School queryInfo(String schoolId) {
         School school;
-        String schoolKey = String.format(RedisConfig.FormatKey.INFO.toString(), schoolId);
-        String s = this.redisTemplate.opsForValue().get(schoolKey);
+        String schoolInfoKey = String.format(RedisTool.FormatKey.INFO.toString(), schoolId);
+        String s = this.redisTool.get(schoolInfoKey);
 
         if (StringUtils.isEmpty(s) || "".equals(s)) {
             school = this.schoolDao.queryById(schoolId);
@@ -124,7 +127,7 @@ public class SchoolService {
                 return null;
             } else {
                 // 储存到 redis
-                redisTemplate.opsForValue().set(schoolKey, JSON.toJSONString(school));
+                redisTool.set(schoolInfoKey, school);
             }
         } else {
             school = JSON.parseObject(s, School.class);
@@ -167,13 +170,15 @@ public class SchoolService {
 
         school.setSchoolId(schoolId);
         if (this.userSchoolDao.insert(new UserSchool(UUID.randomUUID().toString(), userId, schoolId, true)) == 0) {
-            log.error("插入userSchool失败");
+            log.warn("插入userSchool失败");
             throw new MyException(MyException.STATUS.err);
         }
         if (this.schoolDao.insert(school) == 0) {
-            log.error("插入school失败");
+            log.warn("插入school失败");
             throw new MyException(MyException.STATUS.err);
         }
+        this.redisTool.flushAll();
+
         // 3。 返回
         return ResMap.ok(this.queryById(schoolId));
     }
@@ -184,19 +189,17 @@ public class SchoolService {
      * @param school 实例对象
      * @return 实例对象
      */
-    public Map<String, Object> update(School school, String userId) {
+    public Map<String, Object> update(School school, String userId) throws MyException {
         UserSchool userSchool = this.userSchoolDao.queryByUserId(userId);
         if (userSchool == null || !userSchool.getManagement()) {
-            log.error(userId + "没有管理的学校");
+            log.warn(userId + "没有管理的学校");
             return ResMap.err("没有管理的学校");
         }
         school.setSchoolId(userSchool.getSchoolId());
         if (this.schoolDao.update(school) == 0) {
-            log.error(userId + " 修改school失败");
+            log.warn(userId + " 修改school失败");
         }
-        // 删除缓存
-        String schoolKey = String.format(RedisConfig.FormatKey.INFO.toString(), userSchool.getSchoolId());
-        this.redisTemplate.delete(schoolKey);
+        this.redisTool.flushAll();
 
         return ResMap.ok(this.queryById(school.getSchoolId()));
     }
@@ -208,14 +211,14 @@ public class SchoolService {
      * @return 是否成功
      */
 
-    public Map<String, Object> deleteById(String schoolId, String userId) {
+    public Map<String, Object> deleteById(String schoolId, String userId) throws MyException {
         UserSchool userSchool = this.userSchoolDao.queryByUserId(userId);
         if (userSchool == null) {
-            log.error(userId + "没有管理的学校");
+            log.warn(userId + "没有管理的学校");
             return ResMap.err("没有管理的学校");
         }
         if (!userSchool.getSchoolId().equals(schoolId)) {
-            log.error("学校id错误");
+            log.warn("学校id错误");
             return ResMap.err("输入的学校Id错误");
         }
         if (this.userSchoolDao.deleteById(userSchool.getId()) == 0) {
@@ -226,10 +229,10 @@ public class SchoolService {
             log.info("删除学校失败");
             return ResMap.err("删除学校失败");
         }
-        // 删除缓存
-        String schoolKey = String.format(RedisConfig.FormatKey.INFO.toString(), userSchool.getSchoolId());
-        this.redisTemplate.delete(schoolKey);
+        this.redisTool.flushAll();
+
         return ResMap.ok();
     }
+
 
 }

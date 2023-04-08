@@ -5,12 +5,12 @@ import com.aliyuncs.utils.StringUtils;
 import cool.leeson.library.config.RedisConfig;
 import cool.leeson.library.dao.LibrarySeatDao;
 import cool.leeson.library.entity.library.LibrarySeat;
+import cool.leeson.library.entity.tools.RedisTool;
 import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -29,7 +29,7 @@ public class LibrarySeatService {
     @Resource
     private LibrarySeatDao librarySeatDao;
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTool redisTool;
 
     /**
      * 通过ID查询单条数据
@@ -38,7 +38,7 @@ public class LibrarySeatService {
      * @return 实例对象
      */
     public Map<String, Object> queryById(String seatId) {
-        LibrarySeat seat = this.querySimple(seatId);
+        LibrarySeat seat = this.queryInfo(seatId);
         if (seat == null) {
             log.warn(seatId + " 没有座位信息");
             return ResMap.err("没有座位信息");
@@ -46,10 +46,10 @@ public class LibrarySeatService {
         return ResMap.ok(seat);
     }
 
-    public LibrarySeat querySimple(String seatId) {
+    public LibrarySeat queryInfo(String seatId) {
         LibrarySeat seat;
         String roomKey = String.format(RedisConfig.FormatKey.INFO.toString(), seatId);
-        String s = this.redisTemplate.opsForValue().get(roomKey);
+        String s = redisTool.get(roomKey);
 
         if (StringUtils.isEmpty(s) || "".equals(s)) {
             seat = this.librarySeatDao.queryById(seatId);
@@ -57,7 +57,7 @@ public class LibrarySeatService {
                 return null;
             } else {
                 // 储存到 redis
-                redisTemplate.opsForValue().set(roomKey, JSON.toJSONString(seat));
+                redisTool.set(roomKey, seat);
             }
         } else {
             seat = JSON.parseObject(s, LibrarySeat.class);
@@ -90,8 +90,7 @@ public class LibrarySeatService {
         if (this.librarySeatDao.insert(librarySeat) == 0) {
             return ResMap.err();
         }
-        // 删除缓存
-        this.rmCache(seatId);
+        this.redisTool.flushAll(); // 删除缓存
 
         return this.queryById(seatId);
     }
@@ -104,8 +103,7 @@ public class LibrarySeatService {
      */
     public Map<String, Object> update(LibrarySeat librarySeat) {
         this.librarySeatDao.update(librarySeat);
-        // 删除缓存
-        this.rmCache(librarySeat.getSeatId());
+        this.redisTool.flushAll(); // 删除缓存
         return this.queryById(librarySeat.getSeatId());
     }
 
@@ -119,14 +117,9 @@ public class LibrarySeatService {
         if (this.librarySeatDao.deleteById(seatId) > 0) {
             return ResMap.ok();
         }
-        // 删除缓存
-        this.rmCache(seatId);
-
+        this.redisTool.flushAll(); // 删除缓存
         return ResMap.err();
     }
 
-    private void rmCache(String seatId) {
-        String roomKey = String.format(RedisConfig.FormatKey.INFO.toString(), seatId);
-        redisTemplate.delete(roomKey);
-    }
+
 }

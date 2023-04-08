@@ -1,4 +1,4 @@
-package cool.leeson.library.controller;
+package cool.leeson.library.controller.library;
 
 import cool.leeson.library.entity.library.LibrarySeat;
 import cool.leeson.library.service.library.LibrarySeatService;

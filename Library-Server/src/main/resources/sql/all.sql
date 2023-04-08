@@ -142,7 +142,7 @@ create table library
     weekend    boolean comment '周末是否开放',
     begin_time time comment '每日开放开始时间',
     end_time   time comment '每日开放结束时间',
-    tt         int comment '时段长度'
+    tt         time comment '时段长度'
 );
 # insert into library
 # values ('jdgchvauajkuvbh', 'dcajhbadhcavacda', '数字图书馆', '新图书馆',

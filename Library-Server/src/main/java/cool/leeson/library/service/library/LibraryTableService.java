@@ -1,13 +1,12 @@
 package cool.leeson.library.service.library;
 
-import cool.leeson.library.config.RedisConfig;
 import cool.leeson.library.dao.LibraryTableDao;
 import cool.leeson.library.entity.library.LibraryTable;
+import cool.leeson.library.entity.tools.RedisTool;
 import cool.leeson.library.util.ResMap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,7 +24,7 @@ public class LibraryTableService {
     @Resource
     private LibraryTableDao libraryTableDao;
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTool redisTool;
 
     /**
      * 通过ID查询单条数据
@@ -60,7 +59,7 @@ public class LibraryTableService {
         String tableId = UUID.randomUUID().toString();
         libraryTable.setTableId(tableId);
         this.libraryTableDao.insert(libraryTable);
-        this.rmCache(libraryTable.getRoomId());
+        this.redisTool.flushAll(); // 删除缓存
         return ResMap.ok(libraryTable);
     }
 
@@ -74,7 +73,7 @@ public class LibraryTableService {
         Map<String, Object> stringObjectMap = this.queryById(libraryTable.getTableId());
         LibraryTable data = (LibraryTable) stringObjectMap.get("data");
         this.libraryTableDao.update(libraryTable);
-        this.rmCache(data.getRoomId());
+        this.redisTool.flushAll(); // 删除缓存
         return this.queryById(libraryTable.getTableId());
     }
 
@@ -86,16 +85,11 @@ public class LibraryTableService {
      */
 
     public Map<String, Object> deleteById(String tableId) {
-        LibraryTable libraryTable = this.libraryTableDao.queryById(tableId);
-        if (this.libraryTableDao.deleteById(tableId) > 0) {
-            return ResMap.ok();
+        if (this.libraryTableDao.deleteById(tableId) == 0) {
+            return ResMap.err();
         }
-        this.rmCache(libraryTable.getRoomId());
-        return ResMap.err();
+        this.redisTool.flushAll(); // 删除缓存
+        return ResMap.ok();
     }
 
-    private void rmCache(String roomId) {
-        String roomKey = String.format(RedisConfig.FormatKey.INFO.toString(), roomId);
-        redisTemplate.delete(roomKey);
-    }
 }

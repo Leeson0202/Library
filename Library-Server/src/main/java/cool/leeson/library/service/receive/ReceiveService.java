@@ -227,9 +227,9 @@ public class ReceiveService {
             // date
             String ddate = item.getReceiveDate().getMonth() + 1 + "月" + item.getReceiveDate().getDate() + "日";
             // 获取名字
-            String libraryName = this.libraryService.querySimple(item.getLibraryId()).getName();
-            String roomName = this.libraryRoomService.querySimple(item.getRoomId()).getName();
-            String seatName = this.librarySeatService.querySimple(item.getSeatId()).getName();
+            String libraryName = this.libraryService.queryInfo(item.getLibraryId()).getName();
+            String roomName = this.libraryRoomService.queryInfo(item.getRoomId()).getName();
+            String seatName = this.librarySeatService.queryInfo(item.getSeatId()).getName();
             responseItem.setDate(ddate);
             responseItem.setLibraryName(libraryName);
             responseItem.setRoomName(roomName);

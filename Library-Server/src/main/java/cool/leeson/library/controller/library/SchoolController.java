@@ -44,13 +44,12 @@ public class SchoolController {
      */
     @GetMapping("id/{schoolId}")
     public Map<String, Object> queryById(@PathVariable("schoolId") String schoolId) {
-
         return this.schoolService.queryById(schoolId);
     }
 
     @GetMapping("simple")
     public Map<String, Object> simple(String schoolId) {
-        return this.schoolService.schoolSimple(schoolId);
+        return this.schoolService.querySimple(schoolId);
     }
 
     /**
@@ -71,7 +70,7 @@ public class SchoolController {
      * @return 编辑结果
      */
     @PutMapping
-    public Map<String, Object> edit(School school) {
+    public Map<String, Object> edit(School school) throws MyException {
         return this.schoolService.update(school, (String) request.getAttribute("userId"));
     }
 
@@ -82,9 +81,11 @@ public class SchoolController {
      * @return 删除是否成功
      */
     @DeleteMapping
-    public Map<String, Object> deleteById(String schoolId) {
+    public Map<String, Object> deleteById(String schoolId) throws MyException {
         return this.schoolService.deleteById(schoolId, (String) request.getAttribute("userId"));
     }
+
+
 
 }
 

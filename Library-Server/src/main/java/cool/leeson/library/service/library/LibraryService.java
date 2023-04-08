@@ -8,10 +8,10 @@ import cool.leeson.library.dao.LibraryRoomDao;
 import cool.leeson.library.dao.UserSchoolDao;
 import cool.leeson.library.entity.library.Library;
 import cool.leeson.library.entity.library.LibraryRoom;
+import cool.leeson.library.entity.tools.RedisTool;
 import cool.leeson.library.entity.user.UserSchool;
 import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,7 +35,7 @@ public class LibraryService {
     @Resource
     private UserSchoolDao userSchoolDao;
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTool redisTool;
 
 
     /**
@@ -45,7 +45,7 @@ public class LibraryService {
      * @return 实例对象
      */
     public Map<String, Object> queryById(String libraryId) {
-        Library library = this.querySimple(libraryId);
+        Library library = this.queryInfo(libraryId);
         if (library == null) {
             log.warn(libraryId + " 没有该图书馆信息");
             return ResMap.err("没有该图书馆信息");
@@ -58,10 +58,11 @@ public class LibraryService {
         return ResMap.ok(library);
     }
 
-    public Library querySimple(String libraryId) {
+    public Library queryInfo(String libraryId) {
         Library library;
         String libraryKey = String.format(RedisConfig.FormatKey.INFO.toString(), libraryId);
-        String s = this.redisTemplate.opsForValue().get(libraryKey);
+        String s = this.redisTool.get(libraryKey);
+
 
         if (StringUtils.isEmpty(s) || "".equals(s)) {
             library = this.libraryDao.queryById(libraryId);
@@ -69,7 +70,7 @@ public class LibraryService {
                 return null;
             } else {
                 // 储存到 redis
-                redisTemplate.opsForValue().set(libraryKey, JSON.toJSONString(library));
+                this.redisTool.set(libraryKey, library);
             }
         } else {
             library = JSON.parseObject(s, Library.class);
@@ -103,8 +104,8 @@ public class LibraryService {
         List<Library> libraries = this.libraryDao.queryBySchoolId(schoolId);
 
         if (libraries == null || libraries.size() == 0) {
-            log.error(schoolId + " 没有该图书馆信息");
-            return ResMap.err("没有该图书馆信息");
+            log.error(schoolId + " 没有图书馆信息");
+            return ResMap.err("没有图书馆信息");
         }
         // 房间信息
         for (Library library : libraries) {
@@ -142,11 +143,10 @@ public class LibraryService {
             return ResMap.err("library 插入失败");
         }
         // 清理缓存
-        String libraryKey = String.format(RedisConfig.FormatKey.INFO.toString(), libraryId);
-        this.redisTemplate.delete(libraryKey);
+        this.redisTool.flushAll();
 
         // 返回
-        library = this.querySimple(libraryId);
+        library = this.queryInfo(libraryId);
         return ResMap.ok(library);
     }
 
@@ -159,9 +159,7 @@ public class LibraryService {
     public Map<String, Object> update(Library library, String userId) {
         this.libraryDao.update(library);
         // 删除缓存
-        String libraryKey = String.format(RedisConfig.FormatKey.INFO.toString(), library.getLibraryId());
-        this.redisTemplate.delete(libraryKey);
-
+        this.redisTool.flushAll();
         return this.queryById(library.getLibraryId());
     }
 
@@ -175,6 +173,8 @@ public class LibraryService {
         if (this.libraryDao.deleteById(libraryId) > 0) {
             return ResMap.ok();
         }
+        // 删除缓存
+        this.redisTool.flushAll();
         return ResMap.err();
     }
 
