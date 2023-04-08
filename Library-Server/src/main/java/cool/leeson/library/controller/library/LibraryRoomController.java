@@ -1,6 +1,7 @@
 package cool.leeson.library.controller.library;
 
 import cool.leeson.library.entity.library.LibraryRoom;
+import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.library.LibraryRoomService;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,8 +43,18 @@ public class LibraryRoomController {
      * @return 查询结果
      */
     @GetMapping("id/{roomId}")
-    public Map<String, Object> queryByRoomId(@PathVariable("roomId") String roomId, Boolean today, Integer idx) {
-        return this.libraryRoomService.queryById(roomId, today, idx);
+    public Map<String, Object> queryByRoomId(@PathVariable("roomId") String roomId) throws MyException {
+        return this.libraryRoomService.queryById(roomId);
+    }
+
+    /**
+     * 通过roomId 获取room
+     *
+     * @return 查询结果
+     */
+    @GetMapping("time")
+    public Map<String, Object> queryByTime(String roomId, Boolean today, Integer idx) throws MyException {
+        return this.libraryRoomService.queryByTime(roomId, today, idx);
     }
 
     /**
@@ -64,7 +75,7 @@ public class LibraryRoomController {
      * @return 编辑结果
      */
     @PutMapping
-    public Map<String, Object> edit(LibraryRoom libraryRoom) {
+    public Map<String, Object> edit(LibraryRoom libraryRoom) throws MyException {
         return this.libraryRoomService.update(libraryRoom);
     }
 

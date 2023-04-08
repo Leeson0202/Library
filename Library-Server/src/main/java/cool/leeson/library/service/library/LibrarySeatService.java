@@ -2,7 +2,6 @@ package cool.leeson.library.service.library;
 
 import com.alibaba.fastjson.JSON;
 import com.aliyuncs.utils.StringUtils;
-import cool.leeson.library.config.RedisConfig;
 import cool.leeson.library.dao.LibrarySeatDao;
 import cool.leeson.library.entity.library.LibrarySeat;
 import cool.leeson.library.entity.tools.RedisTool;
@@ -46,21 +45,20 @@ public class LibrarySeatService {
         return ResMap.ok(seat);
     }
 
+    /**
+     * 简单信息
+     */
     public LibrarySeat queryInfo(String seatId) {
         LibrarySeat seat;
-        String roomKey = String.format(RedisConfig.FormatKey.INFO.toString(), seatId);
-        String s = redisTool.get(roomKey);
-
+        String infoKey = String.format(RedisTool.FormatKey.INFO.toString(), seatId);
+        String s = redisTool.get(infoKey);
         if (StringUtils.isEmpty(s) || "".equals(s)) {
             seat = this.librarySeatDao.queryById(seatId);
-            if (seat == null) {
-                return null;
-            } else {
+            if (seat != null) {
                 // 储存到 redis
-                redisTool.set(roomKey, seat);
+                redisTool.set(infoKey, seat);
             }
         } else {
-            seat = JSON.parseObject(s, LibrarySeat.class);
             seat = JSON.parseObject(s, LibrarySeat.class);
         }
         return seat;

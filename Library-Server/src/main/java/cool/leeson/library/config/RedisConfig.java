@@ -9,35 +9,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
-    public enum FormatKey {
-        // 身份认证 code  {tel/email}:code  123456
-        CODE("%s:code"),
-        // 判断是否一分钟内重复  {tel/email}:repeat ""
-        REPEAT("%s:repeat"),
-        // 用户token信息 {userId}:token akdvhaviawkvawvd
-        USERTOKEN("%s:token"),
-        // 储存信息{schoolId/libraryId/roomId/ seat}:Info
-        INFO("%s:Info"),
-        // 房间信息+seat信息 {roomId}:roomId
-        ROOMINFO("%s:roomId"),
-        // 座位信息 {seatId}:{day}:{timeIdx}  true/false
-        SEATRECEIVE("%s:%s:%s"),
-        // 用户预约信息  {userId}:{day}:{timeIdx}  true/false
-        USERRECEIVE("%s:%s:%s"),
-        // 用户打卡 {userId}:SEED     1分钟
-        SEED("%s:online");
-
-        private final String format;
-
-        FormatKey(String s) {
-            this.format = s;
-        }
-
-        @Override
-        public String toString() {
-            return this.format;
-        }
-    }
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {

@@ -31,7 +31,7 @@ public interface ReceiveItemDao {
      * @param pageable    分页对象
      * @return 对象列表
      */
-    List<ReceiveItem> queryAllByLimit(ReceiveItem receiveItem, @Param("pageable") Pageable pageable);
+    List<ReceiveItem> queryAllByLimit(@Param("receiveItem") ReceiveItem receiveItem, @Param("pageable") Pageable pageable);
 
     /**
      * 统计总行数

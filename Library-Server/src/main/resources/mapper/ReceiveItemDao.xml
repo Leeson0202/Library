@@ -31,35 +31,35 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="ReceiveItemMap">
         select
-          receive_id, user_id, library_id, room_id, seat_id, receive_date, time_idx, time
+        receive_id, user_id, library_id, room_id, seat_id, receive_date, time_idx, time
         from receive_item
         <where>
-            <if test="receiveId != null and receiveId != ''">
-                and receive_id = #{receiveId}
+            <if test="receiveItem.receiveId != null and receiveItem.receiveId != ''">
+                and receive_id = #{receiveItem.receiveId}
             </if>
-            <if test="userId != null and userId != ''">
-                and user_id = #{userId}
+            <if test="receiveItem.userId != null and receiveItem.userId != ''">
+                and user_id = #{receiveItem.userId}
             </if>
-            <if test="libraryId != null and libraryId != ''">
-                and library_id = #{libraryId}
+            <if test="receiveItem.libraryId != null and receiveItem.libraryId != ''">
+                and library_id = #{receiveItem.libraryId}
             </if>
-            <if test="roomId != null and roomId != ''">
-                and room_id = #{roomId}
+            <if test="receiveItem.roomId != null and receiveItem.roomId != ''">
+                and room_id = #{receiveItem.roomId}
             </if>
-            <if test="seatId != null and seatId != ''">
-                and seat_id = #{seatId}
+            <if test="receiveItem.seatId != null and receiveItem.seatId != ''">
+                and seat_id = #{receiveItem.seatId}
             </if>
-            <if test="receiveDate != null">
-                and receive_date = #{receiveDate}
+            <if test="receiveItem.receiveDate != null">
+                and receive_date = #{receiveItem.receiveDate}
             </if>
-            <if test="timeIdx != null">
-                and time_idx = #{timeIdx}
+            <if test="receiveItem.timeIdx != null">
+                and time_idx = #{receiveItem.timeIdx}
             </if>
-            <if test="time != null">
-                and time = #{time}
+            <if test="receiveItem.time != null">
+                and time = #{receiveItem.time}
             </if>
         </where>
-        limit #{pageable.offset}, #{pageable.pageSize}
+        ORDER BY receive_date DESC LIMIT #{pageable.offset}, #{pageable.pageSize}
     </select>
 
     <!--统计总行数-->

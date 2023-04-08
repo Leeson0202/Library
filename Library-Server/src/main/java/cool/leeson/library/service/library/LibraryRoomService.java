@@ -1,9 +1,7 @@
 package cool.leeson.library.service.library;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.utils.StringUtils;
-import cool.leeson.library.config.RedisConfig;
 import cool.leeson.library.dao.LibraryRoomDao;
 import cool.leeson.library.dao.LibrarySeatDao;
 import cool.leeson.library.dao.LibraryTableDao;
@@ -11,6 +9,7 @@ import cool.leeson.library.entity.library.LibraryRoom;
 import cool.leeson.library.entity.library.LibrarySeat;
 import cool.leeson.library.entity.library.LibraryTable;
 import cool.leeson.library.entity.tools.RedisTool;
+import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -40,16 +39,23 @@ public class LibraryRoomService {
     private RedisTool redisTool;
 
     /**
-     * 通过 roomId 获得房间的所有信息
+     * 通过 roomId 获得房间的所有信息 包括椅子 座子 不包含椅子状态
      *
      * @param roomId id
      * @return 实体
      */
-    public Map<String, Object> query(String roomId) {
-        LibraryRoom libraryRoom = this.libraryRoomDao.queryById(roomId);
+    public Map<String, Object> queryById(String roomId) throws MyException {
+        LibraryRoom libraryRoom;
+        String roomKey = String.format(RedisTool.FormatKey.ROOM.toString(), roomId);
+        String s = redisTool.get(roomKey);
+        if (StringUtils.isEmpty(s)) {
+            libraryRoom = this.queryInfo(roomId);
+        } else {
+            libraryRoom = JSON.parseObject(s, LibraryRoom.class);
+        }
         if (libraryRoom == null) {
             log.error(roomId + " 房间不存在");
-            return ResMap.err("房间不存在");
+            throw new MyException("房间不存在");
         }
         List<LibrarySeat> librarySeat = this.librarySeatDao.queryByRoomId(libraryRoom.getRoomId());
         List<LibraryTable> libraryTables = this.libraryTableDao.queryByRoomId(libraryRoom.getRoomId());
@@ -58,24 +64,26 @@ public class LibraryRoomService {
         }
         libraryRoom.setLibrarySeats(librarySeat);
         libraryRoom.setLibraryTables(libraryTables);
-        // 加入缓存
-        redisTool.set(String.format(RedisConfig.FormatKey.INFO.toString(), roomId), libraryRoom);
+        // 进缓存
+        redisTool.set(roomKey, libraryRoom);
         return ResMap.ok(libraryRoom);
     }
 
-
+    /**
+     * 通过roomId 查找简单信息
+     *
+     * @param roomId roomId
+     */
     public LibraryRoom queryInfo(String roomId) {
         LibraryRoom room;
-        String roomKey = String.format(RedisConfig.FormatKey.INFO.toString(), roomId);
-        String s = this.redisTool.get(roomKey);
+        String infoKey = String.format(RedisTool.FormatKey.INFO.toString(), roomId);
+        String s = this.redisTool.get(infoKey);
 
         if (StringUtils.isEmpty(s) || "".equals(s)) {
             room = this.libraryRoomDao.queryById(roomId);
-            if (room == null) {
-                return null;
-            } else {
+            if (room != null) {
                 // 储存到 redis
-                redisTool.set(roomKey, room);
+                redisTool.set(infoKey, room);
             }
         } else {
             room = JSON.parseObject(s, LibraryRoom.class);
@@ -84,43 +92,30 @@ public class LibraryRoomService {
     }
 
     /**
-     * 通过ID查询单条数据
+     * 通过ID查询单条数据 包含椅子的状态
      *
      * @param roomId 主键
      * @param today  今天还是明天的 Tag
      * @param idx    时间是多少 1代表 8:00-10:00
      * @return 实例对象
      */
-    public Map<String, Object> queryById(String roomId, Boolean today, Integer idx) {
+    public Map<String, Object> queryByTime(String roomId, Boolean today, Integer idx) throws MyException {
         // 解析
-//        System.out.println(new Date().getDay());
-        int day = new Date().getDate();
-        if (!today) { // 明天的
-            Calendar c = Calendar.getInstance();
-            c.setTime(new Date());
-            c.add(Calendar.DAY_OF_MONTH, 1);
-            day = c.getTime().getDate();
-        }
-        // 查缓存
-        String roomKey = String.format(RedisConfig.FormatKey.INFO.toString(), roomId);
-        String room = this.redisTool.get(roomKey);
-        LibraryRoom libraryRoom = null;
-        if (!StringUtils.isEmpty(room)) {
-            // 非空 继续查缓冲 获取seat
-            libraryRoom = JSONObject.parseObject(room, LibraryRoom.class);
-            for (LibrarySeat seat : libraryRoom.getLibrarySeats()) {
-                String seatKey = String.format(RedisConfig.FormatKey.INFO.toString(), seat.getSeatId(), day, idx);
-                String s = redisTool.get(seatKey);
-                // 有就直接拿出来用
-                seat.setRed("true".equals(s));
-            }
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        if (!today) c.add(Calendar.DAY_OF_MONTH, 1); // 明天的
+        int day = c.getTime().getDate();
+        Map<String, Object> query = this.queryById(roomId); // 获取全部信息 没有椅子状态
+        LibraryRoom libraryRoom = (LibraryRoom) query.get("data");
 
-        } else {
-            // 空 查数据库 加入缓冲
-            Map<String, Object> query = this.query(roomId); // 自动加入缓存
-            libraryRoom = (LibraryRoom) query.get("data");
+        // 查缓存 - 椅子是否预约
+        for (LibrarySeat seat : libraryRoom.getLibrarySeats()) {
+            String seatKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), seat.getSeatId(), day, idx);
+            String s = redisTool.get(seatKey);
+            s = JSON.parseObject(s, String.class);
+            // 有就直接拿出来用
+            seat.setRed("true".equals(s));
         }
-
         return ResMap.ok(libraryRoom);
     }
 
@@ -173,12 +168,12 @@ public class LibraryRoomService {
      * @param libraryRoom 实例对象
      * @return 实例对象
      */
-    public Map<String, Object> update(LibraryRoom libraryRoom) {
+    public Map<String, Object> update(LibraryRoom libraryRoom) throws MyException {
         if (StringUtils.isEmpty(libraryRoom.getRoomId())) ResMap.err("roomId不能为空");
         this.libraryRoomDao.update(libraryRoom);
 
         this.redisTool.flushAll(); // 删除缓存
-        return this.query(libraryRoom.getRoomId());
+        return this.queryById(libraryRoom.getRoomId());
     }
 
     /**

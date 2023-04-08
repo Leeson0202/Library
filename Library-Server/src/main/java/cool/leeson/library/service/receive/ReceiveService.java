@@ -2,7 +2,6 @@ package cool.leeson.library.service.receive;
 
 import com.aliyuncs.utils.StringUtils;
 import cool.leeson.library.config.JwtConfig;
-import cool.leeson.library.config.RedisConfig;
 import cool.leeson.library.dao.LibraryDao;
 import cool.leeson.library.dao.LibraryRoomDao;
 import cool.leeson.library.dao.LibrarySeatDao;
@@ -10,6 +9,7 @@ import cool.leeson.library.dao.ReceiveItemDao;
 import cool.leeson.library.entity.receive.ReceiveItem;
 import cool.leeson.library.entity.receive.ReceiveItemPost;
 import cool.leeson.library.entity.receive.ReceiveItemResponse;
+import cool.leeson.library.entity.tools.RedisTool;
 import cool.leeson.library.entity.user.UserOnline;
 import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.library.LibraryRoomService;
@@ -20,7 +20,9 @@ import cool.leeson.library.service.user.UserOnlineService;
 import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +59,7 @@ public class ReceiveService {
     @Resource
     private LibrarySeatService librarySeatService;
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTool redisTool;
     @Resource
     private UserOnlineService userOnlineService;
 
@@ -66,6 +68,7 @@ public class ReceiveService {
 
     @Resource
     private JwtConfig jwtConfig;
+
     //    seatKey
     private String seatKeyFormat = "%s:%s:%s"; // seatId:day:timeIdx   dsackacbjakcaw3:16:1
     // 用户key
@@ -88,15 +91,15 @@ public class ReceiveService {
         for (ReceiveItemPost receiveItemPost : receiveItemPosts) {
             int today = receiveItemPost.getToday() ? 0 : 1;
             // 查询座位是否占用
-            String seatKey = String.format(seatKeyFormat, receiveItemPost.getSeatId(), now.getDate() + today, receiveItemPost.getTimeIdx());
-            String rSeatRecord = redisTemplate.opsForValue().get(seatKey);
+            String seatKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), receiveItemPost.getSeatId(), now.getDate() + today, receiveItemPost.getTimeIdx());
+            String rSeatRecord = redisTool.get(seatKey);
             if (!StringUtils.isEmpty(rSeatRecord) && "true".equals(rSeatRecord)) {
                 // 说明有数据
                 return ResMap.err("座位已占座，请刷新");
             }
             // 查询用户在该时段是否预约
-            String userKey = String.format(userKeyFormat, userId, now.getDate() + today, receiveItemPost.getTimeIdx());
-            String rUserRecord = redisTemplate.opsForValue().get(userKey);
+            String userKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), userId, now.getDate() + today, receiveItemPost.getTimeIdx());
+            String rUserRecord = redisTool.get(userKey);
             if (!StringUtils.isEmpty(rUserRecord) && "true".equals(rUserRecord)) {
                 // 说明有数据
                 return ResMap.err("您已经预约了该时段");
@@ -114,14 +117,15 @@ public class ReceiveService {
         // 座位和用户信息，插入redis
         for (ReceiveItemPost receiveItemPost : receiveItemPosts) {
             int today = receiveItemPost.getToday() ? 0 : 1;
-            String seatKey = String.format(seatKeyFormat, receiveItemPost.getSeatId(), now.getDate() + today, receiveItemPost.getTimeIdx());
-            String userKey = String.format(userKeyFormat, userId, now.getDate() + today, receiveItemPost.getTimeIdx());
+
+            String seatKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), receiveItemPost.getSeatId(), now.getDate() + today, receiveItemPost.getTimeIdx());
+            String userKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), userId, now.getDate() + today, receiveItemPost.getTimeIdx());
             // 剩下的时间
             long milliSecondsLeftToday = 86400000 - DateUtils.getFragmentInMilliseconds(Calendar.getInstance(), Calendar.DATE);
             milliSecondsLeftToday = receiveItemPost.getToday() ? milliSecondsLeftToday : milliSecondsLeftToday + 86400000;
             // 插入
-            redisTemplate.opsForValue().set(seatKey, "true", milliSecondsLeftToday, TimeUnit.MILLISECONDS);
-            redisTemplate.opsForValue().set(userKey, "true", milliSecondsLeftToday, TimeUnit.MILLISECONDS);
+            redisTool.set(seatKey, "true", milliSecondsLeftToday, TimeUnit.MILLISECONDS);
+            redisTool.set(userKey, "true", milliSecondsLeftToday, TimeUnit.MILLISECONDS);
         }
         return this.schedule(userId);
     }
@@ -162,10 +166,10 @@ public class ReceiveService {
         if (receiveItemDao.deleteById(receiveId) != 1) {
             throw new MyException(MyException.STATUS.err);
         }
-        String userKey = String.format(RedisConfig.FormatKey.USERRECEIVE.toString(), userId, receiveDate.getDate(), timeIdx);
-        String seatKey = String.format(RedisConfig.FormatKey.SEATRECEIVE.toString(), receiveItem.getSeatId(), receiveDate.getDate(), timeIdx);
-        redisTemplate.opsForValue().set(userKey, "false", 1, TimeUnit.SECONDS);
-        redisTemplate.opsForValue().set(seatKey, "false", 1, TimeUnit.SECONDS);
+        String userKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), userId, receiveDate.getDate(), timeIdx);
+        String seatKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), receiveItem.getSeatId(), receiveDate.getDate(), timeIdx);
+        redisTool.set(userKey, "false", 1, TimeUnit.SECONDS);
+        redisTool.set(seatKey, "false", 1, TimeUnit.SECONDS);
         return ResMap.ok();
     }
 
@@ -241,5 +245,18 @@ public class ReceiveService {
         return ResMap.ok(responseItems);
     }
 
+
+    /**
+     * 通过房间Id获取全部预约
+     *
+     * @param receiveItem 实体
+     */
+
+    public Map<String, Object> queryAllByLimit(ReceiveItem receiveItem, Integer page, Integer size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("receiveDate").descending());
+        long total = this.receiveItemDao.count(receiveItem);
+        PageImpl<ReceiveItem> receiveItems = new PageImpl<>(this.receiveItemDao.queryAllByLimit(receiveItem, pageRequest), pageRequest, total);
+        return ResMap.ok(receiveItems);
+    }
 
 }

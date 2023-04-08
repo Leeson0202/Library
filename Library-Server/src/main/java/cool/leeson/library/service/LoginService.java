@@ -2,8 +2,8 @@ package cool.leeson.library.service;
 
 import com.alibaba.fastjson.JSONObject;
 import cool.leeson.library.config.JwtConfig;
-import cool.leeson.library.config.RedisConfig;
 import cool.leeson.library.dao.*;
+import cool.leeson.library.entity.tools.RedisTool;
 import cool.leeson.library.entity.user.*;
 import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.util.HttpClientUtil;
@@ -82,8 +82,8 @@ public class LoginService {
             log.error(tel + "输入正确手机号：");
             return ResMap.err("请输入正确的手机号");
         }
-        String codeKey = String.format(RedisConfig.FormatKey.CODE.toString(), tel);
-        String repeatKey = String.format(RedisConfig.FormatKey.REPEAT.toString(), tel);
+        String codeKey = String.format(RedisTool.FormatKey.CODE.toString(), tel);
+        String repeatKey = String.format(RedisTool.FormatKey.REPEAT.toString(), tel);
         // （1分钟内）?
         String s = redisTemplate.opsForValue().get(repeatKey);
         if (s != null) {
@@ -130,7 +130,7 @@ public class LoginService {
         }
         log.info(tel + "正在验证短信验证码");
         // 查询缓存
-        String codeKey = String.format(RedisConfig.FormatKey.CODE.toString(), tel);
+        String codeKey = String.format(RedisTool.FormatKey.CODE.toString(), tel);
         String rCode = redisTemplate.opsForValue().get(codeKey);
         if (rCode == null || !rCode.equals(code)) {
             log.error(tel + "验证码错误 code：" + code + ", rcode：" + rCode);
@@ -163,8 +163,8 @@ public class LoginService {
             log.error(email + " 请输入正确的邮箱");
             return ResMap.err("请输入正确的邮箱");
         }
-        String codeKey = String.format(RedisConfig.FormatKey.CODE.toString(), email);
-        String repeatKey = String.format(RedisConfig.FormatKey.REPEAT.toString(), email);
+        String codeKey = String.format(RedisTool.FormatKey.CODE.toString(), email);
+        String repeatKey = String.format(RedisTool.FormatKey.REPEAT.toString(), email);
         // （1分钟内）?
         String s = redisTemplate.opsForValue().get(repeatKey);
         if (s != null) {
@@ -212,7 +212,7 @@ public class LoginService {
         }
         log.info(email + "正在验证验证码");
         // 查询缓存
-        String codeKey = String.format(RedisConfig.FormatKey.CODE.toString(), email);
+        String codeKey = String.format(RedisTool.FormatKey.CODE.toString(), email);
         String rCode = redisTemplate.opsForValue().get(codeKey);
         if (rCode == null || !rCode.equals(code)) {
             log.info(email + "验证码错误 code：" + code + " rcode：" + rCode);
@@ -281,7 +281,7 @@ public class LoginService {
         log.info(userId + " 开始生成token");
         String token = new JwtConfig().createToken(userId);
 
-        String tokenKey = String.format(RedisConfig.FormatKey.USERTOKEN.toString(), userId);
+        String tokenKey = String.format(RedisTool.FormatKey.TOKEN.toString(), userId);
         // 缓存7天
         redisTemplate.opsForValue().set(tokenKey, token, 7, TimeUnit.DAYS);
 

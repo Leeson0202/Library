@@ -1,6 +1,7 @@
 package cool.leeson.library.controller.receive;
 
 import cool.leeson.library.config.JwtConfig;
+import cool.leeson.library.entity.receive.ReceiveItem;
 import cool.leeson.library.entity.receive.ReceiveItemPost;
 import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.receive.ReceiveItemService;
@@ -51,7 +52,7 @@ public class ReceiveController {
     @PutMapping("cancel")
     public Map<String, Object> cancel(String receiveId) throws MyException {
 
-        return this.receiveService.cancel( (String) request.getAttribute("userId"), receiveId);
+        return this.receiveService.cancel((String) request.getAttribute("userId"), receiveId);
     }
 
     /**
@@ -63,6 +64,9 @@ public class ReceiveController {
         return this.receiveService.schedule(userId);
     }
 
+    /**
+     * 获取所有的预约
+     */
     @GetMapping
     public Map<String, Object> queryAll() throws MyException {
         String userId = jwtConfig.getUsernameFromToken(request.getHeader("token"));
@@ -79,6 +83,12 @@ public class ReceiveController {
     @GetMapping("id/{id}")
     public Map<String, Object> queryById(@PathVariable("id") String id) throws MyException {
         return this.receiveItemService.queryById(id);
+    }
+
+
+    @GetMapping("all")
+    public Map<String, Object> queryByRoomId(ReceiveItem receiveItem, Integer page, Integer size) throws MyException {
+        return this.receiveService.queryAllByLimit(receiveItem, page, size);
     }
 
 

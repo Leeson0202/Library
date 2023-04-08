@@ -50,27 +50,26 @@ public class LibraryService {
             log.warn(libraryId + " 没有该图书馆信息");
             return ResMap.err("没有该图书馆信息");
         }
-
         List<LibraryRoom> libraryRooms = this.libraryRoomDao.queryByLibraryId(libraryId);
         library.setLibraryRooms(libraryRooms);
-
-
         return ResMap.ok(library);
     }
 
+    /**
+     * 简单信息
+     * @param libraryId id
+     */
     public Library queryInfo(String libraryId) {
         Library library;
-        String libraryKey = String.format(RedisConfig.FormatKey.INFO.toString(), libraryId);
-        String s = this.redisTool.get(libraryKey);
-
-
+        String infoKey = String.format(RedisTool.FormatKey.INFO.toString(), libraryId);
+        String s = this.redisTool.get(infoKey);
         if (StringUtils.isEmpty(s) || "".equals(s)) {
             library = this.libraryDao.queryById(libraryId);
             if (library == null) {
                 return null;
             } else {
                 // 储存到 redis
-                this.redisTool.set(libraryKey, library);
+                this.redisTool.set(infoKey, library);
             }
         } else {
             library = JSON.parseObject(s, Library.class);
