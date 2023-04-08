@@ -41,7 +41,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         log.info(ipAddress + "正在请求：" + request.getMethod() + " " + uri);
         // 哪些不需要token认证
         String[] dismiss = new String[]{
-                "/login", "/confirm", "/update"};
+                "/login", "/confirm", "/update", "/img", "/css", "/js"};
         boolean f = false;
         for (String string : dismiss) {
             if (uri.contains(string)) {

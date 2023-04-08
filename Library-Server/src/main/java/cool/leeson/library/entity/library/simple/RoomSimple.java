@@ -14,6 +14,7 @@ public class RoomSimple {
     private String roomId;
     private String name;
     private List<SeatSimple> seatSimpleList;
+    private List<TableSimple> tableSimpleList;
 
     public RoomSimple(LibraryRoom libraryRoom) {
         this.roomId = libraryRoom.getRoomId();

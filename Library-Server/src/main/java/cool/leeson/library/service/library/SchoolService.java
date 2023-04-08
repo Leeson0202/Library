@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.aliyuncs.utils.StringUtils;
 import cool.leeson.library.dao.*;
 import cool.leeson.library.entity.library.*;
-import cool.leeson.library.entity.library.simple.LibrarySimple;
-import cool.leeson.library.entity.library.simple.RoomSimple;
-import cool.leeson.library.entity.library.simple.SchoolSimple;
-import cool.leeson.library.entity.library.simple.SeatSimple;
+import cool.leeson.library.entity.library.simple.*;
 import cool.leeson.library.entity.tools.RedisTool;
 import cool.leeson.library.entity.user.UserSchool;
 import cool.leeson.library.exceptions.MyException;
@@ -43,6 +40,8 @@ public class SchoolService {
     private LibraryRoomDao libraryRoomDao;
     @Resource
     private LibrarySeatDao librarySeatDao;
+    @Resource
+    private LibraryTableDao libraryTableDao;
     @Resource
     private SchoolRuleDao schoolRuleDao;
     @Resource
@@ -105,6 +104,15 @@ public class SchoolService {
                     seatSimpleList.add(seatSimple);
                 }
                 roomSimple.setSeatSimpleList(seatSimpleList);
+                // 获取图书馆桌子
+                List<LibraryTable> libraryTables = this.libraryTableDao.queryByRoomId(libraryRoom.getRoomId());
+                List<TableSimple> tableSimpleList = new ArrayList<>();
+                TableSimple tableSimple;
+                for (LibraryTable libraryTable : libraryTables) {
+                    tableSimple = new TableSimple(libraryTable);
+                    tableSimpleList.add(tableSimple);
+                }
+                roomSimple.setTableSimpleList(tableSimpleList);
                 roomSimpleList.add(roomSimple);
             }
             librarySimple.setRoomSimpleList(roomSimpleList);
@@ -123,9 +131,7 @@ public class SchoolService {
 
         if (StringUtils.isEmpty(s) || "".equals(s)) {
             school = this.schoolDao.queryById(schoolId);
-            if (school == null) {
-                return null;
-            } else {
+            if (school != null) {
                 // 储存到 redis
                 redisTool.set(schoolInfoKey, school);
             }
@@ -177,8 +183,6 @@ public class SchoolService {
             log.warn("插入school失败");
             throw new MyException(MyException.STATUS.err);
         }
-        this.redisTool.flushAll();
-
         // 3。 返回
         return ResMap.ok(this.queryById(schoolId));
     }
@@ -199,7 +203,7 @@ public class SchoolService {
         if (this.schoolDao.update(school) == 0) {
             log.warn(userId + " 修改school失败");
         }
-        this.redisTool.flushAll();
+        this.rmCache(school.getSchoolId());
 
         return ResMap.ok(this.queryById(school.getSchoolId()));
     }
@@ -232,6 +236,13 @@ public class SchoolService {
         this.redisTool.flushAll();
 
         return ResMap.ok();
+    }
+
+    private void rmCache(String schoolId) {
+        String simpleKey = String.format(RedisTool.FormatKey.SIMPLE.toString(), schoolId);
+        String infoKey = String.format(RedisTool.FormatKey.INFO.toString(), schoolId);
+        redisTool.delete(simpleKey);
+        redisTool.delete(infoKey);
     }
 
 

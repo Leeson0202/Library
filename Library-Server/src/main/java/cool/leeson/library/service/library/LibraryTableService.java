@@ -1,9 +1,12 @@
 package cool.leeson.library.service.library;
 
+import com.alibaba.fastjson.JSON;
+import com.aliyuncs.utils.StringUtils;
 import cool.leeson.library.dao.LibraryTableDao;
 import cool.leeson.library.entity.library.LibraryTable;
 import cool.leeson.library.entity.tools.RedisTool;
 import cool.leeson.library.util.ResMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +23,7 @@ import java.util.UUID;
  * @since 2023-04-07 00:01:35
  */
 @Service("libraryTableService")
+@Slf4j
 public class LibraryTableService {
     @Resource
     private LibraryTableDao libraryTableDao;
@@ -33,8 +37,31 @@ public class LibraryTableService {
      * @return 实例对象
      */
     public Map<String, Object> queryById(String tableId) {
-        LibraryTable libraryTable = this.libraryTableDao.queryById(tableId);
-        return ResMap.ok(libraryTable);
+        LibraryTable table = this.queryInfo(tableId);
+        if (table == null) {
+            log.warn(tableId + " 没有座位信息");
+            return ResMap.err("没有座位信息");
+        }
+        return ResMap.ok(table);
+    }
+
+    /**
+     * 简单信息
+     */
+    public LibraryTable queryInfo(String tableId) {
+        LibraryTable table;
+        String infoKey = String.format(RedisTool.FormatKey.INFO.toString(), tableId);
+        String s = redisTool.get(infoKey);
+        if (StringUtils.isEmpty(s) || "".equals(s)) {
+            table = this.libraryTableDao.queryById(tableId);
+            if (table != null) {
+                // 储存到 redis
+                redisTool.set(infoKey, table);
+            }
+        } else {
+            table = JSON.parseObject(s, LibraryTable.class);
+        }
+        return table;
     }
 
     /**

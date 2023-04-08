@@ -40,7 +40,6 @@ Page({
      */
     onLoad(options) {
         let that = this;
-
         this.storeBindings = createStoreBindings(this, {
             store,
             fields: ['school', 'hasSchool', 'hasLogin','baseUrl'],
