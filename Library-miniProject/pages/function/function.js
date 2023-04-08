@@ -35,13 +35,13 @@ Page({
     init() {
         // console.log(this);
         if (!store.hasSchool || !store.hasSchool) return;
-        getSchedule();
-        getUserOnline();
+        this.getSchedule();
+        this.getUserOnline();
     },
 
     onShow() {
         let that = this
-        setTimeout(that.init, 500)
+        setTimeout(() => that.init(), 500)
     },
 
 

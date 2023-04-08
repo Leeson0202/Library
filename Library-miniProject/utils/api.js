@@ -66,7 +66,8 @@ class Api {
     queryLibrary = (libraryId) => request.get("/library/id/" + libraryId);
 
     // 获取图书室信息 - 房间id 今天还是明天 时间idx
-    queryRoom = (roomId, today, idx) => request.get('/room/id/' + roomId, {
+    queryRoom = (roomId, today, idx) => request.get('/room/time', {
+        roomId,
         today,
         idx
     })

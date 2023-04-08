@@ -15,7 +15,7 @@ Page({
     onLoad() {
         this.storeBindings = createStoreBindings(this, {
             store,
-            actions: ['InitData', "Login"]
+            actions: ['InitData', "Login","GetUserInfo"]
         })
     },
     onUnload() {

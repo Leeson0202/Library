@@ -3,7 +3,7 @@
     "projectname": "Library-miniProject",
     "setting": {
         "compileHotReLoad": true,
-        "urlCheck": true,
+        "urlCheck": false,
         "autoAudits": false
     },
     "condition": {
