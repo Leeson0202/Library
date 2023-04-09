@@ -32,6 +32,10 @@ public class LibraryRoomService {
     @Resource
     private LibraryRoomDao libraryRoomDao;
     @Resource
+    private LibrarySeatService librarySeatService;
+    @Resource
+    private LibraryTableService libraryTableService;
+    @Resource
     private LibrarySeatDao librarySeatDao;
     @Resource
     private LibraryTableDao libraryTableDao;
@@ -158,7 +162,7 @@ public class LibraryRoomService {
         String roomId = UUID.randomUUID().toString();
         libraryRoom.setRoomId(roomId);
         this.libraryRoomDao.insert(libraryRoom);
-        this.redisTool.flushAll(); // 删除缓存
+        this.redisTool.deleteByPrefix("school"); // 删除缓存
         return ResMap.ok(libraryRoom);
     }
 
@@ -172,7 +176,7 @@ public class LibraryRoomService {
         if (StringUtils.isEmpty(libraryRoom.getRoomId())) ResMap.err("roomId不能为空");
         this.libraryRoomDao.update(libraryRoom);
 
-        this.redisTool.flushAll(); // 删除缓存
+        this.redisTool.deleteByPrefix("school"); // 删除缓存
         return this.queryById(libraryRoom.getRoomId());
     }
 
@@ -182,12 +186,24 @@ public class LibraryRoomService {
      * @param roomId 主键
      * @return 是否成功
      */
-    public Map<String, Object> deleteById(String roomId) {
+    public Map<String, Object> deleteById(String roomId) throws MyException {
         if (StringUtils.isEmpty(roomId)) ResMap.err("roomId不能为空");
+        LibraryRoom libraryRoom = (LibraryRoom) this.queryById(roomId).get("data");
+        // 删除椅子
+        List<LibrarySeat> librarySeats = libraryRoom.getLibrarySeats();
+        for (LibrarySeat librarySeat : librarySeats) {
+            this.librarySeatService.deleteById(librarySeat.getSeatId());
+        }
+        // 删除桌子
+        List<LibraryTable> libraryTables = libraryRoom.getLibraryTables();
+        for (LibraryTable libraryTable : libraryTables) {
+            this.libraryTableService.deleteById(libraryTable.getTableId());
+        }
+        // 删除图书室
         if (this.libraryRoomDao.deleteById(roomId) > 0) {
             return ResMap.ok();
         }
-        this.redisTool.flushAll(); // 删除缓存
+        this.redisTool.deleteByPrefix("school"); // 删除缓存
         return ResMap.err();
     }
 

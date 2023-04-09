@@ -43,22 +43,22 @@ public class Library implements Serializable {
     /**
      * 周末是否开放
      */
-    private Integer weekend;
+    private Boolean weekend;
     /**
      * 每日开放开始时间
      */
 //    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "HH:mm:ss")
+    @DateTimeFormat(pattern = "HH:mm")
     private LocalTime beginTime;
     /**
      * 每日开放结束时间
      */
-    @DateTimeFormat(pattern = "HH:mm:ss")
+    @DateTimeFormat(pattern = "HH:mm")
     private LocalTime endTime;
     /**
      * 时段长度
      */
-    @DateTimeFormat(pattern = "HH:mm:ss")
+    @DateTimeFormat(pattern = "HH:mm")
     private LocalTime tt;
 
     private List<LibraryRoom> libraryRooms;

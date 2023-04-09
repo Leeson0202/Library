@@ -2,7 +2,6 @@ package cool.leeson.library.service.library;
 
 import com.alibaba.fastjson.JSON;
 import com.aliyuncs.utils.StringUtils;
-import cool.leeson.library.config.RedisConfig;
 import cool.leeson.library.dao.LibraryDao;
 import cool.leeson.library.dao.LibraryRoomDao;
 import cool.leeson.library.dao.UserSchoolDao;
@@ -10,6 +9,7 @@ import cool.leeson.library.entity.library.Library;
 import cool.leeson.library.entity.library.LibraryRoom;
 import cool.leeson.library.entity.tools.RedisTool;
 import cool.leeson.library.entity.user.UserSchool;
+import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +30,8 @@ import java.util.UUID;
 public class LibraryService {
     @Resource
     private LibraryDao libraryDao;
+    @Resource
+    private LibraryRoomService libraryRoomService;
     @Resource
     private LibraryRoomDao libraryRoomDao;
     @Resource
@@ -57,6 +59,7 @@ public class LibraryService {
 
     /**
      * 简单信息
+     *
      * @param libraryId id
      */
     public Library queryInfo(String libraryId) {
@@ -142,7 +145,7 @@ public class LibraryService {
             return ResMap.err("library 插入失败");
         }
         // 清理缓存
-        this.redisTool.flushAll();
+        this.redisTool.deleteByPrefix("school");
 
         // 返回
         library = this.queryInfo(libraryId);
@@ -158,7 +161,7 @@ public class LibraryService {
     public Map<String, Object> update(Library library, String userId) {
         this.libraryDao.update(library);
         // 删除缓存
-        this.redisTool.flushAll();
+        this.redisTool.deleteByPrefix("school");
         return this.queryById(library.getLibraryId());
     }
 
@@ -168,12 +171,23 @@ public class LibraryService {
      * @param libraryId 主键
      * @return 是否成功
      */
-    public Map<String, Object> deleteById(String libraryId) {
+    public Map<String, Object> deleteById(String libraryId) throws MyException {
+        Map<String, Object> map = this.queryById(libraryId);
+        Library library = (Library) map.get("data");
+        if (library == null) {
+            throw new MyException("没有该图书馆");
+        }
+        // 删除图书室
+        List<LibraryRoom> libraryRooms = library.getLibraryRooms();
+        for (LibraryRoom libraryRoom : libraryRooms) {
+            libraryRoomService.deleteById(libraryRoom.getRoomId());
+        }
+        // 删除图书馆
         if (this.libraryDao.deleteById(libraryId) > 0) {
-            return ResMap.ok();
+            return ResMap.ok("删除成功");
         }
         // 删除缓存
-        this.redisTool.flushAll();
+        this.redisTool.deleteByPrefix("school");
         return ResMap.err();
     }
 

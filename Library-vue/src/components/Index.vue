@@ -3,7 +3,7 @@
     <div class="Index">
         <el-container style="height: 100%">
             <el-header style="z-index: 1"><Header></Header></el-header>
-            <el-container id="main-container" style="height: calc(100% - 80px);">
+            <el-container id="main-container" style="height: calc(100% - 80px)">
                 <el-aside width="180px"><Aside></Aside></el-aside>
                 <el-container>
                     <el-main>
@@ -87,7 +87,7 @@ export default {
     line-height: 200px;
     overflow-x: hidden;
     overflow: -Scroll;
-    padding-bottom: 200px;
+    padding-bottom: 50px;
     border-right: 1px solid #d3dce6 !important;
 }
 

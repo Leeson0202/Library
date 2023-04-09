@@ -86,7 +86,7 @@ public class LibraryTableService {
         String tableId = UUID.randomUUID().toString();
         libraryTable.setTableId(tableId);
         this.libraryTableDao.insert(libraryTable);
-        this.redisTool.flushAll(); // 删除缓存
+        this.redisTool.deleteByPrefix("school"); // 删除缓存
         return ResMap.ok(libraryTable);
     }
 
@@ -100,7 +100,7 @@ public class LibraryTableService {
         Map<String, Object> stringObjectMap = this.queryById(libraryTable.getTableId());
         LibraryTable data = (LibraryTable) stringObjectMap.get("data");
         this.libraryTableDao.update(libraryTable);
-        this.redisTool.flushAll(); // 删除缓存
+        this.redisTool.deleteByPrefix("school"); // 删除缓存
         return this.queryById(libraryTable.getTableId());
     }
 
@@ -115,7 +115,7 @@ public class LibraryTableService {
         if (this.libraryTableDao.deleteById(tableId) == 0) {
             return ResMap.err();
         }
-        this.redisTool.flushAll(); // 删除缓存
+        this.redisTool.deleteByPrefix("school"); // 删除缓存
         return ResMap.ok();
     }
 

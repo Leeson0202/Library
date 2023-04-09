@@ -2,13 +2,13 @@ package cool.leeson.library.service.library;
 
 import cool.leeson.library.dao.SchoolRuleDao;
 import cool.leeson.library.entity.library.SchoolRule;
+import cool.leeson.library.exceptions.MyException;
+import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * (SchoolRule)表服务实现类
@@ -28,21 +28,10 @@ public class SchoolRuleService {
      * @param schoolId 主键
      * @return 实例对象
      */
-    public SchoolRule queryById(String schoolId) {
-        return this.schoolRuleDao.queryById(schoolId);
+    public Map<String, Object> queryById(String schoolId) {
+        return ResMap.ok(this.schoolRuleDao.queryById(schoolId));
     }
 
-    /**
-     * 分页查询
-     *
-     * @param schoolRule  筛选条件
-     * @param pageRequest 分页对象
-     * @return 查询结果
-     */
-    public Page<SchoolRule> queryByPage(SchoolRule schoolRule, PageRequest pageRequest) {
-        long total = this.schoolRuleDao.count(schoolRule);
-        return new PageImpl<>(this.schoolRuleDao.queryAllByLimit(schoolRule, pageRequest), pageRequest, total);
-    }
 
     /**
      * 新增数据
@@ -50,9 +39,9 @@ public class SchoolRuleService {
      * @param schoolRule 实例对象
      * @return 实例对象
      */
-    public SchoolRule insert(SchoolRule schoolRule) {
+    public Map<String, Object> insert(SchoolRule schoolRule) {
         this.schoolRuleDao.insert(schoolRule);
-        return schoolRule;
+        return ResMap.ok(schoolRule);
     }
 
     /**
@@ -61,7 +50,7 @@ public class SchoolRuleService {
      * @param schoolRule 实例对象
      * @return 实例对象
      */
-    public SchoolRule update(SchoolRule schoolRule) {
+    public Map<String, Object> update(SchoolRule schoolRule) {
         this.schoolRuleDao.update(schoolRule);
         return this.queryById(schoolRule.getSchoolId());
     }
@@ -72,7 +61,10 @@ public class SchoolRuleService {
      * @param schoolId 主键
      * @return 是否成功
      */
-    public boolean deleteById(String schoolId) {
-        return this.schoolRuleDao.deleteById(schoolId) > 0;
+    public Map<String, Object> deleteById(String schoolId) throws MyException {
+        if (this.schoolRuleDao.deleteById(schoolId) == 0) {
+            throw new MyException("删除失败");
+        }
+        return ResMap.ok("修改成功");
     }
 }

@@ -7,6 +7,6 @@ export default {
     background: null,
     libraries: null,
     schoolRule: null,
-    // 图书馆列表
-    libraries: [],
+
+    options: [],
 };

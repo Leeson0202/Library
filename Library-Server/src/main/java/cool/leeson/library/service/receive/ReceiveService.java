@@ -2,9 +2,6 @@ package cool.leeson.library.service.receive;
 
 import com.aliyuncs.utils.StringUtils;
 import cool.leeson.library.config.JwtConfig;
-import cool.leeson.library.dao.LibraryDao;
-import cool.leeson.library.dao.LibraryRoomDao;
-import cool.leeson.library.dao.LibrarySeatDao;
 import cool.leeson.library.dao.ReceiveItemDao;
 import cool.leeson.library.entity.receive.ReceiveItem;
 import cool.leeson.library.entity.receive.ReceiveItemPost;
@@ -15,7 +12,7 @@ import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.library.LibraryRoomService;
 import cool.leeson.library.service.library.LibrarySeatService;
 import cool.leeson.library.service.library.LibraryService;
-import cool.leeson.library.service.library.SchoolService;
+import cool.leeson.library.service.user.UserInfoService;
 import cool.leeson.library.service.user.UserOnlineService;
 import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
@@ -44,14 +41,10 @@ public class ReceiveService {
     @Resource
     private ReceiveItemDao receiveItemDao;
     @Resource
-    private LibraryDao libraryDao;
-    @Resource
-    private LibraryRoomDao libraryRoomDao;
-    @Resource
-    private LibrarySeatDao librarySeatDao;
+    private UserInfoService userInfoService;
 
     @Resource
-    private SchoolService schoolService;
+    private UserOnlineService userOnlineService;
     @Resource
     private LibraryService libraryService;
     @Resource
@@ -60,8 +53,6 @@ public class ReceiveService {
     private LibrarySeatService librarySeatService;
     @Resource
     private RedisTool redisTool;
-    @Resource
-    private UserOnlineService userOnlineService;
 
     @Resource
     private HttpServletRequest request;
@@ -69,11 +60,6 @@ public class ReceiveService {
     @Resource
     private JwtConfig jwtConfig;
 
-    //    seatKey
-    private String seatKeyFormat = "%s:%s:%s"; // seatId:day:timeIdx   dsackacbjakcaw3:16:1
-    // 用户key
-    private String userKeyFormat = "%s:%s:%s";  // userId:day:timeIdx  dfjank:12:0
-    private String onlineKeyFormat = "%s:online";  // userId:online  dfjank:online
 
     /**
      * 提交预约订单
@@ -170,7 +156,7 @@ public class ReceiveService {
         String seatKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), receiveItem.getSeatId(), receiveDate.getDate(), timeIdx);
         redisTool.set(userKey, "false", 1, TimeUnit.SECONDS);
         redisTool.set(seatKey, "false", 1, TimeUnit.SECONDS);
-        return ResMap.ok();
+        return ResMap.ok("取消成功");
     }
 
     /**
@@ -252,11 +238,33 @@ public class ReceiveService {
      * @param receiveItem 实体
      */
 
-    public Map<String, Object> queryAllByLimit(ReceiveItem receiveItem, Integer page, Integer size) {
+    public Map<String, Object> queryAllByLimit(ReceiveItem receiveItem, Integer page, Integer size) throws MyException {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("receiveDate").descending());
         long total = this.receiveItemDao.count(receiveItem);
-        PageImpl<ReceiveItem> receiveItems = new PageImpl<>(this.receiveItemDao.queryAllByLimit(receiveItem, pageRequest), pageRequest, total);
-        return ResMap.ok(receiveItems);
+        List<ReceiveItem> receiveItems = this.receiveItemDao.queryAllByLimit(receiveItem, pageRequest);
+        List<ReceiveItemResponse> receiveItemResponses = new ArrayList<>();
+        for (ReceiveItem item : receiveItems) {
+            ReceiveItemResponse receiveItemResponse = new ReceiveItemResponse(item);
+            // 名字
+            receiveItemResponse.setNickName(userInfoService.queryById(item.getUserId()).getNickName());
+            // 状态
+            UserOnline userOnline = (UserOnline) userOnlineService.queryById(item.getUserId()).get("data");
+            receiveItemResponse.setOnline(userOnline.getOnline());
+
+            // 图书馆
+            receiveItemResponse.setLibraryName(this.libraryService.queryInfo(item.getLibraryId()).getName());
+            // 图书室
+            receiveItemResponse.setRoomName(this.libraryRoomService.queryInfo(item.getRoomId()).getName());
+            // 椅子
+            receiveItemResponse.setSeatName(this.librarySeatService.queryInfo(item.getSeatId()).getName());
+            // 时间
+            receiveItemResponse.setDate(item.getReceiveDate().getMonth() + "月" + item.getReceiveDate().getDate() + "日");
+            receiveItemResponses.add(receiveItemResponse);
+        }
+        Collections.sort(receiveItemResponses);
+        Collections.reverse(receiveItemResponses);
+        PageImpl<ReceiveItemResponse> res = new PageImpl<>(receiveItemResponses, pageRequest, total);
+        return ResMap.ok(res);
     }
 
 }

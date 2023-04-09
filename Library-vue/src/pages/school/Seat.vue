@@ -14,7 +14,7 @@
                     >
                     </el-option>
                 </el-select>
-                <el-button style="margin-left: 16px" @click="addLibrary"
+                <el-button style="margin-left: 16px" @click="editRoom(-1, null)"
                     >添加
                 </el-button>
             </template>
@@ -24,7 +24,7 @@
             <el-empty v-if="libraryId == ''" :image-size="200"> </el-empty>
             <div v-else>
                 <el-table
-                    :data="rooms[libraryId]"
+                    :data="rooms"
                     :stripe="true"
                     style="width: calc(100% - 30px)"
                     @selection-change="handleSelectionChange"
@@ -46,16 +46,10 @@
                         prop="seatNum"
                         label="座位数量"
                         align="center"
-                        width="80"
+                        width="160"
                     >
                     </el-table-column>
 
-                    <el-table-column
-                        label="剩余位置"
-                        prop="left"
-                        width="80"
-                        align="center"
-                    ></el-table-column>
                     <el-table-column align="left" style="align-items: right">
                         <template slot="header">
                             <el-input
@@ -68,7 +62,7 @@
                         <template slot-scope="scope">
                             <el-button
                                 size="mini"
-                                @click="dialogFormVisible = true"
+                                @click="editRoom(scope.$index, scope.row)"
                                 >编辑</el-button
                             >
                             <el-button
@@ -91,17 +85,21 @@
         <!-- 对话框 -->
 
         <el-dialog title="编辑" :visible.sync="dialogFormVisible">
-            <el-form :model="form" style="width: 90%;">
+            <el-form :model="form" style="width: 90%">
                 <el-form-item label="图书馆" :label-width="formLabelWidth">
-                    <el-select v-model="form.region" placeholder="请选择图书馆">
+                    <el-select
+                        v-model="form.libraryId"
+                        placeholder="请选择图书馆"
+                        style="width: 100%"
+                    >
                         <el-option
-                            label="老图书馆"
-                            value="shanghai"
-                        ></el-option>
-                        <el-option
-                            label="数字图书馆"
-                            value="beijing"
-                        ></el-option>
+                            v-for="item in libraryList"
+                            size="mini"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                        >
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="房间名" :label-width="formLabelWidth">
@@ -123,9 +121,7 @@
             <!-- 下方确定按钮 -->
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false"
-                    >保 存</el-button
-                >
+                <el-button type="primary" @click="submitRoom">保 存</el-button>
             </div>
         </el-dialog>
     </div>
@@ -135,6 +131,9 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from ‘《组件路径》‘;
 
+import api from "@/utils/api";
+import { Message } from "element-ui";
+
 export default {
     name: "Seat",
     components: {},
@@ -143,83 +142,35 @@ export default {
         //这里存放数据
         return {
             searchValue: "",
-            libraryList: [
-                {
-                    value: "avajhgvwab",
-                    label: "老图书馆",
-                },
-                {
-                    value: "wajhvcgwavc",
-                    label: "数字图书馆",
-                },
-            ],
-            libraryId: "wajhvcgwavc",
-            rooms: {
-                avajhgvwab: [
-                    {
-                        roomId: "ajvgah",
-                        name: "一楼电脑室",
-                        descs: "老图书馆一楼电脑室",
-                        seatNum: 100,
-                        left: 20,
-                        weekend: true,
-                        beginTime: "",
-                        endTime: "",
-                    },
-                    {
-                        roomId: "ajvgah",
-                        name: "二楼电脑室",
-                        descs: "老图书馆二楼电脑室",
-                        seatNum: 80,
-                        left: 20,
-                        weekend: true,
-                        beginTime: "",
-                        endTime: "",
-                    },
-                ],
-                wajhvcgwavc: [
-                    {
-                        roomId: "ajvgah",
-                        name: "一楼阅览室",
-                        descs: "数字图书馆一楼阅览室",
-                        seatNum: 100,
-                        left: 20,
-                        weekend: true,
-                        beginTime: "",
-                        endTime: "",
-                    },
-                    {
-                        roomId: "ajvgah",
-                        name: "二楼阅览室",
-                        descs: "数字图书馆二楼阅览室",
-                        seatNum: 80,
-                        left: 20,
-                        weekend: true,
-                        beginTime: "",
-                        endTime: "",
-                    },
-                ],
-            },
+            libraryId: "",
+            rooms: [],
             // 对话框
             dialogFormVisible: false,
+            formIdx: -1,
             // 对话框数据
-            form: {
-                roomId: "ajvgah",
-                name: "一楼电脑室",
-                descs: "老图书馆一楼电脑室",
-                seatNum: 100,
-                left: 20,
-                weekend: true,
-                beginTime: "",
-                endTime: "",
-            },
+            form: {},
             formLabelWidth: "80px",
         };
     },
     //监听属性 类似于data概念
-    computed: {},
+    computed: {
+        libraryList() {
+            let libraryList = [];
+            this.$store.state.school.libraries.forEach((el) => {
+                libraryList.push({ value: el.libraryId, label: el.name });
+            });
+            return libraryList;
+        },
+    },
     //监控data中的数据变化
-    watch: {},
+    watch: {
+        libraryId(newV, oldV) {
+            let that = this;
+            if (newV != null || newV != "") {
+                that.queryRoom();
+            }
+        },
+    },
     //方法集合
     methods: {
         toggleSelection(rows) {
@@ -236,18 +187,71 @@ export default {
         },
         clearFilter(e, c) {},
         search(e) {},
+        editRoom(index, row) {
+            this.formIdx = index;
+            if (index != -1) this.form = { ...row };
+            else
+                this.form = {
+                    libraryId: "",
+                    roomId: "",
+                    name: "",
+                    descs: "",
+                    seatNum: "",
+                };
+            this.dialogFormVisible = true;
+        },
         handleEdit(index, row) {
             console.log(index, row);
         },
         handleDelete(index, row) {
-            console.log(index, row);
+            this.$confirm("确定删除" + row.name + "？")
+                .then((_) => {
+                    api.deleteRoom(row.roomId).then((data) => {
+                        this.queryRoom();
+                    });
+                    done();
+                })
+                .catch((_) => {});
         },
-        addLibrary() {},
+        submitRoom() {
+            let that = this;
+            if (this.formIdx == -1) {
+                //新的
+                console.log(this.form);
+                api.insertRoom(this.form).then((data) => {
+                    that.submitSuccess(data);
+                });
+            } else {
+                //更新
+                api.updateRoom(this.form).then((data) => {
+                    that.submitSuccess(data);
+                });
+            }
+        },
+        submitSuccess(data) {
+            console.log(data);
+            if (data.code == 200) {
+                this.dialogFormVisible = false;
+                Message.success("保存成功");
+                this.queryRoom();
+            }
+        },
+        queryRoom() {
+            let that = this;
+            api.queryLibrary(this.libraryId).then((data) => {
+                console.log(data);
+                if (data.code == 200) {
+                    that.rooms = data.data.libraryRooms;
+                }
+            });
+        },
     },
     //生命周期 - 创建完成（可以访问当前this实例）
     created() {},
     //生命周期 - 挂载完成（可以访问DOM元素）
-    mounted() {},
+    mounted() {
+        this.libraryId = "jdgchvauajkuvbh";
+    },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
     beforeUpdate() {}, //生命周期 - 更新之前

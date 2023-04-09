@@ -35,6 +35,8 @@ public class SchoolService {
     @Resource
     private UserSchoolDao userSchoolDao;
     @Resource
+    private LibraryService libraryService;
+    @Resource
     private LibraryDao libraryDao;
     @Resource
     private LibraryRoomDao libraryRoomDao;
@@ -225,10 +227,32 @@ public class SchoolService {
             log.warn("学校id错误");
             return ResMap.err("输入的学校Id错误");
         }
+        School school = this.queryInfo(schoolId);
+        List<Library> libraries = school.getLibraries();
+        // 删除通知
+
+        // 删除规则
+        if (this.schoolRuleDao.deleteById(schoolId) == 0) {
+            log.info("删除学校失败");
+            return ResMap.err("删除学校失败");
+        }
+        // 删除反馈
+        // 删除设备
+
+        // 删除预约
+
+        // 删除图书馆
+        for (Library library : libraries) {
+            this.libraryService.deleteById(library.getLibraryId());
+        }
+
+
+        // 删除UserSchool
         if (this.userSchoolDao.deleteById(userSchool.getId()) == 0) {
             log.info("删除学校失败");
             return ResMap.err("删除学校失败");
         }
+        // 删除
         if (this.schoolDao.deleteById(schoolId) == 0) {
             log.info("删除学校失败");
             return ResMap.err("删除学校失败");

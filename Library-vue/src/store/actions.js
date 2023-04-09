@@ -4,7 +4,6 @@ export default {
     Launch(context, value) {
         // 更新token
         api.loginUpdate().then((data) => {
-            console.log(data);
             if (data == undefined || data.code == 401 || data.code == 402) {
                 window.localStorage.clear();
                 this.commit("launch");
@@ -27,8 +26,29 @@ export default {
     // 获取学校信息
     QuerySchool(context, value) {
         api.querySchool().then((data) => {
-            console.log(data);
+            context.dispatch("QuerySchoolSimple", data.data.schoolId);
             context.commit("updateSchool", data.data);
+        });
+    },
+    // 获取学校Simple信息
+    QuerySchoolSimple(context, value) {
+        api.querSchoolSimple(value).then((data) => {
+            let root = [];
+            let res = data.data.librarySimpleList;
+            res.forEach((el1, idx) => {
+                let t = {};
+                t.value = el1.libraryId;
+                t.label = el1.name;
+                t.children = [];
+                el1.roomSimpleList.forEach((el) => {
+                    let tt = {};
+                    tt.value = el.roomId;
+                    tt.label = el.name;
+                    t.children.push(tt);
+                });
+                root.push(t);
+            });
+            context.commit("updateOptions", root);
         });
     },
 };

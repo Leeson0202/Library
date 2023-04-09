@@ -1,6 +1,7 @@
 package cool.leeson.library.controller.library;
 
 import cool.leeson.library.entity.library.Library;
+import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.library.LibraryService;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,7 +83,7 @@ public class LibraryController {
      * @return 删除是否成功
      */
     @DeleteMapping
-    public Map<String, Object> deleteById(String libraryId) {
+    public Map<String, Object> deleteById(String libraryId) throws MyException {
         return this.libraryService.deleteById(libraryId);
     }
 

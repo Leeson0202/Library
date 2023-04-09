@@ -14,16 +14,21 @@
         </div>
         <div class="receive-show">
             <el-empty v-if="roomId == ''" :image-size="300"> </el-empty>
-            <div v-else>
+            <div v-else style="width: 100%; height: 100%">
                 <el-table
-                    :data="users"
+                    :data="receives"
                     :stripe="true"
                     style="width: calc(100% - 30px)"
                     @selection-change="handleSelectionChange"
                 >
                     <el-table-column type="selection" width="55">
                     </el-table-column>
-                    <el-table-column fixed prop="name" label="姓名" width="120">
+                    <el-table-column
+                        fixed
+                        prop="nickName"
+                        label="姓名"
+                        width="120"
+                    >
                     </el-table-column>
                     <el-table-column label="状态" width="120" align="center">
                         <template slot-scope="scope">
@@ -57,12 +62,12 @@
                         width="120"
                     >
                     </el-table-column>
-                    <el-table-column prop="roomName" label="房间" width="130">
+                    <el-table-column prop="roomName" label="房间" width="90">
                     </el-table-column>
-                    <el-table-column prop="seatName" label="座位" width="100">
+                    <el-table-column prop="seatName" label="座位" width="70">
                     </el-table-column>
 
-                    <el-table-column prop="date" label="时间" width="100">
+                    <el-table-column prop="date" label="日期" width="80">
                     </el-table-column>
 
                     <el-table-column prop="timeIdx" label="时间" width="100">
@@ -70,9 +75,18 @@
                             {{
                                 8 +
                                 2 * scope.row.timeIdx +
-                                ":00 - " +
+                                ":00-" +
                                 (10 + 2 * scope.row.timeIdx) +
                                 ":00"
+                            }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="time" label="创建时间" width="100">
+                        <template slot-scope="scope">
+                            {{
+                                scope.row.time.slice(0, 10) +
+                                " " +
+                                scope.row.time.slice(11, 19)
                             }}
                         </template>
                     </el-table-column>
@@ -101,6 +115,16 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <el-pagination
+                    v-if="roomId != ''"
+                    class="pagination"
+                    background
+                    layout="prev, pager, next"
+                    :page-size="pageSize"
+                    :total="totalElements"
+                    @current-change="pageChange"
+                >
+                </el-pagination>
             </div>
         </div>
     </div>
@@ -110,7 +134,7 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from ‘《组件路径》‘;
 
-import { color } from "echarts";
+import api from "@/utils/api";
 
 export default {
     name: "Receive",
@@ -119,84 +143,21 @@ export default {
     data() {
         //这里存放数据
         return {
+            pageSize: 8,
+            totalElements: 0,
+            pageIdx: 0,
             searchValue: "",
-            roomId: "shejiyuanze",
-            libraryId: "wajhvcgwavc",
-            options: [
-                {
-                    value: "avajhgvwab",
-                    label: "老图书馆",
-                    children: [
-                        {
-                            value: "sheji5yuanze",
-                            label: "一楼电脑室",
-                        },
-                        {
-                            value: "she3jiyuanze",
-                            label: "二楼电脑室",
-                        },
-                    ],
-                },
-                {
-                    value: "wajhvcgwavc",
-                    label: "数字图书馆",
-                    children: [
-                        {
-                            value: "shejiyuanze",
-                            label: "一楼阅览室",
-                        },
-                        {
-                            value: "shejiy5uanze",
-                            label: "二楼阅览室",
-                        },
-                    ],
-                },
-            ],
-            users: [
-                {
-                    userId: "afgyawu",
-                    name: "Leeson",
-                    online: 0,
-                    libraryId: "jadbchw",
-                    libraryName: "数字图书馆",
-                    roomId: "asucbw",
-                    roomName: "一楼阅览室",
-                    seatId: "A1001",
-                    seatName: "A1001",
-                    date: "2023-3-11",
-                    timeIdx: "0",
-                },
-                {
-                    userId: "afgyawu",
-                    name: "Leeson",
-                    online: 1,
-                    libraryId: "jadbchw",
-                    libraryName: "数字图书馆",
-                    roomId: "asucbw",
-                    roomName: "一楼阅览室",
-                    seatId: "A1001",
-                    seatName: "A1001",
-                    date: "2023-3-11",
-                    timeIdx: "0",
-                },
-                {
-                    userId: "afgyawu",
-                    name: "Leeson",
-                    online: 2,
-                    libraryId: "jadbchw",
-                    libraryName: "数字图书馆",
-                    roomId: "asucbw",
-                    roomName: "一楼阅览室",
-                    seatId: "A1001",
-                    seatName: "A1001",
-                    date: "2023-3-11",
-                    timeIdx: "0",
-                },
-            ],
+            roomId: "",
+            libraryId: "",
+            receives: [],
         };
     },
     //监听属性 类似于data概念
-    computed: {},
+    computed: {
+        options() {
+            return this.$store.state.school.options;
+        },
+    },
     //监控data中的数据变化
     watch: {},
     //方法集合
@@ -204,7 +165,12 @@ export default {
         handleChange(value) {
             this.libraryId = value[0];
             this.roomId = value[1];
-            console.log(value);
+            this.pageIdx = 0;
+            this.queryReceiveAll();
+        },
+        pageChange(val) {
+            this.pageIdx = val - 1;
+            this.queryReceiveAll();
         },
         handleSelectionChange(val) {
             this.multipleSelection = val;
@@ -215,9 +181,22 @@ export default {
             console.log(index, row);
         },
         handleDelete(index, row) {
-            console.log(index, row);
+            api.deleteReceive(row.receiveId, row.userId).then((data) => {
+                console.log(data);
+                this.queryReceiveAll();
+            });
         },
-        addLibrary() {},
+        queryReceiveAll() {
+            let form = {
+                roomId: this.roomId,
+                page: this.pageIdx,
+                size: this.pageSize,
+            };
+            api.queryReceiveAll(form).then((data) => {
+                this.receives = data.data.content;
+                this.totalElements = data.data.totalElements;
+            });
+        },
     },
     //生命周期 - 创建完成（可以访问当前this实例）
     created() {},
@@ -249,6 +228,9 @@ export default {
 .receive-show {
     height: 100%;
     width: 100%;
+    .pagination {
+        margin-top: 26px;
+    }
 }
 .online {
     margin: auto;

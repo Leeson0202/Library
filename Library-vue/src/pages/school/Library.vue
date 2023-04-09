@@ -1,6 +1,7 @@
 <!-- Library -->
 <template>
     <div class="Library" id="library" v-resize="resize">
+        <!-- 图书馆列表 -->
         <el-card
             class="library-card"
             :body-style="{ padding: '0px' }"
@@ -14,12 +15,21 @@
                 :style="{
                     'background-image': 'url(' + item.background + ')',
                 }"
-            ></div>
+            >
+                <div
+                    style="
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(255, 255, 255, 0.2);
+                    "
+                ></div>
+            </div>
             <div class="library-info">
                 <div class="library-title">{{ item.name }}</div>
                 <div class="simple">{{ item.descs }}</div>
             </div>
         </el-card>
+        <!-- 添加Card -->
         <el-card
             class="library-card"
             :style="{ width: detailWidth - 40 + 'px' }"
@@ -48,7 +58,8 @@
                     <el-form-item label="描述">
                         <el-input
                             type="textarea"
-                            v-model="form.desc"
+                            rows="5"
+                            v-model="form.descs"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="背景">
@@ -67,24 +78,24 @@
 
                     <el-form-item label="开放规则">
                         <el-select
-                            v-model="form.rule"
+                            v-model="form.weekend"
                             placeholder="请选择活动区域"
                             style="width: 100%"
                         >
                             <el-option
                                 label="工作日（一周五天）"
-                                value="shanghai"
+                                :value="false"
                             ></el-option>
                             <el-option
                                 label="非节假日（一周七天）"
-                                value="beijing"
+                                :value="true"
                             ></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="开放时间">
                         <el-col :span="11">
                             <el-time-select
-                                v-model="form.time1"
+                                v-model="form.beginTime"
                                 :picker-options="{
                                     start: '07:00',
                                     step: '00:30',
@@ -98,7 +109,7 @@
                         <el-col class="line" :span="2">-</el-col>
                         <el-col :span="11">
                             <el-time-select
-                                v-model="form.time2"
+                                v-model="form.endTime"
                                 :picker-options="{
                                     start: '09:00',
                                     step: '00:30',
@@ -113,7 +124,7 @@
                     <el-form-item label="时段长度">
                         <el-col :span="11">
                             <el-time-select
-                                v-model="form.time3"
+                                v-model="form.tt"
                                 :picker-options="{
                                     start: '00:30',
                                     step: '00:30',
@@ -126,11 +137,20 @@
                         </el-col>
                     </el-form-item>
 
-                    <el-form-item>
-                        <el-button type="primary" @click="onSubmit"
-                            >保存</el-button
+                    <el-form-item style="float: right; width: 100%">
+                        <el-button
+                            v-if="drawerIdx != -1"
+                            type="danger"
+                            @click="rmLibrary(form.libraryId)"
+                            style="float: left; position: relative; left: -65px"
+                            >删 除</el-button
                         >
-                        <el-button>取消</el-button>
+                        <div style="float: right">
+                            <el-button @click="drawer = false">取 消</el-button>
+                            <el-button type="primary" @click="onSubmit">
+                                保 存
+                            </el-button>
+                        </div>
                     </el-form-item>
                 </el-form>
             </div>
@@ -141,6 +161,8 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from ‘《组件路径》‘;
+
+import api from "@/utils/api";
 
 export default {
     name: "Library",
@@ -153,35 +175,23 @@ export default {
             //抽屉
             drawer: false,
             drawerIdx: 0,
-            libraries: [
-                {
-                    id: "jsabahadv",
-                    name: "老图书馆",
-                    descs: "老图书馆",
-                    background:
-                        "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
-                },
-                {
-                    id: "jsabaqrfsahadv",
-                    name: "数字图书馆",
-                    descs: "新图书馆",
-                    background:
-                        "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
-                },
-            ],
             form: {
                 name: "",
                 desc: "",
                 background: "",
                 rule: "",
-                time1: "",
-                time2: "",
-                time3: "",
+                beginTime: "",
+                endTime: "",
+                tt: "",
             },
         };
     },
     //监听属性 类似于data概念
-    computed: {},
+    computed: {
+        libraries() {
+            return this.$store.state.school.libraries;
+        },
+    },
     //监控data中的数据变化
     watch: {},
     //方法集合
@@ -200,23 +210,85 @@ export default {
         },
         // 打开 drawer
         openDrawer(idx) {
+            if (idx == -1) {
+                this.form = {
+                    schoolId: this.$store.state.school.schoolId,
+                    name: "",
+                    desc: "",
+                    background: "",
+                    rule: "",
+                    beginTime: "",
+                    endTime: "",
+                    tt: "",
+                };
+            } else {
+                this.form = { ...this.libraries[idx] };
+                if (this.form.beginTime.length > 5) {
+                    this.form.beginTime = this.form.beginTime.slice(0, 5);
+                }
+                if (this.form.endTime.length > 5) {
+                    this.form.endTime = this.form.endTime.slice(0, 5);
+                }
+                if (this.form.tt.length > 5) {
+                    this.form.tt = this.form.tt.slice(0, 5);
+                }
+            }
             this.drawerIdx = idx;
+
             this.drawer = true;
         },
         // 关闭抽屉
         handleClose(done) {
             this.$confirm("保存并关闭？")
                 .then((_) => {
+                    this.onSubmit();
                     done();
                 })
                 .catch((_) => {});
         },
-        onSubmit() {},
+        // 保存按钮
+        onSubmit() {
+            if (this.drawerIdx == -1) {
+                // 新的
+                // console.log("new", this.form);
+
+                api.insertLibrary(this.form).then((data) => {
+                    // console.log(data);
+                    if (data.code == 200) {
+                        this.$store.dispatch("QuerySchool");
+                    }
+                });
+            } else {
+                //更新
+                api.updateLibrary(this.form).then((data) => {
+                    console.log(data);
+                    if (data.code == 200) {
+                        this.$store.dispatch("QuerySchool");
+                    }
+                });
+            }
+            console.log("submit");
+            this.drawer = false;
+        },
+        // 删除图书馆
+        rmLibrary(libraryId) {
+            this.$confirm("确定删除图书馆？")
+                .then((_) => {
+                    api.deleteLibrary(libraryId).then((data) => {
+                        this.drawer = false;
+                        this.$store.dispatch("QuerySchool");
+                    });
+                })
+                .catch((_) => {});
+        },
     },
     //生命周期 - 创建完成（可以访问当前this实例）
     created() {},
     //生命周期 - 挂载完成（可以访问DOM元素）
-    mounted() {},
+    mounted() {
+        //  更新学校和图书馆列表
+        this.$store.dispatch("QuerySchool");
+    },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
     beforeUpdate() {}, //生命周期 - 更新之前
@@ -252,10 +324,14 @@ export default {
         .library-title {
             font-size: 18px;
             font-weight: 500;
+            margin-bottom: 6px;
         }
         .simple {
             text-indent: 2em;
-            line-height: 12px;
+            line-height: 20px;
+            height: 20px;
+            width: 100%;
+            overflow: hidden;
         }
     }
 }

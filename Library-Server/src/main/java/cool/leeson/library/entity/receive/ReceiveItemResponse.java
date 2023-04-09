@@ -28,6 +28,8 @@ public class ReceiveItemResponse implements Serializable, Comparable {
      * 用户id
      */
     private String userId;
+    private String nickName;
+    private Integer online;
     /**
      * 图书馆id
      */
@@ -56,6 +58,7 @@ public class ReceiveItemResponse implements Serializable, Comparable {
      * 创建时间
      */
     private Date time;
+
 
     /**
      * 是不是这个时间段

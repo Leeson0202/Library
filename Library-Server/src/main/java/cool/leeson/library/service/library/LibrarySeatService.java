@@ -88,7 +88,7 @@ public class LibrarySeatService {
         if (this.librarySeatDao.insert(librarySeat) == 0) {
             return ResMap.err();
         }
-        this.redisTool.flushAll(); // 删除缓存
+        this.redisTool.deleteByPrefix("school"); // 删除缓存
 
         return this.queryById(seatId);
     }
@@ -101,7 +101,7 @@ public class LibrarySeatService {
      */
     public Map<String, Object> update(LibrarySeat librarySeat) {
         this.librarySeatDao.update(librarySeat);
-        this.redisTool.flushAll(); // 删除缓存
+        this.redisTool.deleteByPrefix("school"); // 删除缓存
         return this.queryById(librarySeat.getSeatId());
     }
 
@@ -115,7 +115,8 @@ public class LibrarySeatService {
         if (this.librarySeatDao.deleteById(seatId) > 0) {
             return ResMap.ok();
         }
-        this.redisTool.flushAll(); // 删除缓存
+        this.redisTool.deleteByPrefix("school"); // 删除缓存
+        this.redisTool.deleteByPrefix("receive"); // 删除缓存
         return ResMap.err();
     }
 

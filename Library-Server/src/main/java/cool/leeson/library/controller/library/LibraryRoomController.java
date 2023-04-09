@@ -87,7 +87,7 @@ public class LibraryRoomController {
      * @return 删除是否成功
      */
     @DeleteMapping
-    public Map<String, Object> deleteById(String roomId) {
+    public Map<String, Object> deleteById(String roomId) throws MyException {
         return this.libraryRoomService.deleteById(roomId);
     }
 

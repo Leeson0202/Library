@@ -26,8 +26,10 @@ export default {
     },
     // 更新学校信息
     updateSchool(state, value) {
-        console.log("updateSchool +", value);
         state.school = value;
         state.school.hasSchool = true;
+    },
+    updateOptions(state, value) {
+        state.school.options = value;
     },
 };

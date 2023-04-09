@@ -23,11 +23,12 @@ public class RedisTool {
         CODE("%s:code"), // 身份认证 code  {tel/email}:code  123456
         REPEAT("%s:repeat"), // 判断是否一分钟内重复  {tel/email}:repeat ""
         TOKEN("%s:token"), // 用户token信息 {userId}:token akdvhaviawkvawvd
-        INFO("%s:Info"), // 储存信息{schoolId/libraryId/roomId/ seat}:Info
-        SIMPLE("%s:simple"), // {school}:simple
-        ROOM("%s:roomId"), // 房间信息+seat信息 {roomId}:roomId
-        RECEIVE("%s:%s:%s"), // 预约信息 {seatId/userId}:{day}:{timeIdx}  true/false
-        SEED("%s:online"); // 用户打卡 {userId}:SEED     1分钟
+        INFO("school:%s:info"), // 储存信息{schoolId/libraryId/roomId/ seat}:Info
+        SIMPLE("school:%s:simple"), // {school}:simple
+        ROOM("school:%s:roomId"), // 房间信息+seat信息 {roomId}:roomId
+        RECEIVE("receive:%s:%s:%s"), // 预约信息 {seatId/userId}:{day}:{timeIdx}  true/false
+        ONLINE("receive:%s:online"), // 用户在线 {userId}:online
+        SEED("receive:%s:seed"); // 用户打卡 {userId}:seed     1分钟
 
         private final String format;
 
@@ -68,6 +69,21 @@ public class RedisTool {
     public void flushAll() {
         log.warn("redis flushAll");
         Set<String> keys = redisTemplate.keys("*");
+        assert keys != null;
+        redisTemplate.delete(keys);
+    }
+
+
+    public void deleteByPrefix(String prefix) {
+        log.warn("redis flushByPrefix");
+        Set<String> keys = redisTemplate.keys(prefix + "*");
+        assert keys != null;
+        redisTemplate.delete(keys);
+    }
+
+    public void deleteByEnd(String end) {
+        log.warn("redis flushByEnd");
+        Set<String> keys = redisTemplate.keys("*" + end);
         assert keys != null;
         redisTemplate.delete(keys);
     }

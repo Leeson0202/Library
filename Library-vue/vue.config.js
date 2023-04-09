@@ -14,12 +14,12 @@ module.exports = defineConfig({
     filenameHashing: false,
 
     devServer: {
-        // port: 8070,
+        port: 8070,
         proxy: {
             "/api": {
                 //这里最好有一个 /
-                target: "https://api.library.leeson.cool", // 后台接口域名
-                // target: "http://localhost:8080", // 后台接口域名
+                // target: "https://api.library.leeson.cool", // 后台接口域名
+                target: "http://localhost:8080", // 后台接口域名
                 changeOrigin: true, //是否跨域
                 pathRewrite: {
                     "^/api": "",

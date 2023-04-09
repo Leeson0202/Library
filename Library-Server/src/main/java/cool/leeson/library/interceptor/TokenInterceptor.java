@@ -2,9 +2,9 @@ package cool.leeson.library.interceptor;
 
 import com.alibaba.druid.util.StringUtils;
 import cool.leeson.library.config.JwtConfig;
+import cool.leeson.library.entity.tools.RedisTool;
 import cool.leeson.library.exceptions.MyException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -22,9 +22,8 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     @Resource
     private JwtConfig jwtConfig;
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTool redisTool;
 
-    private final String UserTokenKeyFormat = "%s:token"; // userId:token  7天
 
     @Override
     public boolean preHandle(HttpServletRequest request,
@@ -60,7 +59,8 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         try {
             // 查询缓冲
             String userId = jwtConfig.getUsernameFromToken(token);
-            String rToken = this.redisTemplate.opsForValue().get(String.format(UserTokenKeyFormat, userId)); // redis中的token
+            String tokenKey = String.format(RedisTool.FormatKey.TOKEN.toString(), userId);
+            String rToken = this.redisTool.get(tokenKey); // redis中的token
             if (StringUtils.isEmpty(rToken) || !token.equals(rToken) || jwtConfig.isTokenExpired(token)) {
                 throw new MyException(MyException.STATUS.badToken);
             }

@@ -51,7 +51,6 @@ public class ReceiveController {
      */
     @PutMapping("cancel")
     public Map<String, Object> cancel(String receiveId) throws MyException {
-
         return this.receiveService.cancel((String) request.getAttribute("userId"), receiveId);
     }
 
