@@ -1,4 +1,12 @@
 /* pages/center/feedback/feedback.wxss */
+.input {
+    position: relative;
+    top: 12rpx;
+    display: inline-block;
+    width: 80%;
+    margin-left: 10rpx;
+}
+
 .feedback-input {
     margin: auto;
     padding: 0rpx 24rpx;
@@ -11,11 +19,13 @@
     line-height: 80rpx;
     text-align: center;
 }
-.numshow{
+
+.numshow {
     float: left;
     margin-left: 20rpx;
 }
-.submit-button{
+
+.submit-button {
     margin-right: 20rpx;
     margin-top: 10rpx;
     float: right;

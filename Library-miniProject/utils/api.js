@@ -117,7 +117,7 @@ class Api {
     /**
      * 信息反馈
      */
-    feedback = data => request.post('feedback', data)
+    insertFeedback = (data) => request.post('feedback', data)
 
 }
 const api = new Api()

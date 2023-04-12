@@ -1,10 +1,15 @@
 // pages/center/feedback/feedback.js
+import {
+    store
+} from '../../../store/store'
+import api from '../../../utils/api'
 Page({
 
     /**
      * 页面的初始数据
      */
     data: {
+        title: "",
         text: "",
         textNum: 0
 
@@ -23,12 +28,17 @@ Page({
      */
     onShow() {
         this.setData({
+            title: "",
             text: "",
             textNum: 0
         })
 
     },
-
+    inputTitle(e) {
+        this.setData({
+            title: e.detail.value,
+        })
+    },
     inputBind(e) {
         this.setData({
             text: e.detail.text,
@@ -36,14 +46,23 @@ Page({
         })
     },
     submit() {
-        if (this.data.text.length == 0) return;
-        wx.showToast({
-            title: '提交成功',
-        })
-        setTimeout(() => {
-            wx.switchTab({
-                url: '/pages/center/center',
+        let form = {
+            schoolId: store.school.schoolId,
+            userId: store.userInfo.userId,
+            title: this.data.title,
+            context: this.data.text.trim()
+        }
+        // console.log(form);
+        api.insertFeedback(form).then(data => {
+            wx.showToast({
+                title: '提交成功',
             })
-        }, 1000);
+            setTimeout(() => {
+                wx.switchTab({
+                    url: '/pages/center/center',
+                })
+            }, 1000);
+        })
+
     }
 })

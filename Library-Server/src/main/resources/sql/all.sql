@@ -434,6 +434,7 @@ create table library_feedback
     user_id     varchar(100) comment '用户id',
     `title`     varchar(50) comment '标题',
     `context`   varchar(2000) comment '内容',
+    tag         int comment '处理情况',
     `date`      datetime comment '发布日期'
 );use library;
 

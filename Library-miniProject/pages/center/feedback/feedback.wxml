@@ -1,7 +1,12 @@
 <!--pages/center/feedback/feedback.wxml-->
 
 <view style="height: 100%; width: 100%;">
-    <view style="padding-bottom: 20rpx; border-bottom: 1rpx solid rgb(204, 203, 203);">
+    <view>
+        <view style="width: 95%;height: 80rpx; margin: auto">
+            标题:<input class="input" bindinput="inputTitle" type="text" />
+        </view>
+    </view>
+    <view style="padding-bottom: 20rpx; border-bottom: 1rpx solid rgb(204, 203, 203);border-top: 1rpx solid rgb(204, 203, 203);">
         <editor class="feedback-input" placeholder="请输入反馈信息" bindinput="inputBind">
 
         </editor>

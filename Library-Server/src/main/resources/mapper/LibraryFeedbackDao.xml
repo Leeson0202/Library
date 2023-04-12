@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cool.leeson.library.dao.LibraryFeedbackDao">
+
+    <resultMap type="cool.leeson.library.entity.library.LibraryFeedback" id="LibraryFeedbackMap">
+        <result property="feedbackId" column="feedback_id" jdbcType="VARCHAR"/>
+        <result property="schoolId" column="school_id" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="context" column="context" jdbcType="VARCHAR"/>
+        <result property="tag" column="tag" jdbcType="INTEGER"/>
+        <result property="date" column="date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="LibraryFeedbackMap">
+        select feedback_id,
+               school_id,
+               user_id,
+               title,
+               context,
+               tag,
+               date
+        from library_feedback
+        where feedback_id = #{feedbackId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="LibraryFeedbackMap">
+        select
+        feedback_id, school_id, user_id, title, context, tag, date
+        from library_feedback
+        <where>
+            <if test="libraryFeedback.feedbackId != null and libraryFeedback.feedbackId != ''">
+                and feedback_id = #{libraryFeedback.feedbackId}
+            </if>
+            <if test="libraryFeedback.schoolId != null and libraryFeedback.schoolId != ''">
+                and school_id = #{libraryFeedback.schoolId}
+            </if>
+            <if test="libraryFeedback.userId != null and libraryFeedback.userId != ''">
+                and user_id = #{libraryFeedback.userId}
+            </if>
+            <if test="libraryFeedback.title != null and libraryFeedback.title != ''">
+                and title = #{libraryFeedback.title}
+            </if>
+            <if test="libraryFeedback.context != null and libraryFeedback.context != ''">
+                and context = #{libraryFeedback.context}
+            </if>
+            <if test="libraryFeedback.tag != null">
+                and tag = #{libraryFeedback.tag}
+            </if>
+            <if test="libraryFeedback.date != null">
+                and date = #{libraryFeedback.date}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from library_feedback
+        <where>
+            <if test="feedbackId != null and feedbackId != ''">
+                and feedback_id = #{feedbackId}
+            </if>
+            <if test="schoolId != null and schoolId != ''">
+                and school_id = #{schoolId}
+            </if>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="context != null and context != ''">
+                and context = #{context}
+            </if>
+            <if test="tag != null">
+                and tag = #{tag}
+            </if>
+            <if test="date != null">
+                and date = #{date}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="feedbackId" useGeneratedKeys="true">
+        insert into library_feedback(feedback_id, school_id, user_id, title, context, tag, date)
+        values (#{feedbackId}, #{schoolId}, #{userId}, #{title}, #{context}, #{tag}, #{date})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="feedbackId" useGeneratedKeys="true">
+        insert into library_feedback(school_id, user_id, title, context, tag, date)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.schoolId}, #{entity.userId}, #{entity.title}, #{entity.context}, #{entity.tag}, #{entity.date})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="feedbackId" useGeneratedKeys="true">
+        insert into library_feedback(school_id, user_id, title, context, tag, date)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.schoolId}, #{entity.userId}, #{entity.title}, #{entity.context}, #{entity.tag}, #{entity.date})
+        </foreach>
+        on duplicate key update
+        school_id = values(school_id),
+        user_id = values(user_id),
+        title = values(title),
+        context = values(context),
+        tag = values(tag),
+        date = values(date)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update library_feedback
+        <set>
+            <if test="schoolId != null and schoolId != ''">
+                school_id = #{schoolId},
+            </if>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId},
+            </if>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="context != null and context != ''">
+                context = #{context},
+            </if>
+            <if test="tag != null">
+                tag = #{tag},
+            </if>
+            <if test="date != null">
+                date = #{date},
+            </if>
+        </set>
+        where feedback_id = #{feedbackId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from library_feedback
+        where feedback_id = #{feedbackId}
+    </delete>
+
+</mapper>
+
