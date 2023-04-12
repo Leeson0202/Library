@@ -12,10 +12,5 @@
             <view class="label">
                 邮箱</view>
         </view>
-        <view class="line-item">
-            <view class="label">
-                密码</view>
-        </view>
-
     </view>
 </view>

@@ -20,6 +20,9 @@
             <view class="line-item">
                 帮助与反馈
             </view>
+            <view class="line-item" bindtap="toPrivate">
+                隐私政策
+            </view>
             <view class="line-item">
                 关于
             </view>

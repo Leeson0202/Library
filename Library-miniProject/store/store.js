@@ -11,10 +11,6 @@ import {
     observable
 } from 'mobx-miniprogram';
 import api from '../utils/api';
-import {
-    setStorageSyncSecond,
-    getStorageSyncTime
-} from '../utils/storage'
 
 export const store = observable({
     baseUrl: "https://api.library.leeson.cool",

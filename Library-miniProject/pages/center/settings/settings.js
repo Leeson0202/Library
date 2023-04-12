@@ -19,10 +19,10 @@ Page({
     logout() {
         this.InitData();
         wx.reLaunch({
-          url: '/pages/center/login/login',
+            url: '/pages/center/login/login',
         })
     },
-    
+
 
     /**
      * 生命周期函数--监听页面加载
@@ -31,12 +31,12 @@ Page({
         this.storeBindings = createStoreBindings(this, {
             store,
             fields: ['userInfo', 'hasUserInfo', 'hasLogin'],
-            actions: ['GetUserInfo','InitData','CheckError']
+            actions: ['GetUserInfo', 'InitData', 'CheckError']
         });
 
     },
 
-  
+
 
     /**
      * 生命周期函数--监听页面显示
@@ -56,9 +56,14 @@ Page({
     },
 
 
-    toUser(){
+    toUser() {
         wx.navigateTo({
-          url: '/pages/center/user/user',
+            url: '/pages/center/user/user',
+        })
+    },
+    toPrivate() {
+        wx.navigateTo({
+            url: '/pages/center/login/private/private',
         })
     }
 })
