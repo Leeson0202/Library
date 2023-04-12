@@ -110,6 +110,13 @@
                     "query": "tag=0&identify=18523681435",
                     "launchMode": "default",
                     "scene": null
+                },
+                {
+                    "name": "",
+                    "pathName": "pages/function/notify/notify",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
                 }
             ]
         }

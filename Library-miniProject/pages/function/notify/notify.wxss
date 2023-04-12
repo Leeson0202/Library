@@ -26,8 +26,8 @@
     margin: 0 0 0 20rpx;
     height: 32rpx;
     overflow: hidden;
-    font-size: 26rpx;
-    font-weight: 300;
+    font-size: 24rpx;
+    font-weight: 400;
 }
 
 .item-more {

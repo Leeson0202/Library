@@ -26,7 +26,8 @@ public class RedisTool {
         INFO("school:%s:info"), // 储存信息{schoolId/libraryId/roomId/ seat}:Info
         SIMPLE("school:%s:simple"), // {school}:simple
         ROOM("school:%s:roomId"), // 房间信息+seat信息 {roomId}:roomId
-        RECEIVE("receive:%s:%s:%s"), // 预约信息 {seatId/userId}:{day}:{timeIdx}  true/false
+        RECEIVE("school:%s:%s:%s:receive"), // 预约信息 {seatId/userId}:{day}:{timeIdx}  true/false
+        FAST("school:%s:%s:fast"), // 快速预约信息 {seatId/userId}:{day} true/false
         ONLINE("receive:%s:online"), // 用户在线 {userId}:online
         SEED("receive:%s:seed"); // 用户打卡 {userId}:seed     1分钟
 
@@ -52,6 +53,7 @@ public class RedisTool {
         if (StringUtils.isEmpty(key)) return;
         this.redisTemplate.opsForValue().set(key, JSON.toJSONString(data), timeout, unit);
     }
+
 
     public String get(String key) {
         if (StringUtils.isEmpty(key)) return null;

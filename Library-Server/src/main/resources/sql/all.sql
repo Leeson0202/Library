@@ -401,8 +401,8 @@ create table school_notification
     `date`          datetime comment '发布日期'
 );
 insert into school_notification
-values ('kdjabcdakabedcvd', 'dcajhbadhcavacda', '', '关于寒假闭馆通知',
-        '劳动节放假通知，本馆将于10.1正式放假5天，放假时间为10.1-10.5，10.6正常开馆。', 10, '20220210100000');
+values ('kdjabcdakabedcvd', 'dcajhbadhcavacda', '12344321', '关于寒假闭馆通知',
+        '劳动节放假通知，本馆将于10.1正式放假5天，放假时间为10.1-10.5，10.6正常开馆。', 10, '20220910100000');
 
 -- 预约规则
 drop table if exists school_rule;

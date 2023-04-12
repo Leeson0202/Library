@@ -104,7 +104,7 @@
         insert into receive_item(receive_id, user_id, library_id, room_id, seat_id, receive_date, time_idx, time)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.receiveId},#{entity.userId}, #{entity.libraryId}, #{entity.roomId}, #{entity.seatId},
+            (#{entity.receiveId}, #{entity.userId}, #{entity.libraryId}, #{entity.roomId}, #{entity.seatId},
             #{entity.receiveDate}, #{entity.timeIdx}, #{entity.time})
         </foreach>
     </insert>

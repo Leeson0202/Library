@@ -48,18 +48,28 @@ public class SmsUtil {
         }
     }
 
+    public boolean sendMsg(String phone,Opt opt){
+        SendSmsRequest request = new SendSmsRequest();
+        request.setSignName("SMS_154950909".equals(opt.toString()) ? "阿里云短信测试" : signName); // 签名
+        request.setTemplateCode(opt.toString());  // 注册？登陆？改？
+        request.setPhoneNumbers(phone);
+        request.setTemplateParam("");
+        return this.sent(request);
+    }
 
-    public boolean send(String phone, Opt opt, String code) {
 
-        DefaultProfile profile = DefaultProfile.getProfile(regionId, accessKeyId, secret);
-
-        IAcsClient client = new DefaultAcsClient(profile);
+    public boolean sendCode(String phone, Opt opt, String code) {
         SendSmsRequest request = new SendSmsRequest();
         request.setSignName("SMS_154950909".equals(opt.toString()) ? "阿里云短信测试" : signName); // 签名
         request.setTemplateCode(opt.toString());  // 注册？登陆？改？
         request.setPhoneNumbers(phone);
         request.setTemplateParam("{\"code\":\"" + code + "\"}");
+        return this.sent(request);
+    }
 
+    private boolean sent(SendSmsRequest request) {
+        DefaultProfile profile = DefaultProfile.getProfile(regionId, accessKeyId, secret);
+        IAcsClient client = new DefaultAcsClient(profile);
         try {
             SendSmsResponse response = client.getAcsResponse(request);
             String reCode = response.getCode();

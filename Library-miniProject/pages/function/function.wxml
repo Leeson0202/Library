@@ -30,10 +30,15 @@
             </view>
         </view>
     </view>
+
     <!-- 日程 -->
     <view class="receive-block">
-        <view style="font-size: 30rpx; color: #555; font-weight: 500;">
-            我的计划
+        <view style="font-size: 30rpx; color: #555; font-weight: 500;line-height: 40rpx;">
+            <view style="display: inline-block;"> 我的计划 </view>
+            <!-- 通知 -->
+            <view class="top-notify" bindtap="notifyHandel">
+                {{notifyText}}
+            </view>
         </view>
         <view wx:if="{{receiveList==null || receiveList.length==0}}" style="width: 100%; margin: auto; margin-top: 100rpx; padding-bottom:30rpx;text-align: center; color: #ccc;">
             没有行程

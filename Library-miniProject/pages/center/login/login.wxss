@@ -4,6 +4,7 @@
     width: calc(100% - 80rpx);
     padding: 50rpx 40rpx;
 }
+
 .login-title-block {
     font-size: 38rpx;
 }
@@ -20,13 +21,16 @@
     border-bottom: 1rpx solid #ddd;
 }
 
-.input{
+.input {
     display: inline-block;
     position: relative;
     top: 10rpx;
     font-size: 32rpx;
 }
-.load-submit1{
+
+
+/* 按钮 */
+.load-submit1 {
     width: 90%;
     height: 80rpx;
     line-height: 80rpx;
@@ -38,16 +42,21 @@
     font-size: 30rpx;
     color: #666;
 }
-.load-submit1:hover{
+
+.load-submit1:hover {
     background-color: #ddd;
 }
-.other-option{
-    margin: auto;
-    margin-top: 44rpx;
-    text-align: center;
-    font-size: 24rpx;
-    color: rgb(110, 124, 204);
+.op{
+    margin-top: 40rpx;
+    font-size: 26rpx;
 }
 
+.agreement {
+    float: left;
+}
 
-
+.other-option {
+    float: right;
+    margin-right: 5%;
+    color: rgb(110, 124, 204);
+}

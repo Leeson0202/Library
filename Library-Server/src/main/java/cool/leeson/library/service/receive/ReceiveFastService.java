@@ -66,4 +66,5 @@ public class ReceiveFastService {
         receiveFast.setOpen(i);
         return this.update(receiveFast);
     }
+
 }

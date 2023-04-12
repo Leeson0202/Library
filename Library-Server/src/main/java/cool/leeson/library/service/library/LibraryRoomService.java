@@ -117,8 +117,10 @@ public class LibraryRoomService {
             String seatKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), seat.getSeatId(), day, idx);
             String s = redisTool.get(seatKey);
             s = JSON.parseObject(s, String.class);
+            seatKey = String.format(RedisTool.FormatKey.FAST.toString(), seat.getSeatId(), day);
+            String s1 = redisTool.get(seatKey);
             // 有就直接拿出来用
-            seat.setRed("true".equals(s));
+            seat.setRed("true".equals(s) || "true".equals(s1));
         }
         return ResMap.ok(libraryRoom);
     }

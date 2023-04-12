@@ -3,6 +3,7 @@
 
 <view>
     <view class="login-block" wx:if="{{tag==1 || tag==0}}">
+        <!-- 提示信息 -->
         <view class="login-title-block">
             登陆体验更多精彩
             <view class="login-title" wx:if="{{tag==0}}">
@@ -11,6 +12,7 @@
             <view class="login-title" wx:if="{{tag==1}}">
                 未注册邮箱登录后将自动创建账号</view>
         </view>
+        <!-- 输入框 -->
         <view class="login-mian-block">
             <view wx:if="{{tag==0}}">
                 <text style="display: inline-block;font-size: 32rpx;">+86</text>
@@ -20,20 +22,23 @@
                 <input class="input" type="email" focus="true" value="{{identify}}" bindinput="updateIdentify" placeholder="输入邮箱" />
             </view>
         </view>
+        <!-- 协议相关 -->
+        <!-- 按钮 -->
         <view class="load-submit1" bindtap="login">
             发送验证码
         </view>
         <!-- 更改登陆方式 -->
-        <view wx:if="{{tag==0}}" class="other-option">
-            <view style="display: inline-block;" bindtap="changeLoginMethod" data-tag="{{1}}">
-                邮箱登陆
+        <view class="op">
+            <view class="agreement">
+                登陆即代表您已同意
+                <text style="color: rgb(110, 124, 204);" bindtap="toPrivate">《隐私政策》</text>
+                
+            </view>
+            <view class="other-option" bindtap="changeLoginMethod">
+                {{ tag==1?'手机号登陆':'邮箱登陆' }}
             </view>
         </view>
-        <view wx:if="{{tag==1}}" class="other-option">
-            <view style="display: inline-block;" bindtap="changeLoginMethod" data-tag="{{0}}">
-                手机号登陆
-            </view>
-        </view>
+
     </view>
 
 

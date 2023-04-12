@@ -96,12 +96,12 @@ public class LoginService {
         log.info(tel + " 正在发送短信");
         String code = CodeUtil.createCode();
         // 测试
-//        boolean send = new SmsUtil().send(SmsUtil.Opt.Test, tel, code);
+//        boolean sendCode = new SmsUtil().sendCode(SmsUtil.Opt.Test, tel, code);
 //        // 实际
 
         boolean send = false;
-        if (user == null) send = smsUtil.send(tel, SmsUtil.Opt.Register, code);
-        else send = smsUtil.send(tel, SmsUtil.Opt.Login, code);
+        if (user == null) send = smsUtil.sendCode(tel, SmsUtil.Opt.Register, code);
+        else send = smsUtil.sendCode(tel, SmsUtil.Opt.Login, code);
         if (!send) {
             log.error(tel + "验证码发送失败");
             return ResMap.err("验证码发送失败");

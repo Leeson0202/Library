@@ -1,5 +1,6 @@
 package cool.leeson.library.controller.library;
 
+import com.aliyuncs.utils.StringUtils;
 import cool.leeson.library.entity.library.SchoolNotification;
 import cool.leeson.library.service.library.SchoolNotificationService;
 import cool.leeson.library.util.ResMap;
@@ -32,6 +33,7 @@ public class SchoolNotificationController {
      */
     @GetMapping
     public Object queryByPage(SchoolNotification schoolNotification, Integer page, Integer size) {
+        if (StringUtils.isEmpty(schoolNotification.getSchoolId())) return ResMap.err("schoolId为空");
         return ResMap.ok(this.schoolNotificationService.queryByPage(schoolNotification, PageRequest.of(page, size, Sort.by("date").descending())));
     }
 

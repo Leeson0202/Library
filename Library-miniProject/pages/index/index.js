@@ -2,6 +2,9 @@
 import api from '../../utils/api'
 // 引入ecahrt.js
 import * as echarts from '../../ec-canvas/echarts';
+import {
+    store
+} from '../../store/store'
 
 // 获取应用实例
 const app = getApp()
@@ -56,17 +59,17 @@ function getOption() {
                 borderRadius: 4
             },
             label: {
-              alignTo: 'edge',
-              formatter: '{name|{b}}\n{time|{c} 人}',
-              minMargin: 5,
-              edgeDistance: 10,
-              lineHeight: 15,
-              rich: {
-                time: {
-                  fontSize: 10,
-                  color: '#999'
+                alignTo: 'edge',
+                formatter: '{name|{b}}\n{time|{c} 人}',
+                minMargin: 5,
+                edgeDistance: 10,
+                lineHeight: 15,
+                rich: {
+                    time: {
+                        fontSize: 10,
+                        color: '#999'
+                    }
                 }
-              }
             },
             data: [{
                     value: 40,
@@ -87,17 +90,16 @@ function getOption() {
 
 Page({
     data: {
-        notifyText: "劳动节放假通知，本馆将于5.1正式放假三天，放假时间为5.1-5.3，5.4正常开馆",
         ec: {
             onInit: initChart
         }
 
     },
-    notifyHandel() {
-        wx.navigateTo({
-            url: './notify/notify',
-        })
+
+    onLoad() {
+
     },
-    onLoad() {},
+    onShow() {
+    },
     onReady() {},
 })

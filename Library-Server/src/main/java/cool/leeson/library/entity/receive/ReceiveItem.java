@@ -51,5 +51,12 @@ public class ReceiveItem implements Serializable {
      */
     private Date time;
 
+    public ReceiveItem(ReceiveFast receiveFast) {
+        this.userId = receiveFast.getUserId();
+        this.libraryId = receiveFast.getLibraryId();
+        this.roomId = receiveFast.getRoomId();
+        this.seatId = receiveFast.getSeatId();
+    }
+
 }
 

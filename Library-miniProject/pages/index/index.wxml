@@ -1,9 +1,6 @@
 <!--index.wxml-->
 <view style="width:100%; position: absolute; top: 0; z-index: 10000;background-color: #fff;">
-    <!-- 消息浮动 -->
-    <view class="top-notify flex-row" bindtap="notifyHandel">
-        <text class="r" direction="left">{{notifyText}}</text>
-    </view>
+ 
     <!-- 广告位 -->
     <view class="ad-block">
         <view style="height: 100%;width: 100%;">
@@ -36,6 +33,7 @@
 
             </view>
         </view>
+
 
         <!-- 图表格  -->
         <view class="chart" style="width: 700rpx; height: 550rpx;">

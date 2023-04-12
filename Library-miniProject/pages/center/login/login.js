@@ -15,7 +15,7 @@ Page({
     onLoad() {
         this.storeBindings = createStoreBindings(this, {
             store,
-            actions: ['InitData', "Login","GetUserInfo"]
+            actions: ['InitData', "Login", "GetUserInfo"]
         })
     },
     onUnload() {
@@ -28,9 +28,10 @@ Page({
         })
     },
     // 改变登陆方式
-    changeLoginMethod(e) {
+    changeLoginMethod() {
+        console.log(this.data.tag);
         this.setData({
-            tag: e.currentTarget.dataset.tag,
+            tag: this.data.tag > 0 ? 0 : 1,
             identify: ""
         })
     },
@@ -89,5 +90,11 @@ Page({
                 url: '/pages/center/login/confirm/confirm?tag=' + this.data.tag + "&identify=" + this.data.identify,
             })
         }
+    },
+    toPrivate() {
+        wx.navigateTo({
+            url: './private/private'
+        })
+
     }
 })

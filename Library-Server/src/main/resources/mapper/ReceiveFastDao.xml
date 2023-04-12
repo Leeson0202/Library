@@ -29,22 +29,22 @@
         user_id, school_id, library_id, room_id, seat_id, open
         from receive_fast
         <where>
-            <if test="userId != null and userId != ''">
+            <if test="receiveFast.userId != null and receiveFast.userId != ''">
                 and user_id = #{userId}
             </if>
-            <if test="schoolId != null and schoolId != ''">
+            <if test="receiveFast.schoolId != null and receiveFast.schoolId != ''">
                 and school_id = #{schoolId}
             </if>
-            <if test="libraryId != null and libraryId != ''">
+            <if test="receiveFast.libraryId != null and receiveFast.libraryId != ''">
                 and library_id = #{libraryId}
             </if>
-            <if test="roomId != null and roomId != ''">
+            <if test="receiveFast.roomId != null and receiveFast.roomId != ''">
                 and room_id = #{roomId}
             </if>
-            <if test="seatId != null and seatId != ''">
+            <if test="receiveFast.seatId != null and receiveFast.seatId != ''">
                 and seat_id = #{seatId}
             </if>
-            <if test="open != null">
+            <if test="receiveFast.open != null">
                 and open = #{open}
             </if>
         </where>

@@ -26,7 +26,7 @@
                 </template>
                 <el-menu-item index="notification">通知管理</el-menu-item>
                 <el-menu-item index="library">图书馆管理</el-menu-item>
-                <el-menu-item index="seat">座位管理</el-menu-item>
+                <el-menu-item index="seat">房间管理</el-menu-item>
             </el-submenu>
             <el-submenu index="2">
                 <template slot="title">

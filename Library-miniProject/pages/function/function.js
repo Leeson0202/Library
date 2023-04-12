@@ -17,6 +17,7 @@ Page({
         receiveList: [],
         status: 0,
         online: 0,
+        notifyText: "通知",
 
 
     },
@@ -34,14 +35,21 @@ Page({
     },
     init() {
         // console.log(this);
-        if (!store.hasSchool || !store.hasSchool) return;
+        if (!store.hasLogin || !store.hasSchool) {
+            wwxwx.showToast({
+                title: '请登陆',
+                icon: "none"
+            })
+            return
+        }
+        this.getNotifications();
         this.getSchedule();
         this.getUserOnline();
     },
 
     onShow() {
         let that = this
-        setTimeout(() => that.init(), 500)
+        setTimeout(() => that.init(), 1000)
     },
 
 
@@ -97,6 +105,24 @@ Page({
         })
 
     },
+    // 获取通知
+    getNotifications() {
+        let that = this
+        if (!store.hasSchool || !store.hasSchool) return;
+        console.log(store.school);
+        let form = {
+            schoolId: store.school.schoolId,
+            page: 0,
+            size: 2
+        }
+        api.queryNotifications(form).then(data => {
+            // console.log(data);
+            if (data.data.content.length == 0) return;
+            that.setData({
+                notifyText: data.data.content[0].title
+            })
+        })
+    },
     // 点击预约事件
     bookHandel(e) {
         // console.log(e.currentTarget.dataset.tag);
@@ -112,6 +138,12 @@ Page({
             })
         }
 
+    },
+    // 通知按钮
+    notifyHandel() {
+        wx.navigateTo({
+            url: './notify/notify',
+        })
     },
     // 入座或离座按钮
     downUp() {

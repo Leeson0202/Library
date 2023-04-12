@@ -132,48 +132,8 @@
     }
 }
 
-/* 通知 */
-.top-notify {
-    height: 40rpx;
-    /* background-color: #fcfcfc; */
-    font-size: 26rpx;
-    font-weight: 400;
-    overflow: hidden;
-    box-sizing: border-box;
-    background: #fff;
-}
-
-.r {
-    white-space: nowrap;
-    animation: 8s loop linear infinite normal;
-    display: inline-block;
-    vertical-align: top;
-    font-size: 26rpx;
-    color: #333;
-}
 
 
-@keyframes loop {
-    0% {
-        transform: translateX(3%);
-        -webkit-transform: translateX(3%);
-    }
-
-    30% {
-        transform: translateX(3%);
-        -webkit-transform: translateX(3%);
-    }
-
-    80% {
-        transform: translateX(-20%);
-        -webkit-transform: translateX(-20%);
-    }
-
-    100% {
-        transform: translateX(-20%);
-        -webkit-transform: translateX(-20%);
-    }
-}
 
 /* charts */
 

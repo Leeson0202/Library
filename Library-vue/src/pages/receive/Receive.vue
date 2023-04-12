@@ -81,13 +81,9 @@
                             }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="time" label="创建时间" width="100">
+                    <el-table-column prop="time" label="创建时间" width="90">
                         <template slot-scope="scope">
-                            {{
-                                scope.row.time.slice(0, 10) +
-                                " " +
-                                scope.row.time.slice(11, 19)
-                            }}
+                            {{ scope.row.time.slice(0, 19) }}
                         </template>
                     </el-table-column>
 
@@ -194,6 +190,9 @@ export default {
             };
             api.queryReceiveAll(form).then((data) => {
                 this.receives = data.data.content;
+                data.data.content.forEach((el) => {
+                    el.time = new Date(el.time).toLocaleString();
+                });
                 this.totalElements = data.data.totalElements;
             });
         },

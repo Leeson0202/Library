@@ -28,7 +28,7 @@
                         {{
                             scope.row.date.slice(0, 10) +
                             " " +
-                            scope.row.date.slice(11, 19)
+                            scope.row.date.slice(10, 19)
                         }}
                     </span>
                 </template>
@@ -156,6 +156,9 @@ export default {
             let form = { schoolId, page, size: this.size };
             api.queryNotifications(form).then((data) => {
                 this.totalElements = data.data.totalElements;
+                data.data.content.forEach((el) => {
+                    el.date = new Date(el.date).toLocaleString();
+                });
                 this.tableData = data.data.content;
             });
         },

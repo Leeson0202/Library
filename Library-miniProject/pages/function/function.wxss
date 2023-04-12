@@ -37,6 +37,22 @@ page {
     text-align: center;
 }
 
+/* 通知 */
+
+.top-notify {
+    /* background-color: #fcfcfc; */
+    float: right;
+    font-weight: 400;
+    font-size: 22rpx;
+    background: #fff;
+    text-align: right;
+    color: rgb(247, 126, 126);
+}
+
+
+
+/* shedule */
+
 .receive-block {
     margin: auto;
     padding: 15rpx 20rpx;

@@ -92,7 +92,7 @@ export default {
 .go {
     float: right;
     position: relative;
-    margin-right: 20px;
+    margin-right: 15px;
     float: right;
     height: 160px;
     width: 160px;

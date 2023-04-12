@@ -71,8 +71,10 @@ public class EmailUtil {
             transport.sendMessage(message, message.getAllRecipients());
             //关闭连接
             transport.close();
+            log.info(destEmail + "邮箱发送成功");
             return true;
         } catch (Exception e) {
+            log.info(destEmail + "邮箱发送失败");
             return false;
         }
     }

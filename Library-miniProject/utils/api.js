@@ -71,6 +71,15 @@ class Api {
         today,
         idx
     })
+    /**
+     * 通知
+     */
+
+    queryNotifications = (data) => request.get('notification', data)
+    queryNotification = (notificationId) => request.get('notification/id/' + notificationId)
+    readNotification = (data) => request.put('notification', data)
+
+
 
 
     /**
@@ -105,6 +114,10 @@ class Api {
         seed,
         tag
     })
+    /**
+     * 信息反馈
+     */
+    feedback = data => request.post('feedback', data)
 
 }
 const api = new Api()

@@ -1,9 +1,9 @@
 {
     "pages": [
         "pages/index/index",
-        "pages/index/notify/notify",
-        "pages/index/notify/notifyItem/notifyItem",
         "pages/function/function",
+        "pages/function/notify/notify",
+        "pages/function/notify/notifyItem/notifyItem",
         "pages/function/bookGuide/bookGuide",
         "pages/function/book/book",
         "pages/center/center",
@@ -20,7 +20,8 @@
         "pages/center/mycredit/mycredit",
         "pages/center/messages/messages",
         "pages/center/feedback/feedback",
-        "pages/center/user/user"
+        "pages/center/user/user",
+        "pages/center/login/private/private"
     ],
     "window": {
         "navigationBarBackgroundColor": "#fff",
