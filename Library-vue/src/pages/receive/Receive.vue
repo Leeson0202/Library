@@ -10,6 +10,7 @@
                     @change="handleChange"
                     style="width: 30%; min-width: 360px"
                 ></el-cascader>
+                <i class="el-icon-refresh" @click="queryReceiveAll()"></i>
             </template>
         </div>
         <div class="receive-show">
@@ -131,6 +132,7 @@
 //例如：import 《组件名称》 from ‘《组件路径》‘;
 
 import api from "@/utils/api";
+import { Message } from "element-ui";
 
 export default {
     name: "Receive",
@@ -177,12 +179,21 @@ export default {
             console.log(index, row);
         },
         handleDelete(index, row) {
-            api.deleteReceive(row.receiveId, row.userId).then((data) => {
-                console.log(data);
-                this.queryReceiveAll();
-            });
+            this.$confirm("确定删除？")
+                .then((_) => {
+                    api.deleteReceive(row.receiveId, row.userId).then(
+                        (data) => {
+                            Message.success("删除成功");
+                            this.queryReceiveAll();
+                        }
+                    );
+                    done();
+                })
+                .catch((_) => {});
         },
+        // 查询
         queryReceiveAll() {
+            if (this.roomId == null || this.roomId == "") return;
             let form = {
                 roomId: this.roomId,
                 page: this.pageIdx,
@@ -223,9 +234,18 @@ export default {
     width: 100%;
     display: block;
     text-align: left;
+    .el-icon-refresh {
+        position: relative;
+        margin-left: 20px;
+        top: 6px;
+        font-size: 30px;
+        font-weight: 500;
+        color: #999;
+        cursor: pointer;
+    }
 }
 .receive-show {
-    height: 100%;
+    height: calc(100% - 60px);
     width: 100%;
     .pagination {
         margin-top: 26px;

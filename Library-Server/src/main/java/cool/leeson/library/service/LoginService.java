@@ -49,9 +49,8 @@ public class LoginService {
      *
      * @return 测试
      */
-    public Map<String, Object> test() {
-        String userId = "12344321";
-        String token = this.redisTemplate.opsForValue().get("12344321:token");
+    public Map<String, Object> test(String userId) {
+        String token = this.redisTemplate.opsForValue().get(userId + ":token");
         if (StringUtils.isEmpty(token)) {
             return this.loginSuccess(userId, -1);
         }
@@ -179,7 +178,7 @@ public class LoginService {
         String code = CodeUtil.createCode();
         boolean sent = false;
         if (user == null) sent = emailUtil.send(email, EmailUtil.Opt.Register, code);
-        else emailUtil.send(email, EmailUtil.Opt.Login, code);
+        else sent = emailUtil.send(email, EmailUtil.Opt.Login, code);
         if (!sent) {
             log.info(email + "验证码发送失败");
             return ResMap.err("验证码发送失败");

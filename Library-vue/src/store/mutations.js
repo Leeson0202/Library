@@ -1,5 +1,5 @@
 export default {
-    //执行加
+    //初始化
     launch(state, value) {
         console.log("launch被调用了");
         state.user.userInfo = {
@@ -8,6 +8,18 @@ export default {
         };
         state.user.hasLogin = false;
         state.user.hasUserInfo = false;
+        state.school = {
+            hasSchool: false,
+            schoolId: null,
+            name: null,
+            descs: null,
+            icon: null,
+            background: null,
+            libraries: null,
+            schoolRule: null,
+
+            options: [],
+        };
     },
     updateLogin(state, value) {
         state.user.hasLogin = value;

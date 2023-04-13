@@ -11,14 +11,17 @@ drop table if exists user;
 create table user
 (
     user_id   varchar(100) primary key comment 'id',
-    phone_num varchar(20) unique comment '电话',
-    email     varchar(200) unique comment '邮件',
+    phone_num varchar(20) comment '电话',
+    email     varchar(200) comment '邮件',
     pwd       varchar(30) comment '密码',
     openid    varchar(100) unique comment '微信id'
 
 );
 
-insert into user value ('12344321', '18523681435', 'asedrfa@163.com', null, null);
+insert into user
+values ('admin', '1', 'asedrfa@163.com', null, null),
+       ('test', '1', 'asedrfa@icloud.com', null, null)
+;
 
 -- user_info 用户信息
 -- id      微信id     会话密钥    头像      城市   国家     性别     语言      昵称      真实姓名 年龄   城市     学生id    背景
@@ -43,7 +46,9 @@ create table user_info
 );
 
 insert into user_info(user_id, nick_name, gender, age, avatar_url)
-values ('12344321', 'Leeson', '男', 23,
+values ('admin', 'Leeson', '男', 23,
+        'https://img1.baidu.com/it/u=1047817807,648960205&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500'),
+       ('test', 'Leeson', '男', 23,
         'https://img1.baidu.com/it/u=1047817807,648960205&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500');
 
 -- user_class 用户类型 1表示管理 0 表示
@@ -68,8 +73,6 @@ create table user_record
     all_rank   smallint comment '总排名'       default 0
 
 );
-insert into user_record(user_id)
-values ('12344321');
 
 -- 用户信用记录
 drop table if exists user_credit;
@@ -107,7 +110,8 @@ create table user_school
 );
 
 insert into user_school
-values ('knadjcva', '12344321', 'dcajhbadhcavacda', true);
+values ('knadjcva', 'admin', 'schoolId', true), # 管理员
+       ('asdjsadv', 'test', 'schoolId', false); # 测试
 
 
 
@@ -125,7 +129,7 @@ create table school
     icon       varchar(500) comment '图标',
     background varchar(500) comment '背景'
 );
-insert into school value ('dcajhbadhcavacda', '重庆邮电大学',
+insert into school value ('schoolId', '重庆邮电大学',
                           '重庆邮电大学（Chongqing University of Posts and Telecommunications）简称“重邮”，坐落于直辖市——重庆市，是中华人民共和国工业和信息化部与重庆市人民政府共建的教学研究型大学，入选国家“中西部高校基础能力建设工程”、国家“卓越工程师教育培养计划”，是国家“2011计划”核心协同高校、中国政府奖学金来华留学生接收院校、国家大学生文化素质教育基地、国家布点设立并重点建设的四所邮电高校之一，重庆市一流学科建设高校，CDIO工程教育联盟成员单位。',
                           'https://bkimg.cdn.bcebos.com/pic/3c6d55fbb2fb43163d37add525a4462309f7d371?x-bce-process=image/resize,m_lfit,w_536,limit_1',
                           '/img/schoolbg.jpeg');
@@ -145,10 +149,10 @@ create table library
     tt         time comment '时段长度'
 );
 insert into library
-values ('jdgchvauajkuvbh', 'dcajhbadhcavacda', '数字图书馆', '新图书馆',
+values ('jdgchvauajkuvbh', 'schoolId', '数字图书馆', '新图书馆',
         'http://ehall.cqupt.edu.cn/new/portal/css/dark/millennium/images/bg/bg.jpg', true, '8:00:00', '22:00:00',
         '00:30:00'),
-       ('jdgchvauajkavavvbh', 'dcajhbadhcavacda', '老图书馆', '老图书馆',
+       ('jdgchvauajkavavvbh', 'schoolId', '老图书馆', '老图书馆',
         'https://ids.cqupt.edu.cn/authserver/cquptDzTheme/static/web/dzimages/bg1.jpg', true, '8:00:00', '22:00:00',
         '00:30:00');
 
@@ -401,7 +405,7 @@ create table school_notification
     `date`          datetime comment '发布日期'
 );
 insert into school_notification
-values ('kdjabcdakabedcvd', 'dcajhbadhcavacda', '12344321', '关于寒假闭馆通知',
+values ('kdjabcdakabedcvd', 'schoolId', 'admin', '关于寒假闭馆通知',
         '劳动节放假通知，本馆将于10.1正式放假5天，放假时间为10.1-10.5，10.6正常开馆。', 10, '20220910100000');
 
 -- 预约规则
@@ -412,7 +416,7 @@ create table school_rule
     `context` text comment '内容'
 );
 insert into school_rule
-values ('dcajhbadhcavacda', '1、每天7：00开始，读者可以预约当日或次日的座位，预约成功后读者可以使用该座位至当日闭馆。预约系统登录用户名为学号/工号，密码为公共数据库密码。
+values ('schoolId', '1、每天7：00开始，读者可以预约当日或次日的座位，预约成功后读者可以使用该座位至当日闭馆。预约系统登录用户名为学号/工号，密码为公共数据库密码。
 2、读者可通过以下三种方式预约并使用当日座位
 (1)8：00之前预约当日座位，并在8：30之前通过门禁闸机刷卡入馆，系统即可自动完成签到。
 (2)当日其他开放时段，在馆外通过网络预约当日座位，并在预约成功后30分钟内前往图书馆通过门禁闸机刷卡入馆，系统即可自动完成签到。
@@ -496,6 +500,6 @@ create table receive_fast
 
 
 insert into receive_fast
-values ('12344321', 'dcajhbadhcavacda', 'jdgchvauajkuvbh', 'dsackacbjakcaw3', 'A1001', 1);
+values ('admin', 'schoolId', 'jdgchvauajkuvbh', 'dsackacbjakcaw3', 'A1001', 1);
 
 

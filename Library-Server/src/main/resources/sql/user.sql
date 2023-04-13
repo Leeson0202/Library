@@ -11,14 +11,17 @@ drop table if exists user;
 create table user
 (
     user_id   varchar(100) primary key comment 'id',
-    phone_num varchar(20) unique comment '电话',
-    email     varchar(200) unique comment '邮件',
+    phone_num varchar(20) comment '电话',
+    email     varchar(200) comment '邮件',
     pwd       varchar(30) comment '密码',
     openid    varchar(100) unique comment '微信id'
 
 );
 
-insert into user value ('12344321', '18523681435', 'asedrfa@163.com', null, null);
+insert into user
+values ('admin', '1', 'asedrfa@163.com', null, null),
+       ('test', '1', 'asedrfa@icloud.com', null, null)
+;
 
 -- user_info 用户信息
 -- id      微信id     会话密钥    头像      城市   国家     性别     语言      昵称      真实姓名 年龄   城市     学生id    背景
@@ -43,7 +46,9 @@ create table user_info
 );
 
 insert into user_info(user_id, nick_name, gender, age, avatar_url)
-values ('12344321', 'Leeson', '男', 23,
+values ('admin', 'Leeson', '男', 23,
+        'https://img1.baidu.com/it/u=1047817807,648960205&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500'),
+       ('test', 'Leeson', '男', 23,
         'https://img1.baidu.com/it/u=1047817807,648960205&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500');
 
 -- user_class 用户类型 1表示管理 0 表示
@@ -68,8 +73,6 @@ create table user_record
     all_rank   smallint comment '总排名'       default 0
 
 );
-insert into user_record(user_id)
-values ('12344321');
 
 -- 用户信用记录
 drop table if exists user_credit;
@@ -107,7 +110,8 @@ create table user_school
 );
 
 insert into user_school
-values ('knadjcva', '12344321', 'dcajhbadhcavacda', true);
+values ('knadjcva', 'admin', 'schoolId', true), # 管理员
+       ('asdjsadv', 'test', 'schoolId', false); # 测试
 
 
 

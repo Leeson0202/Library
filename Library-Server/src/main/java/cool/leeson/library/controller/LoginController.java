@@ -26,7 +26,12 @@ public class LoginController {
 
     @GetMapping("login/test")
     public Map<String, Object> test() throws MyException {
-        return this.loginService.test();
+        return this.loginService.test("test");
+    }
+
+    @GetMapping("login/admin")
+    public Map<String, Object> admin() throws MyException {
+        return this.loginService.test("admin");
     }
 
     /**

@@ -16,7 +16,7 @@ export default {
     // 重新登陆
     loginUpdate: () => http.get("api/update"),
     // 测试登陆
-    loginTest: () => http.get("api/login/test"),
+    loginTest: () => http.get("api/login/admin"),
     /**
      * 用户
      */

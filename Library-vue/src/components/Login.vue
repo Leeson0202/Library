@@ -44,14 +44,14 @@
                 <div
                     class="change-button"
                     v-if="loginMethod == 0"
-                    @click="changeMethod(1)"
+                    @click="loginMethod = 1"
                 >
                     切换为邮箱登陆
                 </div>
                 <div
                     class="change-button"
                     v-if="loginMethod == 1"
-                    @click="changeMethod(0)"
+                    @click="loginMethod = 0"
                 >
                     切换为手机号登陆
                 </div>
@@ -87,6 +87,10 @@ export default {
     methods: {
         // 获取验证码
         login() {
+            if (this.codeButtonText != "获取验证码") {
+                Message.warning("请稍后再试");
+                return;
+            }
             let that = this;
             if (this.loginMethod == 0 && this.tel != null && this.tel != "") {
                 api.loginTel(this.tel).then((data) => {
@@ -110,23 +114,24 @@ export default {
             var t = 60;
             that.codeButtonText = "" + t + "s";
             var timer = setInterval(function () {
-                if (--t < 0) {
+                that.codeButtonText = t + "s";
+                if (--t == 0) {
+                    that.codeButtonText = "获取验证码";
                     clearInterval(timer);
                 }
-                that.codeButtonText = "" + t + "s";
             }, 1000);
         },
+        // 验证码发送成功
         loginSuccess(data) {
+            // console.log(data);
             if (data.code == 200) {
                 Message.success("发送验证码成功");
             }
         },
-        changeMethod(value) {
-            this.loginMethod = value;
-        },
+        // 确定登陆
         confirm() {
             // test登陆
-            if (this.tel == "test" || this.email == "test") {
+            if (this.tel == "admin" || this.email == "admin") {
                 api.loginTest().then((data) => {
                     this.confirmSuccess(data);
                 });
@@ -162,6 +167,7 @@ export default {
                 path: "/",
             });
         },
+        // 初始化 判断是否登陆
         init() {
             if (this.$store.state.user.hasLogin == true) {
                 // 登陆成功
@@ -239,6 +245,7 @@ export default {
         width: 100px;
         float: right;
         margin-right: 5%;
+        font-size: 14px;
         text-align: center;
     }
     .submit {

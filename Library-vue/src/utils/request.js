@@ -3,6 +3,7 @@
 import axios from "axios";
 // 使用element-ui Message做消息提醒
 import { Message } from "element-ui";
+import store from "../store";
 //1. 创建新的axios实例，
 const service = axios.create({
     // 公共接口--这里注意后面会讲
@@ -42,8 +43,12 @@ service.interceptors.response.use(
         //接收到响应数据并成功后的一些共有的处理，关闭loading等
         // console.log(response.data);
         if (response.data.code == 401 || response.data.code == 402) {
+            store.commit("launch");
             Message.error("请登录");
             return;
+        }
+        if (response.data.code == 400 || response.data.code == 500 ) {
+            Message.error(response.data.msg);
         }
         return response.data;
     },

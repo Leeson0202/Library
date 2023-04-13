@@ -40,6 +40,6 @@ create table receive_fast
 
 
 insert into receive_fast
-values ('12344321', 'dcajhbadhcavacda', 'jdgchvauajkuvbh', 'dsackacbjakcaw3', 'A1001', 1);
+values ('admin', 'schoolId', 'jdgchvauajkuvbh', 'dsackacbjakcaw3', 'A1001', 1);
 
 
