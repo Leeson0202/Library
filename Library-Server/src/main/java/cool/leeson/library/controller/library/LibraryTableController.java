@@ -5,6 +5,7 @@ import cool.leeson.library.service.library.LibraryTableService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,6 +44,11 @@ public class LibraryTableController {
     @PostMapping
     public Map<String, Object> add(LibraryTable libraryTable) {
         return this.libraryTableService.insert(libraryTable);
+    }
+
+    @PostMapping("insert")
+    public Object insertOrUpdate(@RequestBody List<LibraryTable> libraryTables) {
+        return this.libraryTableService.insertOrUpdate(libraryTables);
     }
 
     /**

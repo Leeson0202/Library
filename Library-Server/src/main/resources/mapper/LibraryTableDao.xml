@@ -122,10 +122,11 @@
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="tableId" useGeneratedKeys="true">
-        insert into library_table(room_id, name, x, y, direction, width, height)
+        insert into library_table(table_id,room_id, name, x, y, direction, width, height)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.roomId}, #{entity.name}, #{entity.x}, #{entity.y}, #{entity.direction}, #{entity.width},
+            (#{entity.tableId},#{entity.roomId}, #{entity.name}, #{entity.x}, #{entity.y}, #{entity.direction},
+            #{entity.width},
             #{entity.height})
         </foreach>
         on duplicate key update

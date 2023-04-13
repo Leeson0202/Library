@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -88,6 +89,17 @@ public class LibraryTableService {
         this.libraryTableDao.insert(libraryTable);
         this.redisTool.deleteByPrefix("school"); // 删除缓存
         return ResMap.ok(libraryTable);
+    }
+
+    public Object insertOrUpdate(List<LibraryTable> libraryTables) {
+
+        for (LibraryTable libraryTable : libraryTables) {
+            if (libraryTable.getTableId() == null) {
+                libraryTable.setTableId(UUID.randomUUID().toString());
+            }
+        }
+        this.libraryTableDao.insertOrUpdateBatch(libraryTables);
+        return ResMap.ok("保存成功");
     }
 
     /**

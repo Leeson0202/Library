@@ -2,9 +2,12 @@ package cool.leeson.library.service.library;
 
 import com.alibaba.fastjson.JSON;
 import com.aliyuncs.utils.StringUtils;
+import cool.leeson.library.dao.LibraryRoomDao;
 import cool.leeson.library.dao.LibrarySeatDao;
+import cool.leeson.library.entity.library.LibraryRoom;
 import cool.leeson.library.entity.library.LibrarySeat;
 import cool.leeson.library.entity.tools.RedisTool;
+import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -27,6 +31,8 @@ import java.util.UUID;
 public class LibrarySeatService {
     @Resource
     private LibrarySeatDao librarySeatDao;
+    @Resource
+    private LibraryRoomDao libraryRoomDao;
     @Resource
     private RedisTool redisTool;
 
@@ -82,15 +88,31 @@ public class LibrarySeatService {
      * @param librarySeat 实例对象
      * @return 实例对象
      */
-    public Map<String, Object> insert(LibrarySeat librarySeat) {
+    public Map<String, Object> insert(LibrarySeat librarySeat) throws MyException {
         String seatId = UUID.randomUUID().toString();
         librarySeat.setSeatId(seatId);
         if (this.librarySeatDao.insert(librarySeat) == 0) {
             return ResMap.err();
         }
+        LibrarySeat librarySeat1 = new LibrarySeat();
+        librarySeat1.setRoomId(librarySeat.getRoomId());
+        long count = this.librarySeatDao.count(librarySeat1);
+        LibraryRoom libraryRoom = this.libraryRoomDao.queryById(librarySeat.getRoomId());
+        libraryRoom.setSeatNum((int) count - 1);
+        this.libraryRoomDao.update(libraryRoom);
         this.redisTool.deleteByPrefix("school"); // 删除缓存
 
         return this.queryById(seatId);
+    }
+
+    public Object insertOrUpdate(List<LibrarySeat> librarySeatList) {
+        for (LibrarySeat librarySeat : librarySeatList) {
+            if (librarySeat.getSeatId() == null) {
+                librarySeat.setSeatId(UUID.randomUUID().toString());
+            }
+        }
+        this.librarySeatDao.insertOrUpdateBatch(librarySeatList);
+        return ResMap.ok("保存成功");
     }
 
     /**
@@ -111,7 +133,14 @@ public class LibrarySeatService {
      * @param seatId 主键
      * @return 是否成功
      */
-    public Map<String, Object> deleteById(String seatId) {
+    public Map<String, Object> deleteById(String seatId) throws MyException {
+        LibrarySeat librarySeat = this.librarySeatDao.queryById(seatId);
+        LibrarySeat librarySeat1 = new LibrarySeat();
+        librarySeat1.setRoomId(librarySeat.getRoomId());
+        long count = this.librarySeatDao.count(librarySeat1);
+        LibraryRoom libraryRoom = this.libraryRoomDao.queryById(librarySeat.getRoomId());
+        libraryRoom.setSeatNum((int) count - 1);
+        this.libraryRoomDao.update(libraryRoom);
         if (this.librarySeatDao.deleteById(seatId) > 0) {
             return ResMap.ok();
         }

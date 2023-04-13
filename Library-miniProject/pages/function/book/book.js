@@ -381,7 +381,8 @@ Page({
             let tempX = parseInt(element.x);
             maxX = tempX > maxX ? tempX : maxX;
         })
-        let height = this.data.seatAreaWidth / maxX
+        console.log(maxX);
+        let height = this.data.seatAreaWidth / (maxX + 1)
         // console.log(maxX, this.data.seatAreaWidth, height);
         this.setData({
             seatScaleHeight: height

@@ -28,6 +28,10 @@ export default [
         component: (resolve) => require(["@/pages/receive/Receive"], resolve),
     },
     {
+        path: "receivefast",
+        component: (resolve) => require(["@/pages/receive/ReceiveFast"], resolve),
+    },
+    {
         path: "receiveRule",
         component: (resolve) =>
             require(["@/pages/receive/ReceiveRule"], resolve),
@@ -42,6 +46,11 @@ export default [
     {
         path: "feedback",
         component: (resolve) => require(["@/pages/feedback/Feedback"], resolve),
+    },
+    // user
+    {
+        path: "user",
+        component: (resolve) => require(["@/pages/user/User"], resolve),
     },
     // settings
     {

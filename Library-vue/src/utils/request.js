@@ -15,15 +15,15 @@ const service = axios.create({
 service.interceptors.request.use(
     (config) => {
         //发请求前做的一些处理，数据转化，配置请求头，设置token,设置loading等，根据需求去添加
-        // config.data = JSON.stringify(config.data); //数据转化,也可以使用qs转换
+        config.data = JSON.stringify(config.data); //数据转化,也可以使用qs转换 后端要加 @RequestBody
         config.headers = {
             token: localStorage.getItem("token"),
             "Content-Type": "application/json", //配置请求头
         };
-        if (config.method == "post" || config.method == "put") {
-            config.headers["Content-Type"] =
-                "application/x-www-form-urlencoded"; //配置请求头
-        }
+        // if (config.method == "post" || config.method == "put") {
+        //     config.headers["Content-Type"] =
+        //         "application/x-www-form-urlencoded"; //配置请求头
+        // }
         //如有需要：注意使用token的时候需要引入cookie方法或者用本地localStorage等方法，推荐js-cookie
         //const token = getCookie('名称');//这里取token之前，你肯定需要先拿到token,存一下
         //if(token){
@@ -47,7 +47,7 @@ service.interceptors.response.use(
             Message.error("请登录");
             return;
         }
-        if (response.data.code == 400 || response.data.code == 500 ) {
+        if (response.data.code == 400 || response.data.code == 500) {
             Message.error(response.data.msg);
         }
         return response.data;

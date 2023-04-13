@@ -86,6 +86,10 @@ public class LibraryRoomService {
         if (StringUtils.isEmpty(s) || "".equals(s)) {
             room = this.libraryRoomDao.queryById(roomId);
             if (room != null) {
+                LibrarySeat librarySeat = new LibrarySeat();
+                librarySeat.setRoomId(roomId);
+                long count = this.librarySeatDao.count(librarySeat);
+                room.setSeatNum((int) count);
                 // 储存到 redis
                 redisTool.set(infoKey, room);
             }
@@ -166,6 +170,12 @@ public class LibraryRoomService {
         this.libraryRoomDao.insert(libraryRoom);
         this.redisTool.deleteByPrefix("school"); // 删除缓存
         return ResMap.ok(libraryRoom);
+    }
+
+    public Object insertOrUpdateSeatTable(List<LibrarySeat> librarySeats, List<LibraryTable> libraryTables) {
+        this.librarySeatService.insertOrUpdate(librarySeats);
+        this.libraryTableService.insertOrUpdate(libraryTables);
+        return ResMap.ok("插入成功");
     }
 
     /**

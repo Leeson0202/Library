@@ -33,6 +33,7 @@
                     <i class="el-icon-date"></i>预约管理
                 </template>
                 <el-menu-item index="receive">预约管理</el-menu-item>
+                <el-menu-item index="receivefast">快速预约</el-menu-item>
                 <el-menu-item index="receiveRule">预约规则</el-menu-item>
             </el-submenu>
             <el-menu-item index="credit">
@@ -40,6 +41,10 @@
             </el-menu-item>
             <el-menu-item index="feedback">
                 <i class="el-icon-bell"></i>反馈消息
+            </el-menu-item>
+
+            <el-menu-item index="user">
+                <i class="el-icon-user"></i>用户管理
             </el-menu-item>
             <el-menu-item index="settings"
                 ><i class="el-icon-setting"></i>设置</el-menu-item

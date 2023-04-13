@@ -1,10 +1,12 @@
 package cool.leeson.library.controller.library;
 
 import cool.leeson.library.entity.library.LibrarySeat;
+import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.library.LibrarySeatService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,8 +43,13 @@ public class LibrarySeatController {
      * @return 新增结果
      */
     @PostMapping
-    public Map<String, Object> add(LibrarySeat librarySeat) {
+    public Map<String, Object> add(LibrarySeat librarySeat) throws MyException {
         return this.librarySeatService.insert(librarySeat);
+    }
+
+    @PostMapping("insert")
+    public Object insertOrUpdate(@RequestBody List<LibrarySeat> librarySeats) {
+        return this.librarySeatService.insertOrUpdate(librarySeats);
     }
 
     /**
@@ -63,7 +70,7 @@ public class LibrarySeatController {
      * @return 删除是否成功
      */
     @DeleteMapping
-    public Map<String, Object> deleteById(String seatId) {
+    public Map<String, Object> deleteById(String seatId) throws MyException {
         return this.librarySeatService.deleteById(seatId);
     }
 

@@ -123,16 +123,9 @@
                     </el-form-item>
                     <el-form-item label="描述" :label-width="formLabelWidth">
                         <el-input
+                            type="textarea"
+                            rows="5"
                             v-model="form.descs"
-                            autocomplete="off"
-                        ></el-input>
-                    </el-form-item>
-                    <el-form-item
-                        label="座位数量"
-                        :label-width="formLabelWidth"
-                    >
-                        <el-input
-                            v-model="form.seatNum"
                             autocomplete="off"
                         ></el-input>
                     </el-form-item>
@@ -185,6 +178,7 @@ export default {
     computed: {
         libraryList() {
             let libraryList = [];
+            if (this.$store.state.school.libraries == null) return null;
             this.$store.state.school.libraries.forEach((el) => {
                 libraryList.push({ value: el.libraryId, label: el.name });
             });

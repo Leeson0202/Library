@@ -81,6 +81,7 @@ export default {
     querySeat: (seatId) => http.get("api/seat/id/" + seatId),
     insertSeat: (data) => http.post("api/seat", { data }),
     updateSeat: (data) => http.put("api/seat", data),
+    insertOrUpdateSeat: (data) => http.post("api/seat/insert", data),
     deleteSeat: (seatId) => http.delete("api/seat", { seatId }),
 
     /**
@@ -89,6 +90,7 @@ export default {
     queryTable: (tableId) => http.get("api/table/id/" + tableId),
     insertTable: (data) => http.post("api/table", { data }),
     updateTable: (data) => http.put("api/table", data),
+    insertOrUpdateTable: (data) => http.post("api/table/insert", data),
     deleteTable: (tableId) => http.delete("api/table", { tableId }),
 
     /**
