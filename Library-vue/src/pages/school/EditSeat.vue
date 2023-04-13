@@ -309,7 +309,7 @@ export default {
                 (document.getElementById("panzoom").clientHeight -
                     this.itemWidth * (maxHeight + 1)) /
                 2;
-            // console.log(this.itemWidth, this.paddingTop);
+            console.log(this.itemWidth, this.paddingTop);
         },
         // 返回到房间管理
         back() {

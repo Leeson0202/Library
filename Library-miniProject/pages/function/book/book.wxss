@@ -113,10 +113,10 @@ page {
 .normal {
     position: relative;
     margin: auto;
-    margin-left: 10%;
-    margin-bottom: 10%;
+    margin-left: 4%;
+    margin-bottom: 11%;
     text-align: center;
-    width: 80%;
+    width: 92%;
 
     /* height: 100%;  */
 }
