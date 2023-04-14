@@ -75,7 +75,7 @@ public class ReceiveSchedule {
                 inserts.add(receiveItem); // 进数组
                 // 进缓存
                 String userKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), receiveFast.getUserId(), tomorrow.getDate(), i);
-                redisTool.set(userKey, "true", TimeUtil.getLeftToZeroOf(2), TimeUnit.MILLISECONDS);
+                redisTool.set(userKey, true, TimeUtil.getLeftToZeroOf(2), TimeUnit.MILLISECONDS);
             }
             // 进数据库
             if (inserts.size() > 0) {
@@ -88,7 +88,7 @@ public class ReceiveSchedule {
             User user = userDao.queryById(userId);
             String tel = user.getPhoneNum();
             smsUtil.sendCode(tel, SmsUtil.Opt.Test, "666666");
-            emailUtil.send("asedrfa@icloud.com", EmailUtil.Opt.Update, "666666");
+            emailUtil.sendOpt("asedrfa@icloud.com", EmailUtil.Opt.Update, "666666");
 
             log.info(user.getUserId() + " 快速预约成功");
             count++;

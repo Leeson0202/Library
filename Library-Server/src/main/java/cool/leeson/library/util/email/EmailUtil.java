@@ -1,6 +1,7 @@
 package cool.leeson.library.util.email;
 
 
+import com.aliyuncs.utils.StringUtils;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -40,7 +41,9 @@ public class EmailUtil {
     public static enum Opt {
         Register("验证码为：%s，您正在申请邮箱注册，5分钟内有效！"),
         Login("验证码为：%s，您正在登录，若非本人操作，请勿泄露。"),
-        Update("验证码为：%s，您正在尝试变更重要信息，请妥善保管账户信息。");
+        Update("验证码为：%s，您正在尝试变更重要信息，请妥善保管账户信息。"),
+        ReceiveSuccess("您已成功预约明天的座位，请准时入座");
+
         private final String method;
 
         Opt(String s) {
@@ -54,10 +57,23 @@ public class EmailUtil {
         }
     }
 
-
-    public boolean send(String destEmail, Opt opt, String code) {
+    public Boolean sendMsg(String destEmail, String context) {
         this.destEmail = destEmail;
-        this.context = String.format(opt.toString(), code);
+        this.context = context;
+        return this.send();
+    }
+
+
+    public boolean sendOpt(String destEmail, Opt opt, String code) {
+        this.destEmail = destEmail;
+        if (StringUtils.isEmpty(code))
+            this.context = opt.toString();
+        else
+            this.context = String.format(opt.toString(), code);
+        return this.send();
+    }
+
+    private boolean send() {
 
         this.init();
         try {

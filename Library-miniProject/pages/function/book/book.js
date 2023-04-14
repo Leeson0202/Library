@@ -102,9 +102,10 @@ Page({
             timeIdx: timeIdx - 1,
             today: today
         })
+        console.log(getApp().globalData.screenHeight, getApp().globalData.statusBarHeight, getApp().globalData.screenWidth);
         // 长宽配置
         that.setData({
-            seatArea: getApp().globalData.screenHeight - getApp().globalData.statusBarHeight * 2 - 185 - 50,
+            seatArea: getApp().globalData.screenHeight - getApp().globalData.statusBarHeight * 2 - 200 - 55,
             seatAreaWidth: getApp().globalData.screenWidth - this.data.paddingLeft,
             rpxToPx: getApp().globalData.screenWidth / 750,
         });
@@ -285,7 +286,7 @@ Page({
     // 选择事件
     bindPickerChange: function (e) {
         this.setData({
-            roomId: this.data.roomList[e.detail.value],
+            roomId: this.data.rooms[e.detail.value].roomId,
             roomIdx: e.detail.value
         })
         this.queryRoom(this.data.rooms[this.data.roomIdx].roomId, this.data.today, this.data.timeIdx)
@@ -369,20 +370,39 @@ Page({
 
     //计算最大座位数,生成影厅图大小
     getWidth(room) {
+        let that = this;
         var maxX = 0;
+        var maxY = 0;
         let seatList = room.librarySeats;
         let tableList = room.libraryTables;
         // console.log(seatList.length);
-        seatList.forEach(element => {
-            let tempX = parseInt(element.x);
+        seatList.forEach(el => {
+            let tempX = parseInt(el.x);
+            let tempY = parseInt(el.y);
             maxX = tempX > maxX ? tempX : maxX;
+            maxY = tempY > maxY ? tempY : maxY;
         });
-        tableList.forEach(element => {
-            let tempX = parseInt(element.x);
+        tableList.forEach(el => {
+            let tempX = parseInt(el.x) + parseInt(el.direction);
+            let tempY = parseInt(el.y) + 1 - parseInt(el.direction);
             maxX = tempX > maxX ? tempX : maxX;
+            maxY = tempY > maxY ? tempY : maxY;
         })
-        console.log(maxX);
+        // 先按照宽
         let height = this.data.seatAreaWidth / (maxX + 1)
+        // 如果高度不够
+        let hh = height * (maxY + 1);
+        if (hh > this.data.seatArea - this.data.paddingTop) {
+            console.log("大了");
+            // 按照高度计算
+            height = (this.data.seatArea - this.data.paddingTop) / (maxY + 1)
+            // 并计算 左右内边距之和
+            that.setData({
+                paddingLeft: getApp().globalData.screenWidth - height * (maxX + 1)
+            })
+
+        }
+        console.log(height);
         // console.log(maxX, this.data.seatAreaWidth, height);
         this.setData({
             seatScaleHeight: height
@@ -393,6 +413,10 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow() {
+        let that = this;
+        setTimeout(() => {
+            that.queryLibrary(that.data.libraryId);
+        }, 500);
         this.queryLibrary(this.data.libraryId);
     },
 

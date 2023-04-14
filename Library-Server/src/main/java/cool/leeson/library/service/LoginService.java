@@ -95,7 +95,7 @@ public class LoginService {
         log.info(tel + " 正在发送短信");
         String code = CodeUtil.createCode();
         // 测试
-//        boolean sendCode = new SmsUtil().sendCode(SmsUtil.Opt.Test, tel, code);
+//        boolean sendOpt = new SmsUtil().sendOpt(SmsUtil.Opt.Test, tel, code);
 //        // 实际
 
         boolean send = false;
@@ -177,8 +177,8 @@ public class LoginService {
         log.info(email + "正在发送验证码");
         String code = CodeUtil.createCode();
         boolean sent = false;
-        if (user == null) sent = emailUtil.send(email, EmailUtil.Opt.Register, code);
-        else sent = emailUtil.send(email, EmailUtil.Opt.Login, code);
+        if (user == null) sent = emailUtil.sendOpt(email, EmailUtil.Opt.Register, code);
+        else sent = emailUtil.sendOpt(email, EmailUtil.Opt.Login, code);
         if (!sent) {
             log.info(email + "验证码发送失败");
             return ResMap.err("验证码发送失败");
@@ -244,6 +244,8 @@ public class LoginService {
         String userId = UUID.randomUUID().toString();
         User user = new User(); // User
         UserInfo userInfo = new UserInfo(); // UserInfo
+        UserSchool userSchool = new UserSchool(UUID.randomUUID().toString(), userId, "schoolId", false); // userSchool
+
         UserRecord userRecord = new UserRecord(); // UserRecord
         user.setUserId(userId);
         // tel
@@ -261,7 +263,7 @@ public class LoginService {
         userRecord.setAllRank(0);
 
 
-        if (userDao.insert(user) < 1 || userInfoDao.insert(userInfo) < 1 || this.userRecordDao.insert(userRecord) < 1) {
+        if (userDao.insert(user) < 1 || userInfoDao.insert(userInfo) < 1 || this.userRecordDao.insert(userRecord) < 1 || this.userSchoolDao.insert(userSchool) < 1) {
             log.info(email + " 数据库插入失败");
             return false;
         }

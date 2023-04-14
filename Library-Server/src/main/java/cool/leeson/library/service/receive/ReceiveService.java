@@ -110,8 +110,8 @@ public class ReceiveService {
             long milliSecondsLeftToday = 86400000 - DateUtils.getFragmentInMilliseconds(Calendar.getInstance(), Calendar.DATE);
             milliSecondsLeftToday = receiveItemPost.getToday() ? milliSecondsLeftToday : milliSecondsLeftToday + 86400000;
             // 插入
-            redisTool.set(seatKey, "true", milliSecondsLeftToday, TimeUnit.MILLISECONDS);
-            redisTool.set(userKey, "true", milliSecondsLeftToday, TimeUnit.MILLISECONDS);
+            redisTool.set(seatKey, true, milliSecondsLeftToday, TimeUnit.MILLISECONDS);
+            redisTool.set(userKey, true, milliSecondsLeftToday, TimeUnit.MILLISECONDS);
         }
         return this.schedule(userId);
     }
@@ -207,7 +207,7 @@ public class ReceiveService {
      * @throws MyException ms
      */
     public Map<String, Object> queryAll(String userId) throws MyException {
-        log.info(userId + " 正在获取行程计划");
+        log.info(userId + "查询所有记录");
         // 先查询所有
         List<ReceiveItem> items = this.receiveItemDao.queryByUserId(userId);
         List<ReceiveItemResponse> responseItems = new ArrayList<>();
