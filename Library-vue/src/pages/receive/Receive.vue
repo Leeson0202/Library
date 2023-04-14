@@ -141,7 +141,7 @@ export default {
     data() {
         //这里存放数据
         return {
-            pageSize: 8,
+            pageSize: 10,
             totalElements: 0,
             pageIdx: 0,
             searchValue: "",
@@ -173,7 +173,6 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
-        clearFilter(e, c) {},
         search(e) {},
         handleEdit(index, row) {
             console.log(index, row);

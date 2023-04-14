@@ -56,7 +56,7 @@ public class ReceiveSchedule {
 
         // 进行预约
         for (ReceiveFast receiveFast : receiveFasts) {
-            if (receiveFast.getOpen() != 1) continue;
+            if (!receiveFast.getOpen()) continue;
             Date tomorrow = TimeUtil.getZeroTimeOf(1);
             // 查询fastKey
             String fastKey = String.format(RedisTool.FormatKey.FAST.toString(), receiveFast.getSeatId(), tomorrow.getDate());

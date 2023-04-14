@@ -21,6 +21,7 @@ public class ReceiveFast implements Serializable {
      * id
      */
     private String userId;
+    private String nickName;
     /**
      * 学校id
      */
@@ -29,18 +30,23 @@ public class ReceiveFast implements Serializable {
      * 图书馆Id
      */
     private String libraryId;
+    private String libraryName;
     /**
      * 图书室id
      */
     private String roomId;
+    private String roomName;
+
     /**
      * 座位id
      */
     private String seatId;
+    private String seatName;
+
     /**
      * 是否打开
      */
-    private Integer open;
+    private Boolean open;
 
 
 }

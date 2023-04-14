@@ -98,7 +98,7 @@ public interface UserDao {
      * @param userId 主键
      * @return 影响行数
      */
-    int deleteById(Integer userId);
+    int deleteById(String userId);
 
 }
 

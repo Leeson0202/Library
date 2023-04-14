@@ -30,8 +30,6 @@ export default {
         http.post("api/user/bind/cqupt", { cqupt_id, password }),
     // 获取用户 User
     queryUser: () => http.get("api/user"),
-    // 更新用户信息
-    updateUser: (data) => http.put("api/user", data),
     // 修改用户确定-验证码
     updateUserConfirm: (code) => http.put("api/usre/comfirm", { code }),
 
@@ -119,6 +117,20 @@ export default {
     updateReceive: (data) => http.put("api/receive", data),
     deleteReceive: (receiveId, userId) =>
         http.put("api/receive/cancel", { receiveId, userId }),
+
+    /**
+     * 快速预约
+     */
+    queryReceiveFastAll: (data) => http.get("api/receive/fast/all", data),
+    updateReceiveFast: (data) => http.put("api/receive/fast", data),
+
+    /**
+     * 用户管理
+     */
+    queryUserAll: (schoolId) => http.get("api/user/all", { schoolId }),
+    insertUser: (data) => http.post("api/user", data),
+    updateUser: (data) => http.put("api/user", data),
+    deleteUser: (userId) => http.delete("api/user", { userId }),
 };
 
 //其实，也不一定就是params，也可以是 query 还有 data 的呀！

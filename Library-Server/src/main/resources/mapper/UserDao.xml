@@ -63,20 +63,20 @@
         user_id, phone_num, email, pwd, openid
         from user
         <where>
-            <if test="userId != null">
-                and user_id = #{userId}
+            <if test="user.userId != null">
+                and user_id = #{user.userId}
             </if>
-            <if test="phoneNum != null and phoneNum != ''">
-                and phone_num = #{phoneNum}
+            <if test="user.phoneNum != null and user.phoneNum != ''">
+                and phone_num = #{user.phoneNum}
             </if>
-            <if test="email != null and email != ''">
-                and email = #{email}
+            <if test="user.email != null and user.email != ''">
+                and email = #{user.email}
             </if>
-            <if test="pwd != null and pwd != ''">
-                and pwd = #{pwd}
+            <if test="user.pwd != null and user.pwd != ''">
+                and pwd = #{user.pwd}
             </if>
-            <if test="openId != null and openId != ''">
-                and openid = #{openId}
+            <if test="user.openId != null and user.openId != ''">
+                and openid = #{user.openId}
             </if>
         </where>
         limit #{pageable.offset}, #{pageable.pageSize}

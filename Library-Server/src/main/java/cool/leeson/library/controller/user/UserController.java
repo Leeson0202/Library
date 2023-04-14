@@ -6,8 +6,6 @@ import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.user.UserService;
 import cool.leeson.library.util.ResMap;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -56,6 +54,12 @@ public class UserController {
         return this.userService.queryById(userId);
     }
 
+    @GetMapping("all")
+    public Object queryAll(String schoolId) throws MyException {
+        return this.userService.queryAll(schoolId);
+
+    }
+
 
     /**
      * 编辑数据
@@ -65,38 +69,33 @@ public class UserController {
      */
     @PutMapping
     public Map edit(User user) throws MyException {
-        // 解析token获取userId
-        String userId = new JwtConfig().getUsernameFromToken(request.getHeader("token"));
-        if (user == null) {
-            return ResMap.err("请添加用户信息");
-        }
-        if (StringUtils.isEmpty(user.getUserId())) {
-            return ResMap.err("请添加userId");
-        }
-        if (!userId.equals(user.getUserId())) {
-            return ResMap.err("请添加自己的userId");
-        }
         return this.userService.update(user);
+    }
+
+    @PostMapping
+    public Object add(@RequestBody User user) throws MyException {
+        return this.userService.insert(user);
     }
 
     /**
      * 删除数据
      *
-     * @param id 主键
+     * @param userId 主键
      * @return 删除是否成功
      */
     @DeleteMapping
-    public ResponseEntity<Boolean> deleteById(Integer id) {
-        return ResponseEntity.ok(this.userService.deleteById(id));
+    public Object deleteById(String userId) {
+        return ResMap.ok(this.userService.deleteById(userId));
     }
 
 
     /**
      * 通过token获取 学校身份信息
+     *
      * @return 实体
      */
     @GetMapping("studentInfo")
-    public Map<String,Object> queryCquptInfoByToken() throws MyException {
+    public Map<String, Object> queryCquptInfoByToken() throws MyException {
         String userId = new JwtConfig().getUsernameFromToken(request.getHeader("token"));
         return this.userService.queryCquptInfoByToken(userId);
     }

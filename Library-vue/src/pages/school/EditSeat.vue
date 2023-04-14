@@ -13,7 +13,13 @@
         </div>
         <div class="main">
             <div class="main-left">
-                <div id="panzoom" :style="{ 'padding-top': paddingTop + 'px' }">
+                <div
+                    id="panzoom"
+                    :style="{
+                        'padding-top': paddingTop + 'px',
+                        'padding-left': paddingLeft + 'px',
+                    }"
+                >
                     <!-- 椅子 -->
                     <img
                         class="yizi"
@@ -25,7 +31,7 @@
                         alt=""
                         :style="{
                             width: itemWidth + 'px',
-                            left: seat.x * itemWidth + 'px',
+                            left: paddingLeft + seat.x * itemWidth + 'px',
                             top: paddingTop + seat.y * itemWidth + 'px',
                             '-webkit-transform':
                                 'rotate(' + seat.direction * 90 + 'deg)',
@@ -42,6 +48,7 @@
                             width: itemWidth + 'px',
                             height: itemWidth * 2 + 'px',
                             left:
+                                paddingLeft +
                                 (table.x + table.direction * 2) * itemWidth +
                                 'px',
                             top: paddingTop + table.y * itemWidth + 'px',
@@ -53,8 +60,12 @@
             </div>
             <div class="main-right">
                 <div class="oprate-add">
-                    <el-button size="mini" round>添加椅子</el-button>
-                    <el-button size="mini" round>添加桌子</el-button>
+                    <el-button size="mini" round @click="addYizi()"
+                        >添加椅子</el-button
+                    >
+                    <el-button size="mini" round @click="addZhuozi()"
+                        >添加桌子</el-button
+                    >
                 </div>
                 <div class="oprate-show" v-if="itemId != ''">
                     <div class="item">
@@ -162,7 +173,9 @@ import Panzoom from "@panzoom/panzoom";
 import { Message } from "element-ui";
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from ‘《组件路径》‘;
+const itemMaxWidth = 60;
 
+const randomID = () => Math.random().toString(36).substring(2);
 export default {
     name: "EditSeat",
     components: {},
@@ -174,10 +187,16 @@ export default {
             room: {},
             // panZoom的上白部分
             paddingTop: 0,
+            // panzoom 左白部分
+            paddingLeft: 0,
             // 图标宽度
             itemWidth: 100,
-            // 视图宽度
-            viewWidth: 0,
+            maxX: 0,
+            maxY: 0,
+            // 最右下
+            maxXb: 0,
+            // 最下右
+            maxYr: 0,
             // 选中id
             itemType: 0,
             itemId: "",
@@ -207,9 +226,84 @@ export default {
                 target: { id: "A1227" },
             };
         },
+        // 添加椅子
+        addYizi() {
+            let that = this;
+            let x = 0;
+            let y = 0;
+            if (this.maxYr < this.maxX) {
+                // 默认 下右
+                y = this.maxY;
+                x = this.maxYr + 1;
+            } else {
+                y = this.maxY + 1;
+                x = 0;
+            }
+
+            this.form = {
+                seatId: randomID() + randomID(),
+                name: randomID(),
+                direction: 0,
+                repair: 0,
+                height: 1,
+                width: 1,
+                red: false,
+                roomId: this.room.roomId,
+                x: x,
+                y: y,
+            };
+            this.room.librarySeats.push(this.form);
+            this.cacul(this.room);
+            let e = {
+                target: {
+                    id: this.form.seatId,
+                },
+            };
+            setTimeout(() => {
+                that.onClick(e, 1);
+            }, 100);
+
+            console.log("椅子");
+        },
+        // 添加桌子
+        addZhuozi() {
+            let that = this;
+            let x = 0;
+            let y = 0;
+            if (this.maxYr < this.maxX) {
+                // 默认 下右
+                y = this.maxY;
+                x = this.maxYr + 1;
+            } else {
+                y = this.maxY + 1;
+                x = 0;
+            }
+
+            this.form = {
+                tableId: randomID() + randomID(),
+                name: randomID(),
+                direction: 0,
+                height: 1,
+                width: 1,
+                roomId: this.room.roomId,
+                x: x,
+                y: y,
+            };
+            this.room.libraryTables.push(this.form);
+            this.cacul(this.room);
+            let e = {
+                target: {
+                    id: this.form.tableId,
+                },
+            };
+            setTimeout(() => {
+                that.onClick(e, 1);
+            }, 100);
+        },
         // 改变位置
         changePosition(tag, tt) {
-            console.log("changePosition");
+            // console.log("changePosition");
+            if (this.form[tag] == 0 && tt == -1) return;
             this.form[tag] += tt;
         },
         // 改变方向
@@ -264,9 +358,19 @@ export default {
         // 保存
         submit() {
             api.insertOrUpdateSeat(this.seats).then((data) => {
-                Message.success("座位保存成功");
+                Message.success("椅子保存成功");
             });
             api.insertOrUpdateTable(this.tables).then((data) => {
+                let e = {
+                    target: {
+                        id:
+                            this.form.seatId == null
+                                ? this.form.tableId
+                                : this.form.seatId,
+                    },
+                };
+                this.onClick(e, -1);
+                this.queryRoom();
                 Message.success("座位保存成功");
             });
         },
@@ -284,32 +388,85 @@ export default {
         cacul(data) {
             this.seats = data.librarySeats;
             this.tables = data.libraryTables;
-            let maxWidth = 0;
-            let maxHeight = 0;
+            let maxX = 0; // 最右
+            let maxY = 0; // 最下
+            let maxXb = 0; // 最右下
+            let maxYr = 0; // 最下右
             this.seats.forEach((el) => {
-                maxWidth = el.x > maxWidth ? el.x : maxWidth;
-                maxHeight = el.y > maxHeight ? el.x : maxHeight;
+                if (el.x > maxX) {
+                    maxX = el.x;
+                    maxXb = el.y;
+                } else if (el.x == maxX && el.y > maxXb) {
+                    maxXb = el.y;
+                }
+                if (el.y > maxY) {
+                    maxY = el.y;
+                    maxYr = el.x;
+                } else if (el.y == maxY && el.x > maxYr) {
+                    maxYr = el.x;
+                }
             });
+            console.log(maxX, maxY, maxXb, maxYr);
+            // 桌子不一样 因为宽度不同
             this.tables.forEach((el) => {
-                maxWidth =
-                    el.x + (el.direction + 1) > maxWidth
-                        ? el.x + (el.direction + 1)
-                        : maxWidth;
-                maxHeight =
-                    el.y + (1 - el.direction) > maxHeight
-                        ? el.x(1 - el.direction)
-                        : maxHeight;
+                if (el.x + el.direction > maxX) {
+                    maxX = el.x + el.direction;
+                    maxXb = el.y + (1 - el.direction);
+                } else if (
+                    el.x + el.direction == maxX &&
+                    el.y + (1 - el.direction) > maxXb
+                ) {
+                    maxXb = el.y + (1 - el.direction);
+                }
+
+                if (el.y + (1 - el.direction) > maxY) {
+                    maxY = el.y + (1 - el.direction);
+                    maxYr = el.x + el.direction;
+                } else if (
+                    el.y + (1 - el.direction) == maxY &&
+                    el.x + el.direction > maxYr
+                ) {
+                    maxYr = el.x + el.direction;
+                }
             });
-            let maxX = maxWidth > maxHeight ? maxWidth : maxHeight;
+            console.log(maxX, maxY, maxXb, maxYr);
+            this.maxX = maxX;
+            this.maxY = maxY;
+            this.maxXb = maxXb;
+            this.maxYr = maxYr;
+            // 取较长的一边作为最长
+            let maxWidth = maxX > maxY ? maxX : maxY;
+            // 先保证宽
             // 得到width
             this.itemWidth =
-                document.getElementById("panzoom").clientWidth / (maxX + 1);
-
+                document.getElementById("panzoom").clientWidth / (maxWidth + 1);
+            if (this.itemWidth > itemMaxWidth) {
+                this.itemWidth = itemMaxWidth;
+            }
+            // 算paddingtop
+            this.paddingLeft = 0;
+            this.paddingTop = 0;
             this.paddingTop =
                 (document.getElementById("panzoom").clientHeight -
-                    this.itemWidth * (maxHeight + 1)) /
+                    this.itemWidth * (maxY + 1)) /
                 2;
-            console.log(this.itemWidth, this.paddingTop);
+            this.paddingLeft =
+                (document.getElementById("panzoom").clientWidth -
+                    this.itemWidth * (maxX + 1)) /
+                2;
+            console.log(this.itemWidth, this.paddingTop, this.paddingLeft);
+            // 如果超出视野，重新算
+            if (this.paddingTop < 0) {
+                this.itemWidth =
+                    document.getElementById("panzoom").clientHeight /
+                    (maxWidth + 1);
+                this.paddingLeft =
+                    (document.getElementById("panzoom").clientWidth -
+                        this.itemWidth * (maxX + 1)) /
+                    2;
+                this.paddingTop = 0;
+            }
+            console.log(this.itemWidth, this.paddingTop, this.paddingLeft);
         },
         // 返回到房间管理
         back() {
@@ -324,20 +481,32 @@ export default {
         this.init();
         // 全局监听键盘左右键事件
         var that = this;
-        document.onkeyup = function (e) {
-            if (e.code === "ArrowLeft") {
-                console.log("arrowleft");
+        document.onkeypress = function (e) {
+            if (e.code === "KeyA") {
                 that.changePosition("x", -1);
-            } else if (e.code === "ArrowRight") {
-                console.log("arrowright");
+            } else if (e.code === "KeyD") {
                 that.changePosition("x", 1);
-            } else if (e.code === "ArrowUp") {
-                console.log("ArrowUp");
+            } else if (e.code === "KeyW") {
                 that.changePosition("y", -1);
-            } else if (e.code === "ArrowDown") {
-                console.log("ArrowDown");
+            } else if (e.code === "KeyS") {
                 that.changePosition("y", 1);
             }
+            // console.log(e.code);
+        };
+
+        document.onkeyup = function (e) {
+            if (e.code === "ArrowLeft") {
+                that.changePosition("x", -1);
+            } else if (e.code === "ArrowRight") {
+                that.changePosition("x", 1);
+            } else if (e.code === "ArrowUp") {
+                that.changePosition("y", -1);
+            } else if (e.code === "ArrowDown") {
+                that.changePosition("y", 1);
+            } else if (e.code === "Space") {
+                that.changeDirection();
+            }
+            // console.log(e.code);
         };
     },
     beforeCreate() {}, //生命周期 - 创建之前

@@ -62,7 +62,7 @@ public class UserInfoController {
      * @return 实体
      */
     @PutMapping()
-    public ResponseEntity<Map<String, Object>> update(UserInfo userInfo) throws MyException {
+    public Object update(UserInfo userInfo) throws MyException {
         // 判断是否为空
         if (CheckObjectIsNullUtils.objCheckAllIsNull(userInfo)) {
             return ResponseEntity.ok(ResMap.err("属性为空"));
@@ -74,7 +74,8 @@ public class UserInfoController {
         UserInfo quserInfo = this.userInfoService.update(userInfo);
 
         quserInfo.setSessionKey("");
-        return ResponseEntity.ok(ResMap.ok("userInfo", quserInfo).build());
+        return ResMap.ok("userInfo", quserInfo).build();
     }
+
 
 }

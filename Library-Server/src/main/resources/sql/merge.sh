@@ -1,1 +1,1 @@
-cat user.sql school.sql cqupt.sql receive.sql > all.sql
+cat user.sql school.sql cqupt.sql receive.sql ./data/library_seat.sql ./data/library_table.sql > all.sql

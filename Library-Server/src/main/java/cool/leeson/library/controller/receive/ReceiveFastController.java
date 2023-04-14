@@ -4,6 +4,7 @@ import cool.leeson.library.config.JwtConfig;
 import cool.leeson.library.entity.receive.ReceiveFast;
 import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.receive.ReceiveFastService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,6 +53,15 @@ public class ReceiveFastController {
         return this.receiveFastService.queryById(userId);
     }
 
+    /**
+     * 通过用户全部
+     **/
+
+    @GetMapping("all")
+    public Object queryAll(ReceiveFast receiveFast, Integer page, Integer size) throws MyException {
+        return this.receiveFastService.queryByPage(receiveFast, PageRequest.of(page, size));
+    }
+
 
     /**
      * 新增数据
@@ -84,7 +94,7 @@ public class ReceiveFastController {
     @GetMapping("close")
     public Map<String, Object> close() throws MyException {
         String userId = jwtConfig.getUsernameFromToken(request.getHeader("token"));
-        return this.receiveFastService.change(userId, 0);
+        return this.receiveFastService.change(userId, false);
     }
 
 }

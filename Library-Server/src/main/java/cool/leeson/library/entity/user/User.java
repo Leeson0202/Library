@@ -21,6 +21,7 @@ public class User implements Serializable {
      * id
      */
     private String userId;
+    private String nickName;
     /**
      * 电话
      */

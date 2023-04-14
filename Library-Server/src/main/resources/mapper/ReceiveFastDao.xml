@@ -30,22 +30,22 @@
         from receive_fast
         <where>
             <if test="receiveFast.userId != null and receiveFast.userId != ''">
-                and user_id = #{userId}
+                and user_id = #{receiveFast.userId}
             </if>
             <if test="receiveFast.schoolId != null and receiveFast.schoolId != ''">
-                and school_id = #{schoolId}
+                and school_id = #{receiveFast.schoolId}
             </if>
             <if test="receiveFast.libraryId != null and receiveFast.libraryId != ''">
-                and library_id = #{libraryId}
+                and library_id = #{receiveFast.libraryId}
             </if>
             <if test="receiveFast.roomId != null and receiveFast.roomId != ''">
-                and room_id = #{roomId}
+                and room_id = #{receiveFast.roomId}
             </if>
             <if test="receiveFast.seatId != null and receiveFast.seatId != ''">
-                and seat_id = #{seatId}
+                and seat_id = #{receiveFast.seatId}
             </if>
             <if test="receiveFast.open != null">
-                and open = #{open}
+                and open = #{receiveFast.open}
             </if>
         </where>
         limit #{pageable.offset}, #{pageable.pageSize}
