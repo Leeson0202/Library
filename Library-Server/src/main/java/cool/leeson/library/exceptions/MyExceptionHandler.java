@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.Map;
 import java.util.Objects;
 
 @ControllerAdvice
@@ -21,9 +20,9 @@ public class MyExceptionHandler {
      */
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
-    public Map<String, Object> defaultHandel(Exception p) {
-//        p.printStackTrace();
-        return new ResMap().putCode(500).putMsg("服务器错误").build();
+    public Object defaultHandel(Exception p) {
+        p.printStackTrace();
+        return new ResMap().error("服务器错误");
     }
 
     /**

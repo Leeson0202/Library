@@ -36,10 +36,6 @@ Page({
     init() {
         // console.log(this);
         if (!store.hasLogin || !store.hasSchool) {
-            wwxwx.showToast({
-                title: '请登陆',
-                icon: "none"
-            })
             return
         }
         this.getNotifications();

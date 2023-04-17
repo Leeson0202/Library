@@ -17,7 +17,15 @@
             <el-empty v-if="roomId == ''" :image-size="300"> </el-empty>
             <div v-else style="width: 100%; height: 100%">
                 <el-table
-                    :data="receives"
+                    :data="
+                        receives.filter(
+                            (data) =>
+                                !search ||
+                                data.nickName
+                                    .toLowerCase()
+                                    .includes(search.toLowerCase())
+                        )
+                    "
                     :stripe="true"
                     style="width: calc(100% - 30px)"
                     @selection-change="handleSelectionChange"
@@ -91,7 +99,7 @@
                     <el-table-column align="left" style="align-items: right">
                         <template slot="header">
                             <el-input
-                                v-model="searchValue"
+                                v-model="search"
                                 size="mini"
                                 placeholder="输入关键字搜索"
                                 style="max-width: 300px; float: left"
@@ -144,7 +152,7 @@ export default {
             pageSize: 10,
             totalElements: 0,
             pageIdx: 0,
-            searchValue: "",
+            search: "",
             roomId: "",
             libraryId: "",
             receives: [],
@@ -173,7 +181,6 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
-        search(e) {},
         handleEdit(index, row) {
             console.log(index, row);
         },

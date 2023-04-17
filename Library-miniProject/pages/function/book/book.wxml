@@ -59,7 +59,7 @@
     <view class="submit-block">
         <view class="receive-details" hidden="{{!receiveTag}}">
             <view class="receive-detail" wx:for="{{selectedSeats}}" wx:key="index">
-                <view style="float: left;">
+                <view style="float: left; width: calc(100% - 45rpx); ">
                     {{item.libraryName}}{{item.roomName}} · {{item.seatName}} · {{item.today?"今":"明"}} · {{times[item.timeIdx]}}
                 </view>
                 <image bindtap="deleteSelected" data-index="{{index}}" style="margin-right: 12rpx;height: 30rpx; width: 30rpx; top: 16rpx; position: relative; float: right;" src="/resources/images/library/delete.svg" mode="heightFix" />

@@ -3,6 +3,7 @@ package cool.leeson.library.controller.library;
 import cool.leeson.library.entity.library.SchoolRule;
 import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.library.SchoolRuleService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -42,7 +43,7 @@ public class SchoolRuleController {
      * @return 新增结果
      */
     @PostMapping
-    public Map<String, Object> add(SchoolRule schoolRule) {
+    public Map<String, Object> add(@RequestBody @Validated SchoolRule schoolRule) {
         return this.schoolRuleService.insert(schoolRule);
     }
 

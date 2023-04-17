@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.List;
@@ -27,10 +29,12 @@ public class Library implements Serializable {
     /**
      * 学校id
      */
+    @NotBlank(message = "schoolId不能为空")
     private String schoolId;
     /**
      * 图书馆名字
      */
+    @NotBlank(message = "名字不能为空")
     private String name;
     /**
      * 简介
@@ -49,16 +53,19 @@ public class Library implements Serializable {
      */
 //    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "HH:mm")
+    @NotNull(message = "开始时间不能为空")
     private LocalTime beginTime;
     /**
      * 每日开放结束时间
      */
     @DateTimeFormat(pattern = "HH:mm")
+    @NotNull(message = "结束时间不能为空")
     private LocalTime endTime;
     /**
      * 时段长度
      */
     @DateTimeFormat(pattern = "HH:mm")
+    @NotNull(message = "时间段不能为空")
     private LocalTime tt;
 
     private List<LibraryRoom> libraryRooms;

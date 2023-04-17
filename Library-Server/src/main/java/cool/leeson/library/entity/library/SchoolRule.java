@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -20,10 +21,12 @@ public class SchoolRule implements Serializable {
     /**
      * 学校id
      */
+    @NotBlank
     private String schoolId;
     /**
      * 内容
      */
+    @NotBlank
     private String context;
 
 

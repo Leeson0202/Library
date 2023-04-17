@@ -240,7 +240,7 @@ public class LoginService {
      * @return 是否注册成功
      */
     private boolean register(String tel, String email) {
-        log.info(email + "开始注册");
+        log.info(tel == null ? email : tel + "开始注册");
         String userId = UUID.randomUUID().toString();
         User user = new User(); // User
         UserInfo userInfo = new UserInfo(); // UserInfo
@@ -248,10 +248,13 @@ public class LoginService {
 
         UserRecord userRecord = new UserRecord(); // UserRecord
         user.setUserId(userId);
-        // tel
-        if (!StringUtils.isEmpty(tel)) user.setPhoneNum(tel);
-        // email
-        if (!StringUtils.isEmpty(email)) user.setEmail(email);
+        if (tel == null) {
+            user.setEmail(email);
+            user.setNickName(email);
+        } else {
+            user.setPhoneNum(tel);
+            user.setNickName(tel);
+        }
         userInfo.setUserId(userId);
         userRecord.setUserId(userId);
         userRecord.setCredit(100);
@@ -267,7 +270,7 @@ public class LoginService {
             log.info(email + " 数据库插入失败");
             return false;
         }
-        log.info(email + "注册，数据库插入成功");
+        log.info(tel == null ? email : tel + "注册，数据库插入成功");
         return true;
     }
 

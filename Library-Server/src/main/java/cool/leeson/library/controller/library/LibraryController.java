@@ -1,12 +1,16 @@
 package cool.leeson.library.controller.library;
 
+import com.aliyuncs.utils.StringUtils;
 import cool.leeson.library.entity.library.Library;
 import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.library.LibraryService;
+import cool.leeson.library.util.ResMap;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
 import java.util.Map;
 
 /**
@@ -17,6 +21,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("library")
+@Validated
 public class LibraryController {
     @Resource
     private HttpServletRequest request;
@@ -33,7 +38,7 @@ public class LibraryController {
      * @return 查询结果
      */
     @GetMapping("school")
-    public Map<String, Object> queryBySchoolId(String schoolId) {
+    public Map<String, Object> queryBySchoolId(@NotBlank(message = "schoolId 不能为空") String schoolId) {
         return this.libraryService.queryBySchoolId(schoolId);
     }
 
@@ -61,7 +66,7 @@ public class LibraryController {
      * @return 新增结果
      */
     @PostMapping
-    public Map<String, Object> add(Library library) {
+    public Map<String, Object> add(@Validated @RequestBody Library library) {
         return this.libraryService.insert(library, (String) request.getAttribute("userId"));
     }
 
@@ -72,7 +77,8 @@ public class LibraryController {
      * @return 编辑结果
      */
     @PutMapping
-    public Map<String, Object> edit(Library library) {
+    public Map<String, Object> edit(@Validated Library library) {
+        if (StringUtils.isEmpty(library.getLibraryId())) return ResMap.err("libraryId 不能为空");
         return this.libraryService.update(library, (String) request.getAttribute("userId"));
     }
 
@@ -83,7 +89,7 @@ public class LibraryController {
      * @return 删除是否成功
      */
     @DeleteMapping
-    public Map<String, Object> deleteById(String libraryId) throws MyException {
+    public Map<String, Object> deleteById(@NotBlank(message = "libraryId 不能为空") String libraryId) throws MyException {
         return this.libraryService.deleteById(libraryId);
     }
 

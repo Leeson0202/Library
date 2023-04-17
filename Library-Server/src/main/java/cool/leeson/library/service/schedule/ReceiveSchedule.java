@@ -56,7 +56,7 @@ public class ReceiveSchedule {
 
         // 进行预约
         for (ReceiveFast receiveFast : receiveFasts) {
-            if (!receiveFast.getOpen()) continue;
+            if (!receiveFast.getOpen() || receiveFast.getSeatId() == null) continue;
             Date tomorrow = TimeUtil.getZeroTimeOf(1);
             // 查询fastKey
             String fastKey = String.format(RedisTool.FormatKey.FAST.toString(), receiveFast.getSeatId(), tomorrow.getDate());
@@ -88,7 +88,7 @@ public class ReceiveSchedule {
             User user = userDao.queryById(userId);
             String tel = user.getPhoneNum();
             smsUtil.sendCode(tel, SmsUtil.Opt.Test, "666666");
-            emailUtil.sendOpt("asedrfa@icloud.com", EmailUtil.Opt.Update, "666666");
+            emailUtil.sendOpt(user.getEmail(), EmailUtil.Opt.ReceiveSuccess);
 
             log.info(user.getUserId() + " 快速预约成功");
             count++;
@@ -108,6 +108,7 @@ public class ReceiveSchedule {
         log.info("receiveFast的数量：" + receiveFasts.size());
         int count = 0;
         for (ReceiveFast receiveFast : receiveFasts) {
+            if (receiveFast.getSeatId() == null) continue;
             String seatId = receiveFast.getSeatId();
             Date date = TimeUtil.getZeroTimeOf(2); // 后天的零点
             int afterTomorrow = date.getDate(); // 后天的日期

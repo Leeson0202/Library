@@ -46,7 +46,7 @@
                     <el-table-column
                         prop="num"
                         label="扣分"
-                        width="100"
+                        width="60"
                         align="center"
                     >
                     </el-table-column>

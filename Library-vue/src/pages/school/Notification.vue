@@ -15,7 +15,15 @@
         </div>
 
         <el-table
-            :data="tableData"
+            :data="
+                tableData.filter(
+                    (data) =>
+                        !search ||
+                        data.nickName
+                            .toLowerCase()
+                            .includes(search.toLowerCase())
+                )
+            "
             :stripe="true"
             style="width: calc(100% - 40px); margin: 0 20px"
             @selection-change="handleSelectionChange"
@@ -54,7 +62,7 @@
             <el-table-column align="left" style="align-items: right">
                 <template slot="header">
                     <el-input
-                        v-model="searchValue"
+                        v-model="search"
                         size="mini"
                         placeholder="输入关键字搜索"
                         style="max-width: 300px; float: left"
@@ -119,7 +127,7 @@ export default {
         return {
             size: 10,
             totalElements: 0,
-            searchValue: "",
+            search: "",
             idx: -1,
             dialogFormVisible: false,
             // 对话框数据
@@ -176,7 +184,6 @@ export default {
             this.form.date = null;
             this.dialogFormVisible = true;
         },
-        search(e) {},
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
@@ -200,7 +207,9 @@ export default {
     created() {},
     //生命周期 - 挂载完成（可以访问DOM元素）
     mounted() {
-        this.queryNotifications(this.$store.state.school.schoolId, 0);
+        setTimeout(() => {
+            this.queryNotifications(this.$store.state.school.schoolId, 0);
+        }, 300);
     },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前

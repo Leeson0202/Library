@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -25,20 +26,24 @@ public class SchoolNotification implements Serializable {
     /**
      * 学校id
      */
+    @NotBlank(message = "schoolId 不能为空")
     private String schoolId;
     /**
      * 用户id
      */
+    @NotBlank(message = "userId 不能为空")
     private String userId;
     private String nickName;
     /**
      * 标题
      */
+    @NotBlank(message = "title 不能为空")
     private String title;
 
     /**
      * 内容
      */
+    @NotBlank(message = "context 不能为空")
     private String context;
     /**
      * 浏览量

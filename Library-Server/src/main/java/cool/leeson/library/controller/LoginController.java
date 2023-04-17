@@ -5,16 +5,20 @@ import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.LoginService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Map;
 
 @RestController
 @Slf4j
+@Validated
 public class LoginController {
     @Resource
     private LoginService loginService;
@@ -52,7 +56,7 @@ public class LoginController {
      * @return 实体对象
      */
     @GetMapping("login/tel")
-    public ResponseEntity<Map<String, Object>> loginTel(String tel) {
+    public ResponseEntity<Map<String, Object>> loginTel(@NotBlank(message = "手机号不能为空") String tel) {
         Map<String, Object> res = this.loginService.loginTel(tel);
         return ResponseEntity.ok(res);
     }
@@ -65,7 +69,9 @@ public class LoginController {
      * @return 实体对象
      */
     @GetMapping("confirm/tel")
-    public ResponseEntity<Map<String, Object>> confirmTel(String code, String tel) {
+    public ResponseEntity<Map<String, Object>> confirmTel(
+            @NotBlank(message = "验证码不能为空") String code,
+            @NotBlank(message = "手机号不能为空") String tel) {
         return ResponseEntity.ok(this.loginService.confirmTel(code, tel));
     }
 
@@ -76,7 +82,8 @@ public class LoginController {
      * @return 实体对象
      */
     @GetMapping("login/email")
-    public ResponseEntity<Map<String, Object>> loginEmail(String email) {
+    public ResponseEntity<Map<String, Object>> loginEmail(
+            @Email(message = "邮箱错误") String email) {
         Map<String, Object> res = this.loginService.loginEmail(email);
         return ResponseEntity.ok(res);
     }
@@ -90,7 +97,7 @@ public class LoginController {
      */
 
     @GetMapping("confirm/email")
-    public ResponseEntity<Map<String, Object>> confirmEmail(String code, String email) {
+    public ResponseEntity<Map<String, Object>> confirmEmail(@NotBlank(message = "验证码不能为空") String code,@Email(message = "邮箱错误")  String email) {
         Map<String, Object> resMap = this.loginService.confirmEmail(code, email);
         return ResponseEntity.ok(resMap);
     }

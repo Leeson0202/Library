@@ -57,9 +57,16 @@ public class EmailUtil {
         }
     }
 
-    public Boolean sendMsg(String destEmail, String context) {
+    public Boolean sendMsg(String destEmail, String msg) {
         this.destEmail = destEmail;
-        this.context = context;
+        this.context = msg;
+        return this.send();
+    }
+
+
+    public Boolean sendOpt(String destEmail, Opt opt) {
+        this.destEmail = destEmail;
+        this.context = opt.toString();
         return this.send();
     }
 

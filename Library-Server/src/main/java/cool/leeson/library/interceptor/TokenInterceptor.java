@@ -15,9 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 @Slf4j
 public class TokenInterceptor extends HandlerInterceptorAdapter {
-    static final String UNKNOWN = "unknown";
-    @Resource
-    private HttpServletRequest request;
+
 
     @Resource
     private JwtConfig jwtConfig;
@@ -35,12 +33,9 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         if (uri.contains("error")) {
             throw new MyException(400, "没有该请求 ");
         }
-
-        String ipAddress = this.getIpAddress();
-        log.info(ipAddress + "正在请求：" + request.getMethod() + " " + uri);
         // 哪些不需要token认证
         String[] dismiss = new String[]{
-                "/login", "/confirm", "/update", "/img", "/css", "/js"};
+                "/login", "/confirm", "/update", "/img", "/css", "/js", "/download"};
         boolean f = false;
         for (String string : dismiss) {
             if (uri.contains(string)) {
@@ -74,29 +69,5 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 
-    public String getIpAddress() {
-        if (request == null) {
-            return UNKNOWN;
-        }
-        String ip = request.getHeader("x-forwarded-for");
-        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
-        }
-        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
-            ip = request.getHeader("X-Forwarded-For");
-        }
-        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
-            ip = request.getHeader("X-Real-IP");
-        }
 
-        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
-        }
-        ip = "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
-        ip = String.format("%-16s", ip);
-        return ip;
-    }
 }

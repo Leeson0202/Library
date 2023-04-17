@@ -13,7 +13,7 @@
                 class="card-img"
                 @click="openDrawer(idx)"
                 :style="{
-                    'background-image': 'url(' + item.background + ')',
+                    'background-image': 'url(api/' + item.background + ')',
                 }"
             >
                 <div
@@ -66,12 +66,23 @@
                         <el-upload
                             class="upload-demo"
                             drag
-                            action="https://jsonplaceholder.typicode.com/posts/"
-                            multiple
+                            action="none"
+                            auto-upload
+                            :http-request="uploadFile"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload"
                         >
-                            <i class="el-icon-upload"></i>
-                            <div class="el-upload__text">
-                                将文件拖到此处，或<em>点击上传</em>
+                            <img
+                                v-if="imageUrl"
+                                :src="imageUrl"
+                                style="width: 100%; height: 100%"
+                            />
+                            <div else>
+                                <i class="el-icon-upload"></i>
+                                <div class="el-upload__text">
+                                    将文件拖到此处，或<em>点击上传</em>
+                                </div>
                             </div>
                         </el-upload>
                     </el-form-item>
@@ -163,6 +174,7 @@
 //例如：import 《组件名称》 from ‘《组件路径》‘;
 
 import api from "@/utils/api";
+import { Message } from "element-ui";
 
 export default {
     name: "Library",
@@ -175,6 +187,7 @@ export default {
             //抽屉
             drawer: false,
             drawerIdx: 0,
+            imageUrl: "",
             form: {
                 name: "",
                 desc: "",
@@ -196,17 +209,33 @@ export default {
     watch: {},
     //方法集合
     methods: {
-        resize() {
-            // console.log("size is change");
-            // console.log(document.getElementById("showTable").getBoundingClientRect().width)
-            // 调整宽度
-            var showTable = document.getElementById("library");
-            if (showTable == null) return;
-            let Allwidth = document
-                .getElementById("library")
-                .getBoundingClientRect().width;
-            let n = Allwidth / 330;
-            this.detailWidth = Allwidth / Math.floor(n);
+        // 上传成功
+        handleAvatarSuccess(res, file) {
+            console.log(res, file);
+            this.imageUrl = URL.createObjectURL(file.raw);
+            this.form.background = URL.createObjectURL(file.raw);
+        },
+        // 上传
+        uploadFile(file) {
+            console.log(file);
+            let form = { file: file.file };
+            api.fileUpload(form).then((data) => {
+                this.form.background = data.data;
+                this.imageUrl = "api/" + data.data;
+            });
+        },
+        // 上传前
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === "image/jpeg";
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (!isJPG) {
+                this.$message.error("上传头像图片只能是 JPG 格式!");
+            }
+            if (!isLt2M) {
+                this.$message.error("上传头像图片大小不能超过 2MB!");
+            }
+            return isJPG && isLt2M;
         },
         // 打开 drawer
         openDrawer(idx) {
@@ -221,8 +250,10 @@ export default {
                     endTime: "",
                     tt: "",
                 };
+                this.imageUrl = this.form.background;
             } else {
                 this.form = { ...this.libraries[idx] };
+                this.imageUrl = this.form.background;
                 if (this.form.beginTime.length > 5) {
                     this.form.beginTime = this.form.beginTime.slice(0, 5);
                 }
@@ -242,7 +273,6 @@ export default {
             this.$confirm("保存并关闭？")
                 .then((_) => {
                     this.onSubmit();
-                    done();
                 })
                 .catch((_) => {});
         },
@@ -255,6 +285,7 @@ export default {
                 api.insertLibrary(this.form).then((data) => {
                     // console.log(data);
                     if (data.code == 200) {
+                        Message.success("添加成功");
                         this.$store.dispatch("QuerySchool");
                     }
                 });
@@ -263,6 +294,7 @@ export default {
                 api.updateLibrary(this.form).then((data) => {
                     console.log(data);
                     if (data.code == 200) {
+                        Message.success("修改成功");
                         this.$store.dispatch("QuerySchool");
                     }
                 });
@@ -276,10 +308,24 @@ export default {
                 .then((_) => {
                     api.deleteLibrary(libraryId).then((data) => {
                         this.drawer = false;
+                        Message.success("删除成功");
                         this.$store.dispatch("QuerySchool");
                     });
                 })
                 .catch((_) => {});
+        },
+        // 监听宽度
+        resize() {
+            // console.log("size is change");
+            // console.log(document.getElementById("showTable").getBoundingClientRect().width)
+            // 调整宽度
+            var showTable = document.getElementById("library");
+            if (showTable == null) return;
+            let Allwidth = document
+                .getElementById("library")
+                .getBoundingClientRect().width;
+            let n = Allwidth / 330;
+            this.detailWidth = Allwidth / Math.floor(n);
         },
     },
     //生命周期 - 创建完成（可以访问当前this实例）
@@ -287,7 +333,9 @@ export default {
     //生命周期 - 挂载完成（可以访问DOM元素）
     mounted() {
         //  更新学校和图书馆列表
-        this.$store.dispatch("QuerySchool");
+        setTimeout(() => {
+            this.$store.dispatch("QuerySchool");
+        }, 300);
     },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前

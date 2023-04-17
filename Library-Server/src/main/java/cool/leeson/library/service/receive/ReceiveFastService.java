@@ -71,7 +71,11 @@ public class ReceiveFastService {
      * @param receiveFast 实例对象
      * @return 实例对象
      */
-    public ReceiveFast insert(ReceiveFast receiveFast) {
+    public ReceiveFast insert(ReceiveFast receiveFast) throws MyException {
+        ReceiveFast receiveFast1 = new ReceiveFast();
+        receiveFast1.setSeatId(receiveFast.getSeatId());
+        List<ReceiveFast> receiveFasts = this.receiveFastDao.queryAllByLimit(receiveFast1, PageRequest.of(0, 10));
+        if (receiveFasts.size() > 0) throw new MyException("该座位已有人预约");
         this.receiveFastDao.insert(receiveFast);
         return receiveFast;
     }
@@ -83,6 +87,10 @@ public class ReceiveFastService {
      * @return 实例对象
      */
     public Map<String, Object> update(ReceiveFast receiveFast) throws MyException {
+        ReceiveFast receiveFast1 = new ReceiveFast();
+        receiveFast1.setSeatId(receiveFast.getSeatId());
+        List<ReceiveFast> receiveFasts = this.receiveFastDao.queryAllByLimit(receiveFast1, PageRequest.of(0, 10));
+        if (receiveFasts.size() > 0) throw new MyException("该座位已有人预约");
         this.receiveFastDao.update(receiveFast);
         return this.queryById(receiveFast.getUserId());
     }

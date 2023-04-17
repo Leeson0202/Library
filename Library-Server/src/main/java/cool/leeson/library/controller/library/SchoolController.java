@@ -59,7 +59,7 @@ public class SchoolController {
      * @return 新增结果
      */
     @PostMapping
-    public Map<String, Object> add(School school) throws MyException {
+    public Map<String, Object> add(@RequestBody School school) throws MyException {
         return this.schoolService.insert(school, (String) request.getAttribute("userId"));
     }
 

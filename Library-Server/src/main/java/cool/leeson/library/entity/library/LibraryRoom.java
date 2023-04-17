@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalTime;
 import java.io.Serializable;
 import java.util.List;
@@ -26,10 +27,12 @@ public class LibraryRoom implements Serializable {
     /**
      * 图书馆Id
      */
+    @NotBlank(message = "libraryId 不能为空")
     private String libraryId;
     /**
      * 图书室名字
      */
+    @NotBlank(message = "名字 不能为空")
     private String name;
     /**
      * 图书室描述

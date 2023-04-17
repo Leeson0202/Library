@@ -19,6 +19,12 @@ const router = new VueRouter({
             name: "login",
             component: (resolve) => require(["@/components/Login"], resolve),
         },
+
+        {
+            path: "/404",
+            name: "page404",
+            component: (resolve) => require(["@/components/NotFount"], resolve),
+        },
     ],
 });
 

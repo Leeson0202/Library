@@ -153,6 +153,7 @@ page {
 
 .receive-detail {
     height: 60rpx;
+    overflow: hidden;
     line-height: 60rpx;
     font-size: 24rpx;
     text-align: left;
@@ -176,12 +177,13 @@ page {
     font-size: 34rpx;
 }
 
-.success-img{
+.success-img {
     display: block;
     margin: auto;
     height: 150rpx;
     margin-bottom: 40rpx;
 }
+
 .success-title {
     position: relative;
     margin-top: 100px;

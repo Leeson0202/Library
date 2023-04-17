@@ -131,6 +131,11 @@ export default {
     insertUser: (data) => http.post("api/user", data),
     updateUser: (data) => http.put("api/user", data),
     deleteUser: (userId) => http.delete("api/user", { userId }),
+
+    /** 文件 */
+
+    fileUpload: (data) => http.upload("api/upload", data),
+    fileDownload: (fileName) => http.get("api/download/" + fileName),
 };
 
 //其实，也不一定就是params，也可以是 query 还有 data 的呀！

@@ -94,7 +94,7 @@ public class ResMap {
 
     public static Map<String, Object> error(String msg) {
         return new HashMap<String, Object>() {{
-            put("code", 400);
+            put("code", 500);
             put("msg", msg);
         }};
     }

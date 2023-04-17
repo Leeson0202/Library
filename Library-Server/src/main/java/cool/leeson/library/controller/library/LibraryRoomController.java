@@ -1,15 +1,15 @@
 package cool.leeson.library.controller.library;
 
 import cool.leeson.library.entity.library.LibraryRoom;
-import cool.leeson.library.entity.library.LibrarySeat;
-import cool.leeson.library.entity.library.LibraryTable;
 import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.library.LibraryRoomService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 /**
@@ -20,6 +20,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("room")
+@Validated
 public class LibraryRoomController {
     @Resource
     private HttpServletRequest request;
@@ -36,7 +37,7 @@ public class LibraryRoomController {
      * @return 查询结果
      */
     @GetMapping("rooms")
-    public Map<String, Object> queryByLibraryId(String libraryId) {
+    public Map<String, Object> queryByLibraryId(@NotBlank(message = "libraryId 不能为空") String libraryId) {
         return this.libraryRoomService.queryByLibraryId(libraryId);
     }
 
@@ -56,7 +57,7 @@ public class LibraryRoomController {
      * @return 查询结果
      */
     @GetMapping("time")
-    public Map<String, Object> queryByTime(String roomId, Boolean today, Integer idx) throws MyException {
+    public Map<String, Object> queryByTime(@NotBlank(message = "roomId 不能为空") String roomId, @NotNull(message = "today 不能为空") Boolean today, @NotNull(message = "idx 不能为空") Integer idx) throws MyException {
         return this.libraryRoomService.queryByTime(roomId, today, idx);
     }
 
@@ -67,10 +68,9 @@ public class LibraryRoomController {
      * @return 新增结果
      */
     @PostMapping
-    public Map<String, Object> add(LibraryRoom libraryRoom) {
+    public Map<String, Object> add(@Validated @RequestBody LibraryRoom libraryRoom) {
         return this.libraryRoomService.insert(libraryRoom);
     }
-
 
 
     /**
@@ -92,7 +92,7 @@ public class LibraryRoomController {
      * @return 删除是否成功
      */
     @DeleteMapping
-    public Map<String, Object> deleteById(String roomId) throws MyException {
+    public Map<String, Object> deleteById(@NotBlank(message = "roomId 不能为空") String roomId) throws MyException {
         return this.libraryRoomService.deleteById(roomId);
     }
 

@@ -19,13 +19,9 @@ Page({
         schoolId: null,
 
         libraryId: null,
-        libraries: [{
-            name: "老图书馆"
-        }, {
-            name: "数字图书馆"
-        }], // [] 记录详细信息
-        libraryList: ['老图书馆', '数字图书馆'], // [] 记录名字
-        libraryIdx: 1, // 下标
+        libraries: [], // [] 记录详细信息
+        libraryList: [], // [] 记录名字
+        libraryIdx: 0, // 下标
 
         // 选择的房间
         roomId: null,
@@ -102,7 +98,7 @@ Page({
             timeIdx: timeIdx - 1,
             today: today
         })
-        console.log(getApp().globalData.screenHeight, getApp().globalData.statusBarHeight, getApp().globalData.screenWidth);
+        // console.log(getApp().globalData.screenHeight, getApp().globalData.statusBarHeight, getApp().globalData.screenWidth);
         // 长宽配置
         that.setData({
             seatArea: getApp().globalData.screenHeight - getApp().globalData.statusBarHeight * 2 - 200 - 55,
@@ -113,6 +109,7 @@ Page({
         setTimeout(() => {
             store.school.libraries.forEach((el, idx) => {
                 if (el.libraryId === options.libraryId) {
+                    console.log("libraryIdx setting:", idx);
                     that.setData({
                         libraryIdx: idx
                     })
@@ -227,7 +224,7 @@ Page({
                 if (oIndex != nIndex && that.data.seatList[nIndex].red != true) {
                     let item = {
                         libraryId: that.data.libraryId,
-                        libraryName: that.data.libraryList[that.data.libraryIdx],
+                        libraryName: store.school.libraries[that.data.libraryIdx].name,
                         roomId: that.data.roomId,
                         roomName: that.data.rooms[that.data.roomIdx].name,
                         seatId: seatId,
@@ -263,7 +260,7 @@ Page({
 
             let selecteditem = {
                 libraryId: that.data.libraryId,
-                libraryName: that.data.libraries[that.data.libraryIdx].name,
+                libraryName: store.school.libraries[that.data.libraryIdx].name,
                 roomId: that.data.roomId,
                 roomName: that.data.rooms[that.data.roomIdx].name,
                 seatId: seatId,

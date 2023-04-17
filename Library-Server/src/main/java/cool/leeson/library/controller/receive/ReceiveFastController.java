@@ -4,6 +4,7 @@ import cool.leeson.library.config.JwtConfig;
 import cool.leeson.library.entity.receive.ReceiveFast;
 import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.receive.ReceiveFastService;
+import cool.leeson.library.util.ResMap;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -70,8 +71,8 @@ public class ReceiveFastController {
      * @return 新增结果
      */
     @PostMapping
-    public ResponseEntity<ReceiveFast> add(ReceiveFast receiveFast) {
-        return ResponseEntity.ok(this.receiveFastService.insert(receiveFast));
+    public Object add(ReceiveFast receiveFast) throws MyException {
+        return ResMap.ok(this.receiveFastService.insert(receiveFast));
     }
 
     /**
