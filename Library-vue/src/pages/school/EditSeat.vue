@@ -357,6 +357,8 @@ export default {
                 this.$confirm("确定删除该座位吗？")
                     .then((_) => {
                         api.deleteSeat(this.form.seatId).then((data) => {
+                            this.form = {};
+                            this.itemId = ""
                             Message.success("删除成功");
                             that.queryRoom();
                         });
@@ -367,6 +369,8 @@ export default {
                 this.$confirm("确定删除该座位吗？")
                     .then((_) => {
                         api.deleteTable(this.form.tableId).then((data) => {
+                            this.form = {};
+                            this.itemId = ""
                             Message.success("删除成功");
                             that.queryRoom();
                         });

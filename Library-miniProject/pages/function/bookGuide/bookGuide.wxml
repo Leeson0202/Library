@@ -30,7 +30,7 @@
             <text>{{school.schoolRule.context}}</text>
         </view>
         <!--图书馆列表-->
-        <view class="manu-label" hidden="{{selected!=2}}" wx:for="{{school.libraries}}" wx:key="id" style="background-image: url({{item.background}});">
+        <view class="manu-label" hidden="{{selected!=2}}" wx:for="{{school.libraries}}" wx:key="id" style="background-image: url({{baseUrl+item.background}});">
             <view class="label" bindtap="handelbook" data-id="{{item.libraryId}}">{{item.name}}</view>
         </view>
 

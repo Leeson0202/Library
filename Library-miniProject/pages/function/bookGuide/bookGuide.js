@@ -31,6 +31,7 @@ Page({
         let libraryId = e.currentTarget.dataset.id;
         wx.navigateTo({
             url: '/pages/function/book/book?schoolId=' + store.school.schoolId + '&libraryId=' + libraryId,
+            baseUrl: null,
 
         })
     },
@@ -40,14 +41,17 @@ Page({
      */
     onLoad(options) {
         let that = this;
+        that.setData({
+            baseUrl: store.baseUrl + '/'
+        })
         this.storeBindings = createStoreBindings(this, {
             store,
-            fields: ['school', 'hasSchool', 'hasLogin','baseUrl'],
-            actions: ['GetSchool','InitData','LocalImg','CheckError']
+            fields: ['school', 'hasSchool', 'hasLogin'],
+            actions: ['GetSchool', 'InitData', 'LocalImg', 'CheckError']
         });
 
     },
-    localImag(uri){
+    localImag(uri) {
         return this.LocalImag(uri);
     },
 
@@ -57,9 +61,9 @@ Page({
      */
     onReady() {
         setTimeout(() => {
-            if(store.hasLogin!=true){
+            if (store.hasLogin != true) {
                 wx.navigateTo({
-                  url: '/pages/center/login/login',
+                    url: '/pages/center/login/login',
                 })
             }
         }, 1000);
@@ -70,9 +74,9 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow() {
-        if(store.hasSchool!=true){
-            let school =  wx.getStorageSync('school')
-            if(school != ""){
+        if (store.hasSchool != true) {
+            let school = wx.getStorageSync('school')
+            if (school != "") {
                 store.school = school;
                 store.hasSchool = true;
                 return;

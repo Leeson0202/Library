@@ -56,6 +56,6 @@ public class FileUploadController {
         fileName = fileName + originalFilename.substring(i);
         File file = new File(uploadDir + "/" + fileName);
         item.transferTo(file);//将此图像保存到file本地
-        return "download/"+fileName;
+        return "download/" + fileName;
     }
 }

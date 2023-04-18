@@ -92,12 +92,13 @@ page {
 .defaultArea {
     background-color: #eee;
     overflow: hidden;
+    vertical-align: top;
 }
 
 .movableOne {
     width: calc(100% - 120rpx);
     height: calc(100% - 160rpx);
-    padding: 80rpx 60rpx;
+    vertical-align: top;
 
 }
 

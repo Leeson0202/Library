@@ -43,8 +43,13 @@ Page({
         timeIdx: 0,
 
         // 设置宽高
-        paddingLeft: 40,
-        paddingTop: 70,
+        seatArea: 100,
+        seatAreaWidth: 40,
+        maxSeatWidth: 20,
+        marginTop: 70,
+        marginLeft: 40,
+        paddingLeft: 0,
+        paddingTop: 0,
         receiveTag: false,
 
         // 房间信息
@@ -66,7 +71,7 @@ Page({
         let that = this;
         this.storeBindings = createStoreBindings(this, {
             store,
-            fields: ['school', 'hasSchool', 'hasLogin', 'baseUrl'],
+            fields: ['school', 'hasSchool', 'hasLogin', ],
             actions: ['GetSchool', 'InitData', 'CheckError']
         });
         // 获取现在的时间 初始化配置
@@ -91,6 +96,7 @@ Page({
         }
         // 初始化options
         that.setData({
+            baseUrl: store.baseUrl + "/",
             schoolId: options.schoolId,
             libraryId: options.libraryId,
             seatList: [],
@@ -102,7 +108,7 @@ Page({
         // 长宽配置
         that.setData({
             seatArea: getApp().globalData.screenHeight - getApp().globalData.statusBarHeight * 2 - 200 - 55,
-            seatAreaWidth: getApp().globalData.screenWidth - this.data.paddingLeft,
+            seatAreaWidth: getApp().globalData.screenWidth - this.data.marginLeft,
             rpxToPx: getApp().globalData.screenWidth / 750,
         });
         // 遍历图书馆 寻找idx
@@ -385,27 +391,49 @@ Page({
             maxX = tempX > maxX ? tempX : maxX;
             maxY = tempY > maxY ? tempY : maxY;
         })
-        // 先按照宽
-        let height = this.data.seatAreaWidth / (maxX + 1)
-        // 如果高度不够
-        let hh = height * (maxY + 1);
-        if (hh > this.data.seatArea - this.data.paddingTop) {
-            console.log("大了");
-            // 按照高度计算
-            height = (this.data.seatArea - this.data.paddingTop) / (maxY + 1)
-            // 并计算 左右内边距之和
-            that.setData({
-                paddingLeft: getApp().globalData.screenWidth - height * (maxX + 1)
-            })
+        console.log(this.data.seatArea - this.data.marginTop, this.data.seatAreaWidth); // 先按照宽
+        let width = this.data.seatAreaWidth / (maxX + 1)
 
+        // 计算padding
+        that.caculPadding(width, maxX, maxY);
+
+
+        // 如果高度不够
+        if (this.data.paddingTop < 0) {
+            console.log("大了");
+            width = (this.data.seatArea - this.data.marginTop) / (maxY + 1);
+            this.caculPadding(width, maxX, maxY)
         }
-        console.log(height);
-        // console.log(maxX, this.data.seatAreaWidth, height);
+        // 如果width太大了
+        if(width > 60){
+            width = 60;
+            this.caculPadding(width,maxX,maxY)
+        }
+        console.log(width);
         this.setData({
-            seatScaleHeight: height
+            seatScaleHeight: width
         })
     },
 
+    // 计算padding
+    caculPadding(width, maxX, maxY) {
+        let allWidth = width * (maxX + 1);
+        let allHeight = width * (maxY + 1);
+        // paddingTop
+        let paddingTop = (this.data.seatArea - this.data.marginTop - allHeight) / 2;
+
+        // padiingLeft
+        let paddingLeft = (this.data.seatAreaWidth - allWidth) / 2;
+        console.log("paddingTop:" + paddingTop + "  paddingLeft:" + paddingLeft);
+        this.setData({
+            paddingTop: paddingTop,
+            paddingLeft: paddingLeft
+        })
+
+
+
+
+    },
     /**
      * 生命周期函数--监听页面显示
      */
