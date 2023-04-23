@@ -87,7 +87,7 @@ export default {
     line-height: 200px;
     overflow-x: hidden;
     overflow: -Scroll;
-    padding-bottom: 50px;
+    padding-bottom: 20px;
     border-right: 1px solid #d3dce6 !important;
 }
 

@@ -50,6 +50,7 @@
                 ><i class="el-icon-setting"></i>设置</el-menu-item
             >
         </el-menu>
+        <div class="beian">渝ICP备2021009603号-2</div>
     </div>
 </template>
 
@@ -118,5 +119,11 @@ export default {
 
 .el-submenu /deep/ .el-submenu__title:hover {
     background-color: #eee !important;
+}
+
+.beian {
+    height: 30px;
+    width: 100%;
+    text-align: center;
 }
 </style>
