@@ -35,10 +35,9 @@
         <spring-cloud-alibaba.version>2021.0.1.0</spring-cloud-alibaba.version>
         <dubbo.version>2.7.13</dubbo.version>
 
-
+        <druid.version>1.2.9</druid.version>
         <mysql-connector.version>8.0.29</mysql-connector.version>
         <mybatis-plus.version>3.5.1</mybatis-plus.version>
-        <fastjson.version>1.2.73</fastjson.version>
         <jjwt.version>0.9.1</jjwt.version>
         <java-jwt>4.3.0</java-jwt>
         <email.version>1.4.7</email.version>
@@ -84,6 +83,7 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector.version}</version>
+                <scope>runtime</scope>
             </dependency>
 
             <!--mybatis-plus相关-->
@@ -92,18 +92,19 @@
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
-            <!--mybatis-plus代码生成器-->
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-generator</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <!--mybatis-plus代码生成器引擎-->
-            <dependency>
-                <groupId>org.apache.velocity</groupId>
-                <artifactId>velocity-engine-core</artifactId>
-                <version>${velocity-engine-core.version}</version>
-            </dependency>
+
+            <!--            &lt;!&ndash;mybatis-plus代码生成器&ndash;&gt;-->
+            <!--            <dependency>-->
+            <!--                <groupId>com.baomidou</groupId>-->
+            <!--                <artifactId>mybatis-plus-generator</artifactId>-->
+            <!--                <version>${mybatis-plus.version}</version>-->
+            <!--            </dependency>-->
+            <!--            &lt;!&ndash;mybatis-plus代码生成器引擎&ndash;&gt;-->
+            <!--            <dependency>-->
+            <!--                <groupId>org.apache.velocity</groupId>-->
+            <!--                <artifactId>velocity-engine-core</artifactId>-->
+            <!--                <version>${velocity-engine-core.version}</version>-->
+            <!--            </dependency>-->
 
             <!--JWT(Json Web Token)登录支持-->
             <dependency>
@@ -137,24 +138,6 @@
                 <version>${aliyun-java-sdk-dysmsapi.version}</version>
             </dependency>
 
-            <!--mybatis-plus相关-->
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <!--mybatis-plus代码生成器-->
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-generator</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <!--mybatis-plus代码生成器引擎-->
-            <dependency>
-                <groupId>org.apache.velocity</groupId>
-                <artifactId>velocity-engine-core</artifactId>
-                <version>${velocity-engine-core.version}</version>
-            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -166,6 +149,12 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <!--json解析-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.73</version>
+        </dependency>
 
         <!-- 测试 -->
         <dependency>
@@ -175,24 +164,25 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <!-- IntelliJ IDEA本地测试去掉fork也生效 -->
-                    <fork>true</fork>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    &lt;!&ndash; IntelliJ IDEA本地测试去掉fork也生效 &ndash;&gt;-->
+<!--                    <fork>true</fork>-->
+<!--                    <excludes>-->
+<!--                        <exclude>-->
+<!--                            <groupId>org.projectlombok</groupId>-->
+<!--                            <artifactId>lombok</artifactId>-->
+<!--                        </exclude>-->
+<!--                    </excludes>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
     <repositories>
         <repository>
             <id>spring-milestones</id>
