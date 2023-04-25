@@ -1,0 +1,20 @@
+server:
+  port: 80
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    # nacos地址
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848 #Nacos地址
+        file-extension: yaml #这里我们获取的yaml格式的配置
+    gateway:
+      enabled: true
+      discovery:
+        locator:
+          # 这个配置是动态路由开启，自动识别nacos的服务名进行路由
+          enabled: true

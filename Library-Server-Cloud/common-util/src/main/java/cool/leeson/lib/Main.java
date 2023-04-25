@@ -1,4 +1,4 @@
-package cool.leeson;
+package cool.leeson.lib;
 
 public class Main {
     public static void main(String[] args) {
