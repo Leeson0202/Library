@@ -24,6 +24,7 @@ public class CommonController {
 
     @GetMapping("codeImage")
     public void getImage(HttpSession session, HttpServletResponse response) throws Exception {
+        System.out.println("正在生成验证码");
         //生产验证码 6位
         String securityCode = CodeUtil.createCode();
         BufferedImage image = CodeUtil.createImage(securityCode);

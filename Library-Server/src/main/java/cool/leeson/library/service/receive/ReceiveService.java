@@ -113,7 +113,7 @@ public class ReceiveService {
             redisTool.set(seatKey, true, milliSecondsLeftToday, TimeUnit.MILLISECONDS);
             redisTool.set(userKey, true, milliSecondsLeftToday, TimeUnit.MILLISECONDS);
         }
-        return this.schedule(userId);
+        return new ResMap().putCode(200).putMsg("预约成功").build();
     }
 
     /**
