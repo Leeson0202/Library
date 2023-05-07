@@ -41,6 +41,7 @@ public class ReceiveController {
      */
     @PostMapping
     public Map<String, Object> receive(@RequestBody List<ReceiveItemPost> receives) throws MyException {
+        System.out.println("预约:"+ receives.size());
         return this.receiveService.receive(receives, (String) request.getAttribute("userId"));
     }
 

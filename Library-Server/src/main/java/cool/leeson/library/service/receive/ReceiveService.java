@@ -76,19 +76,20 @@ public class ReceiveService {
         List<ReceiveItem> receiveItems = new ArrayList<>();
         for (ReceiveItemPost receiveItemPost : receiveItemPosts) {
             int today = receiveItemPost.getToday() ? 0 : 1;
-            // 查询座位是否占用
-            String seatKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), receiveItemPost.getSeatId(), now.getDate() + today, receiveItemPost.getTimeIdx());
-            String rSeatRecord = redisTool.get(seatKey);
-            if (!StringUtils.isEmpty(rSeatRecord) && "true".equals(rSeatRecord)) {
-                // 说明有数据
-                return ResMap.err("座位已占座，请刷新");
-            }
+
             // 查询用户在该时段是否预约
             String userKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), userId, now.getDate() + today, receiveItemPost.getTimeIdx());
             String rUserRecord = redisTool.get(userKey);
             if (!StringUtils.isEmpty(rUserRecord) && "true".equals(rUserRecord)) {
                 // 说明有数据
                 return ResMap.err("您已经预约了该时段");
+            }
+            // 查询座位是否占用
+            String seatKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), receiveItemPost.getSeatId(), now.getDate() + today, receiveItemPost.getTimeIdx());
+            String rSeatRecord = redisTool.get(seatKey);
+            if (!StringUtils.isEmpty(rSeatRecord) && "true".equals(rSeatRecord)) {
+                // 说明有数据
+                return ResMap.err("座位已占座，请刷新");
             }
             // 构建 receiveItem
 
