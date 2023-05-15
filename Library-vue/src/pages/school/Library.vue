@@ -75,7 +75,7 @@
                         >
                             <img
                                 v-if="imageUrl"
-                                :src="'api' + imageUrl"
+                                :src="'api/' + imageUrl"
                                 style="width: 100%; height: 100%"
                             />
                             <div else>
@@ -210,11 +210,11 @@ export default {
     //方法集合
     methods: {
         // 上传成功
-        handleAvatarSuccess(res, file) {
-            console.log(res, file);
-            this.imageUrl = URL.createObjectURL(file.raw);
-            this.form.background = URL.createObjectURL(file.raw);
-        },
+        // handleAvatarSuccess(res, file) {
+        //     console.log(res, file);
+        //     this.imageUrl = URL.createObjectURL(file.raw);
+        //     this.form.background = URL.createObjectURL(file.raw);
+        // },
         // 上传
         uploadFile(file) {
             console.log(file);

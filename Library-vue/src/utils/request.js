@@ -20,7 +20,7 @@ service.interceptors.request.use(
             token: localStorage.getItem("token"),
             "Content-Type": "application/json", //配置请求头
         };
-        console.log(config.data);
+        // console.log(config.data);
         if (config.data != null && config.data.file != null) {
             config.headers["Content-Type"] =
                 "multipart/form-data;charset=utf-8"; //配置请求头

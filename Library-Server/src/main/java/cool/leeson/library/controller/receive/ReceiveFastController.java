@@ -6,7 +6,6 @@ import cool.leeson.library.exceptions.MyException;
 import cool.leeson.library.service.receive.ReceiveFastService;
 import cool.leeson.library.util.ResMap;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -83,8 +82,10 @@ public class ReceiveFastController {
      */
     @PutMapping
     public Map<String, Object> edit(ReceiveFast receiveFast) throws MyException {
-        String userId = jwtConfig.getUsernameFromToken(request.getHeader("token"));
-        receiveFast.setUserId(userId);
+        if (receiveFast.getUserId() == null) {
+            String userId = jwtConfig.getUsernameFromToken(request.getHeader("token"));
+            receiveFast.setUserId(userId);
+        }
         return this.receiveFastService.update(receiveFast);
     }
 

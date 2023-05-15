@@ -87,10 +87,15 @@ public class ReceiveFastService {
      * @return 实例对象
      */
     public Map<String, Object> update(ReceiveFast receiveFast) throws MyException {
-        ReceiveFast receiveFast1 = new ReceiveFast();
-        receiveFast1.setSeatId(receiveFast.getSeatId());
-        List<ReceiveFast> receiveFasts = this.receiveFastDao.queryAllByLimit(receiveFast1, PageRequest.of(0, 10));
-        if (receiveFasts.size() > 0) throw new MyException("该座位已有人预约");
+        // 1. 判断receive是否为open
+        if (receiveFast.getOpen().equals(Boolean.TRUE)) {
+            // 查询是否有人已经预订
+            ReceiveFast receiveFast1 = new ReceiveFast();
+            receiveFast1.setSeatId(receiveFast.getSeatId());
+            receiveFast1.setOpen(true);
+            List<ReceiveFast> receiveFasts = this.receiveFastDao.queryAllByLimit(receiveFast1, PageRequest.of(0, Integer.MAX_VALUE));
+            if (receiveFasts.size() > 0) throw new MyException("该座位已有人预约");
+        }
         this.receiveFastDao.update(receiveFast);
         return this.queryById(receiveFast.getUserId());
     }

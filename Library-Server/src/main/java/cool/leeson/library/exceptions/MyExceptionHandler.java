@@ -21,7 +21,7 @@ public class MyExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public Object defaultHandel(Exception p) {
-        p.printStackTrace();
+//        p.printStackTrace();
         return new ResMap().error("服务器错误");
     }
 

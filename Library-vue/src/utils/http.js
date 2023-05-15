@@ -58,7 +58,7 @@ const http = {
                 "Content-Type": "multipart/form-data;charset=utf-8",
             },
         };
-        console.log(config);
+        // console.log(config);
         return new Promise((resolve, reject) => {
             axios
                 .post(
