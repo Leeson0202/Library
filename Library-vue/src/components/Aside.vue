@@ -24,9 +24,10 @@
                         alt=""
                     />学校管理
                 </template>
+                <el-menu-item index="school">学校信息</el-menu-item>
                 <el-menu-item index="notification">通知管理</el-menu-item>
                 <el-menu-item index="library">图书馆管理</el-menu-item>
-                <el-menu-item index="seat">房间管理</el-menu-item>
+                <el-menu-item index="seat">图书室管理</el-menu-item>
             </el-submenu>
             <el-submenu index="2">
                 <template slot="title">

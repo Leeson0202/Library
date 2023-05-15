@@ -10,6 +10,11 @@ export default [
     },
     // school
     {
+        path: "school",
+        component: (resolve) =>
+            require(["@/pages/school/School"], resolve),
+    },
+    {
         path: "notification",
         component: (resolve) =>
             require(["@/pages/school/Notification"], resolve),

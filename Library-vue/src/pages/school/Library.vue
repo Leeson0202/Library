@@ -75,7 +75,7 @@
                         >
                             <img
                                 v-if="imageUrl"
-                                :src="imageUrl"
+                                :src="'api' + imageUrl"
                                 style="width: 100%; height: 100%"
                             />
                             <div else>
@@ -221,13 +221,14 @@ export default {
             let form = { file: file.file };
             api.fileUpload(form).then((data) => {
                 this.form.background = data.data;
-                this.imageUrl = "api/" + data.data;
+                this.imageUrl = data.data;
             });
         },
         // 上传前
         beforeAvatarUpload(file) {
-            const isJPG = file.type === "image/jpeg";
-            const isLt2M = file.size / 1024 / 1024 < 2;
+            const isJPG =
+                file.type === "image/jpeg" || file.type === "image/png";
+            const isLt2M = file.size / 1024 / 1024 < 4;
 
             if (!isJPG) {
                 this.$message.error("上传头像图片只能是 JPG 格式!");
@@ -250,7 +251,6 @@ export default {
                     endTime: "",
                     tt: "",
                 };
-                this.imageUrl = this.form.background;
             } else {
                 this.form = { ...this.libraries[idx] };
                 this.imageUrl = this.form.background;
@@ -264,6 +264,9 @@ export default {
                     this.form.tt = this.form.tt.slice(0, 5);
                 }
             }
+            if (this.form.background[0] !== "/")
+                this.imageUrl = "/" + this.form.background;
+            else this.imageUrl = this.form.background;
             this.drawerIdx = idx;
 
             this.drawer = true;
