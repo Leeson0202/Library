@@ -1,7 +1,6 @@
 package cool.leeson.library.service.receive;
 
 import com.aliyuncs.utils.StringUtils;
-import cool.leeson.library.config.JwtConfig;
 import cool.leeson.library.dao.ReceiveItemDao;
 import cool.leeson.library.entity.receive.ReceiveItem;
 import cool.leeson.library.entity.receive.ReceiveItemPost;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -54,12 +52,6 @@ public class ReceiveService {
     @Resource
     private RedisTool redisTool;
 
-    @Resource
-    private HttpServletRequest request;
-
-    @Resource
-    private JwtConfig jwtConfig;
-
 
     /**
      * 提交预约订单
@@ -67,16 +59,15 @@ public class ReceiveService {
      * @param receiveItemPosts 数据
      * @return 实体
      */
+    @Transactional
     public Map<String, Object> receive(List<ReceiveItemPost> receiveItemPosts, String userId) throws MyException {
         if (receiveItemPosts == null || receiveItemPosts.size() == 0)
             throw new MyException(MyException.STATUS.requestErr);
-//        log.info(receiveItemPosts.toString());
         Date now = new Date();
         // 构建 receiveItems
         List<ReceiveItem> receiveItems = new ArrayList<>();
         for (ReceiveItemPost receiveItemPost : receiveItemPosts) {
             int today = receiveItemPost.getToday() ? 0 : 1;
-
             // 查询用户在该时段是否预约
             String userKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), userId, now.getDate() + today, receiveItemPost.getTimeIdx());
             String rUserRecord = redisTool.get(userKey);
@@ -92,8 +83,6 @@ public class ReceiveService {
                 return ResMap.err("座位已占座，请刷新");
             }
             // 构建 receiveItem
-
-//            LocalTime local = LocalTime.of(timeIdx * 2 + 8, 0, 0, 0); 构建时间的
             ReceiveItem receiveItem = new ReceiveItem(UUID.randomUUID().toString(), userId, receiveItemPost.getLibraryId(), receiveItemPost.getRoomId(), receiveItemPost.getSeatId(), new Date(now.getYear(), now.getMonth(), now.getDate() + today), receiveItemPost.getTimeIdx(), now);
             receiveItems.add(receiveItem);
         }
@@ -104,7 +93,6 @@ public class ReceiveService {
         // 座位和用户信息，插入redis
         for (ReceiveItemPost receiveItemPost : receiveItemPosts) {
             int today = receiveItemPost.getToday() ? 0 : 1;
-
             String seatKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), receiveItemPost.getSeatId(), now.getDate() + today, receiveItemPost.getTimeIdx());
             String userKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), userId, now.getDate() + today, receiveItemPost.getTimeIdx());
             // 剩下的时间
@@ -216,7 +204,7 @@ public class ReceiveService {
             // 构建
             ReceiveItemResponse responseItem = new ReceiveItemResponse(item);
             // date
-            String ddate = item.getReceiveDate().getMonth() + 1 + "月" + item.getReceiveDate().getDate() + "日";
+            String ddate = (item.getReceiveDate().getMonth() + 1) + "月" + item.getReceiveDate().getDate() + "日";
             // 获取名字
             String libraryName = this.libraryService.queryInfo(item.getLibraryId()).getName();
             String roomName = this.libraryRoomService.queryInfo(item.getRoomId()).getName();
@@ -259,7 +247,7 @@ public class ReceiveService {
             // 椅子
             receiveItemResponse.setSeatName(this.librarySeatService.queryInfo(item.getSeatId()).getName());
             // 时间
-            receiveItemResponse.setDate(item.getReceiveDate().getMonth() + "月" + item.getReceiveDate().getDate() + "日");
+            receiveItemResponse.setDate(item.getReceiveDate().getMonth() + 1 + "月" + item.getReceiveDate().getDate() + "日");
             receiveItemResponses.add(receiveItemResponse);
         }
         Collections.sort(receiveItemResponses);

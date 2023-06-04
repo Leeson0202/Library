@@ -43,7 +43,6 @@ Page({
             // console.log(data);
             let now = new Date(new Date().setHours(0, 0, 0, 0));
             let timeIdx = Math.floor((new Date().getHours() - 8) / 2);
-            let date = (now.getMonth + 1) + "月" + now.getDate + '日'
             // console.log(now, timeIdx);
             let recordAll = [],
                 itemAll = [];
@@ -55,7 +54,7 @@ Page({
                 itemDone = [];
             data.data.forEach((el, idx) => {
                 let rDate = new Date(el.receiveDate)
-                el.date = rDate.getFullYear() + "-" + rDate.getMonth() + "-" + rDate.getDate()
+                el.date = rDate.getFullYear() + "-" + (rDate.getMonth() + 1) + "-" + rDate.getDate()
                 // console.log(el.date, el.timeIdx, rDate, rDate < now, rDate.getTime() == now.getTime(), rDate > now);
                 if (rDate.getTime() < now.getTime() || (rDate.getTime() == now.getTime() && el.timeIdx < timeIdx)) {
                     // receiveDone 已经完成

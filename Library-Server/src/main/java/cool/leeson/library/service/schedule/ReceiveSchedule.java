@@ -16,9 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +47,8 @@ public class ReceiveSchedule {
     // 前一天进缓存
     // 后一天正式预约发短信
     @Scheduled(cron = "0 0 19 * * ?")
-    public void ReceiveFastScheduleAfter() throws ParseException, InterruptedException {
+    @Transactional
+    public void ReceiveFastScheduleAfter() {
         log.info("ReceiveFastScheduleAfter is running: 正在进行快速预约并发送短信");
         // 获取全部的receiveFast
         List<ReceiveFast> receiveFasts = this.receiveFastDao.queryAllByLimit(new ReceiveFast(), Pageable.ofSize(Integer.MAX_VALUE));
@@ -64,7 +65,6 @@ public class ReceiveSchedule {
             // 如果没有明天的fast ，直接continue
             if (StringUtils.isEmpty(s)) continue;
 
-
             ArrayList<ReceiveItem> inserts = new ArrayList<>();
             for (int i = 0; i < 7; i++) {
                 ReceiveItem receiveItem = new ReceiveItem(receiveFast);
@@ -79,24 +79,24 @@ public class ReceiveSchedule {
             }
             // 进数据库
             if (inserts.size() > 0) {
-
                 this.receiveItemDao.insertBatch(inserts);
             }
             // 发送
             log.info(receiveFast.getUserId() + " 正在发送预约短信和邮箱");
             String userId = receiveFast.getUserId();
             User user = userDao.queryById(userId);
-            String tel = user.getPhoneNum();
-            smsUtil.sendCode(tel, SmsUtil.Opt.Test, "666666");
-            emailUtil.sendOpt(user.getEmail(), EmailUtil.Opt.ReceiveSuccess);
-
-            log.info(user.getUserId() + " 快速预约成功");
-            count++;
+            boolean b = false;
+            if (!StringUtils.isEmpty(user.getPhoneNum()))
+                b = smsUtil.sendMsg(user.getPhoneNum(), SmsUtil.Opt.FastReceive);
+            else if (!StringUtils.isEmpty(user.getEmail()))
+                b = emailUtil.sendOpt(user.getEmail(), EmailUtil.Opt.ReceiveSuccess);
+            if (b) {
+                log.info(user.getUserId() + " 快速预约成功");
+                count++;
+            }
         }
         log.info("ReceiveFastScheduleAfter 快速预约人数为：" + count);
         log.info("ReceiveFastScheduleAfter over");
-
-
     }
 
     // 前
@@ -108,7 +108,7 @@ public class ReceiveSchedule {
         log.info("receiveFast的数量：" + receiveFasts.size());
         int count = 0;
         for (ReceiveFast receiveFast : receiveFasts) {
-            if (receiveFast.getSeatId() == null) continue;
+            if (receiveFast.getSeatId() == null || receiveFast.getOpen() == Boolean.FALSE) continue;
             String seatId = receiveFast.getSeatId();
             Date date = TimeUtil.getZeroTimeOf(2); // 后天的零点
             int afterTomorrow = date.getDate(); // 后天的日期

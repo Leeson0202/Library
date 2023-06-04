@@ -33,9 +33,10 @@ public class SmsUtil {
     // templateCode
     public static enum Opt {
         Test("SMS_154950909"), // 测试
-        Register("SMS_227741458"),
-        Login("SMS_254210472"),
-        Update("SMS_254215484");
+        Register("SMS_274745554"),
+        Login("SMS_274535909"),
+        Update("SMS_274660909"),
+        FastReceive("");
         private final String method;
 
         Opt(String s) {
@@ -76,11 +77,11 @@ public class SmsUtil {
             System.out.println(new Gson().toJson(response));
             return "OK".equalsIgnoreCase(reCode);
         } catch (ServerException e) {
-            e.printStackTrace();
+            log.warn("发送失败！");
         } catch (ClientException e) {
-            System.out.println("ErrCode:" + e.getErrCode());
-            System.out.println("ErrMsg:" + e.getErrMsg());
-            System.out.println("RequestId:" + e.getRequestId());
+            log.warn("ErrCode:" + e.getErrCode());
+            log.warn("ErrMsg:" + e.getErrMsg());
+            log.warn("RequestId:" + e.getRequestId());
         }
         return false;
     }

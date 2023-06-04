@@ -115,7 +115,6 @@ public class LibraryRoomService {
         int day = c.getTime().getDate();
         Map<String, Object> query = this.queryById(roomId); // 获取全部信息 没有椅子状态
         LibraryRoom libraryRoom = (LibraryRoom) query.get("data");
-
         // 查缓存 - 椅子是否预约
         for (LibrarySeat seat : libraryRoom.getLibrarySeats()) {
             String seatKey = String.format(RedisTool.FormatKey.RECEIVE.toString(), seat.getSeatId(), day, idx);
@@ -167,6 +166,7 @@ public class LibraryRoomService {
         if (StringUtils.isEmpty(libraryRoom.getLibraryId())) ResMap.err("libraryId不能为空");
         String roomId = UUID.randomUUID().toString();
         libraryRoom.setRoomId(roomId);
+        libraryRoom.setSeatNum(0);
         this.libraryRoomDao.insert(libraryRoom);
         this.redisTool.deleteByPrefix("school"); // 删除缓存
         return ResMap.ok(libraryRoom);

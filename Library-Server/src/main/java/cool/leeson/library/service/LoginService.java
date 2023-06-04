@@ -251,11 +251,16 @@ public class LoginService {
         if (tel == null) {
             user.setEmail(email);
             user.setNickName(email);
+            userInfo.setNickName(email);
         } else {
             user.setPhoneNum(tel);
             user.setNickName(tel);
+            userInfo.setNickName(tel);
         }
+
         userInfo.setUserId(userId);
+        userInfo.setAvatarUrl("/img/headicon.webp");
+
         userRecord.setUserId(userId);
         userRecord.setCredit(100);
         userRecord.setMaxTime(0);

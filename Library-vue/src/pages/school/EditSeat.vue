@@ -310,7 +310,7 @@ export default {
                 if (this.form.direction == 2) this.form.direction = 0;
             }
         },
-        // 点击
+        // 点击桌椅
         onClick(e, idx) {
             console.log(e.target.id, idx);
             // 获取id 修改背景色
@@ -324,9 +324,9 @@ export default {
             } else {
                 this.itemId = "";
                 this.form = {};
+                return;
             }
-
-            // 获取类型和form
+            // 获取类型和详细信息
             this.seats.forEach((el) => {
                 if (el.seatId == this.itemId) {
                     this.itemType = 0;
