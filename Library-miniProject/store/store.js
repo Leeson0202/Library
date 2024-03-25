@@ -144,49 +144,6 @@ export const store = observable({
     LocalImag: action(function (uri) {
         return this.baseUrl + uri;
     }),
-    // 登陆cqupt
-    LoginCqupt: action(function (cqupt_id, password) {
-        let that = this
-        wx.showLoading({
-            title: "正在登陆"
-        });
-        // console.log(cqupt_id, password);
-        let url = this.baseUrl + '/user/bind/cqupt'
-        wx.request({
-            url: url,
-            method: "POST",
-            data: {
-                cqupt_id: cqupt_id,
-                password: password
-            },
-            header: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                token: wx.getStorageSync('token')
-            },
-            success(res) {
-                console.log(res.data);
-                wx.hideLoading();
-                if (that.CheckError(res.data)) return
-                if (res.data.code == 200) {
-                    that.GetSchool();
-                    wx.showToast({
-                        title: '绑定成功',
-                        icon: "success"
-                    })
-                    wx.navigateBack();
-                }
-
-            },
-            fail() {
-                wx.hideLoading();
-                wx.showToast({
-                    title: '请检查网络',
-                    icon: "error"
-                })
-            }
-        })
-
-    }),
 
     /** 获取实体 */
     // 设置头像 和昵称
