@@ -1,27 +1,18 @@
 import http from '../http';
 
-export default class AuthService {
-  static loginTel(tel) {
-    return http.get('api/login/tel', { tel });
-  }
+export default {
+    // 登陆-tel
+    loginTel: (tel) => http.get("api/login/tel", { tel }),
+    confirmTel: (tel, code) => http.get("api/confirm/tel", { tel, code }),
 
-  static confirmTel(tel, code) {
-    return http.get('api/confirm/tel', { tel, code });
-  }
+    // 登陆 - 邮箱
+    loginEmail: (email) => http.get("api/login/email", { email }),
+    confirmEmail: (email, code) =>
+        http.get("api/confirm/email", { email, code }),
 
-  static loginEmail(email) {
-    return http.get('api/login/email', { email });
-  }
+    // 重新登陆
+    loginUpdate: () => http.get("api/update"),
+    // 测试登陆
+    loginTest: () => http.get("api/login/admin")
 
-  static confirmEmail(email, code) {
-    return http.get('api/confirm/email', { email, code });
-  }
-
-  static loginUpdate() {
-    return http.get('api/update');
-  }
-
-  static loginTest() {
-    return http.get('api/login/admin');
-  }
 }

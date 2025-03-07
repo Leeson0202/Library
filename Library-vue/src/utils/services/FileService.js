@@ -1,12 +1,7 @@
 import http from '../http';
 
-export default class FileService {
+export default {
 
-    static fileUpload(data) {
-        return http.upload('api/upload', data);
-    }
-
-    static fileDownload(fileName) {
-        return http.get(`api/download/${fileName}`);
-    }
+    fileUpload: (data) => http.upload("api/upload", data),
+    fileDownload: (fileName) => http.get("api/download/" + fileName),
 }

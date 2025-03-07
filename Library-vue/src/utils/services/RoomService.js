@@ -1,31 +1,16 @@
 import http from '../http';
 
-export default class RoomService {
-  static queryRooms(libraryId) {
-    return http.get('api/room/rooms', { libraryId });
-  }
+export default {
+    queryRooms: (libraryId) => http.get("api/room/rooms", { libraryId }),
+    queryRoomByTime: (libraryId, today, idx) =>
+        http.get("api/room/time", {
+            libraryId,
+            today,
+            idx,
+        }),
+    queryRoom: (roomId) => http.get("api/room/id/" + roomId),
+    insertRoom: (data) => http.post("api/room", data),
+    updateRoom: (data) => http.put("api/room", data),
+    deleteRoom: (roomId) => http.delete("api/room", { roomId }),
 
-  static queryRoomByTime(libraryId, today, idx) {
-    return http.get('api/room/time', { 
-      libraryId,
-      today,
-      idx 
-    });
-  }
-
-  static queryRoom(roomId) {
-    return http.get(`api/room/id/${roomId}`);
-  }
-
-  static insertRoom(data) {
-    return http.post('api/room', data);
-  }
-
-  static updateRoom(data) {
-    return http.put('api/room', data);
-  }
-
-  static deleteRoom(roomId) {
-    return http.delete('api/room', { roomId });
-  }
 }

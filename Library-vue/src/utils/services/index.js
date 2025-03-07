@@ -8,6 +8,7 @@ import RuleService from './RuleService';
 import NotificationService from './NotificationService';
 import FileService from './FileService';
 import TableService from './TableService';
+import SeatService from './SeatService';
 
 export {
   AuthService,
@@ -19,5 +20,6 @@ export {
   RuleService,
   NotificationService,
   FileService,
-  TableService
+  TableService,
+  SeatService,
 };
