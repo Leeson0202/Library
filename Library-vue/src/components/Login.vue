@@ -63,7 +63,6 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from ‘《组件路径》‘;
-import api from "@/utils/api";
 import { Message } from "element-ui";
 
 export default {
@@ -93,7 +92,7 @@ export default {
             }
             let that = this;
             if (this.loginMethod == 0 && this.tel != null && this.tel != "") {
-                api.loginTel(this.tel).then((data) => {
+                this.$api.AuthService.loginTel(this.tel).then((data) => {
                     this.loginSuccess(data);
                 });
             } else if (
@@ -101,7 +100,7 @@ export default {
                 this.email != null &&
                 this.email != ""
             ) {
-                api.loginEmail(this.email).then((data) => {
+                this.$api.AuthService.loginEmail(this.email).then((data) => {
                     this.loginSuccess(data);
                 });
             } else {
@@ -132,7 +131,7 @@ export default {
         confirm() {
             // test登陆
             if (this.tel == "admin" || this.email == "admin") {
-                api.loginTest().then((data) => {
+                this.$api.AuthService.loginTest().then((data) => {
                     this.confirmSuccess(data);
                 });
                 return;
@@ -143,11 +142,11 @@ export default {
                 return;
             }
             if (this.loginMethod == 0) {
-                api.confirmTel(this.tel, this.code).then((data) => {
+                this.$api.AuthService.confirmTel(this.tel, this.code).then((data) => {
                     this.confirmSuccess(data);
                 });
             } else if (this.loginMethod == 1) {
-                api.confirmEmail(this.email, this.code).then((data) => {
+                this.$api.AuthService.confirmEmail(this.email, this.code).then((data) => {
                     this.confirmSuccess(data);
                 });
             }

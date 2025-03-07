@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import api from "@/utils/api";
+
 import { Message } from "element-ui";
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from ‘《组件路径》‘;
@@ -150,11 +150,11 @@ export default {
         // 提交
         onSubmit() {
             if (this.idx == -1) {
-                api.insertNotification(this.form).then((data) => {
+                this.$api.NotificationService.insertNotification(this.form).then((data) => {
                     this.submitSuccess(data);
                 });
             } else {
-                api.updateNotification(this.form).then((data) => {
+                this.$api.NotificationService.updateNotification(this.form).then((data) => {
                     this.submitSuccess(data);
                 });
             }
@@ -162,7 +162,7 @@ export default {
         // 查找
         queryNotifications(schoolId, page) {
             let form = { schoolId, page, size: this.size };
-            api.queryNotifications(form).then((data) => {
+            this.$api.NotificationService.queryNotifications(form).then((data) => {
                 this.totalElements = data.data.totalElements;
                 data.data.content.forEach((el) => {
                     el.date = new Date(el.date).toLocaleString();
@@ -191,7 +191,7 @@ export default {
         handleDelete(index, row) {
             this.$confirm("确定删除？")
                 .then((_) => {
-                    api.deleteNotification(row.notificationId).then((data) => {
+                    this.$api.NotificationService.deleteNotification(row.notificationId).then((data) => {
                         Message.success("删除成功");
                         this.queryNotifications(
                             this.$store.state.school.schoolId,

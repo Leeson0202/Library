@@ -150,7 +150,7 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from ‘《组件路径》‘;
 
-import api from "@/utils/api";
+
 import { Message } from "element-ui";
 import EditSeat from "./EditSeat.vue";
 
@@ -238,7 +238,7 @@ export default {
         handleDelete(index, row) {
             this.$confirm("确定删除" + row.name + "？")
                 .then((_) => {
-                    api.deleteRoom(row.roomId).then((data) => {
+                    this.$api.RoomService.deleteRoom(row.roomId).then((data) => {
                         this.queryLibrary();
                     });
                     done();
@@ -251,12 +251,12 @@ export default {
             if (this.formIdx == -1) {
                 //新的
                 // console.log(this.form);
-                api.insertRoom(this.form).then((data) => {
+                this.$api.RoomService.insertRoom(this.form).then((data) => {
                     that.submitSuccess(data);
                 });
             } else {
                 //更新
-                api.updateRoom(this.form).then((data) => {
+                this.$api.RoomService.updateRoom(this.form).then((data) => {
                     that.submitSuccess(data);
                 });
             }
@@ -273,7 +273,7 @@ export default {
         // 获取图书馆信息
         queryLibrary() {
             let that = this;
-            api.queryLibrary(this.libraryId).then((data) => {
+            this.$api.LibraryService.queryLibrary(this.libraryId).then((data) => {
                 // console.log(data);
                 if (data.code == 200) {
                     that.rooms = data.data.libraryRooms;
