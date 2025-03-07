@@ -139,7 +139,7 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from ‘《组件路径》‘;
 
-import api from "@/utils/api";
+
 import { Message } from "element-ui";
 
 export default {
@@ -187,7 +187,7 @@ export default {
         handleDelete(index, row) {
             this.$confirm("确定删除？")
                 .then((_) => {
-                    api.deleteReceive(row.receiveId, row.userId).then(
+                    this.$api.ReservationService.deleteReceive(row.receiveId, row.userId).then(
                         (data) => {
                             Message.success("删除成功");
                             this.queryReceiveAll();
@@ -205,7 +205,7 @@ export default {
                 page: this.pageIdx,
                 size: this.pageSize,
             };
-            api.queryReceiveAll(form).then((data) => {
+            this.$api.ReservationService.queryReceiveAll(form).then((data) => {
                 this.receives = data.data.content;
                 data.data.content.forEach((el) => {
                     el.time = new Date(el.time).toLocaleString();

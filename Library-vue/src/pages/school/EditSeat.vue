@@ -175,7 +175,7 @@
 </template>
 
 <script>
-import api from "@/utils/api";
+
 import Panzoom from "@panzoom/panzoom";
 import { Message } from "element-ui";
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
@@ -356,7 +356,7 @@ export default {
                 // 椅子
                 this.$confirm("确定删除该座位吗？")
                     .then((_) => {
-                        api.deleteSeat(this.form.seatId).then((data) => {
+                        this.$api.SeatService.deleteSeat(this.form.seatId).then((data) => {
                             this.form = {};
                             this.itemId = ""
                             Message.success("删除成功");
@@ -368,7 +368,7 @@ export default {
                 //   桌子
                 this.$confirm("确定删除该座位吗？")
                     .then((_) => {
-                        api.deleteTable(this.form.tableId).then((data) => {
+                        this.$api.SeatService.deleteTable(this.form.tableId).then((data) => {
                             this.form = {};
                             this.itemId = ""
                             Message.success("删除成功");
@@ -380,10 +380,10 @@ export default {
         },
         // 保存
         submit() {
-            api.insertOrUpdateSeat(this.seats).then((data) => {
+            this.$api.SeatService.insertOrUpdateSeat(this.seats).then((data) => {
                 Message.success("椅子保存成功");
             });
-            api.insertOrUpdateTable(this.tables).then((data) => {
+            this.$api.TableService.insertOrUpdateTable(this.tables).then((data) => {
                 let e = {
                     target: {
                         id:
@@ -400,7 +400,7 @@ export default {
 
         // 获取房间信息
         queryRoom() {
-            api.queryRoom(this.roomId).then((data) => {
+            this.$api.RoomService.queryRoom(this.roomId).then((data) => {
                 console.log(data);
                 this.room = data.data;
                 // 获取后计算宽度

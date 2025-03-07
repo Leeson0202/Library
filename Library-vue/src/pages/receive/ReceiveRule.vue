@@ -42,7 +42,7 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from ‘《组件路径》‘;
 
-import api from "@/utils/api";
+
 
 export default {
     name: "ReceiveRule",
@@ -77,7 +77,7 @@ export default {
         },
         success() {
             let that = this;
-            api.updateRule({
+            this.$api.RuleService.updateRule({
                 schoolId: this.$store.state.school.schoolId,
                 context: this.eContext,
             }).then((data) => {

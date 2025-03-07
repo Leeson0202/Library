@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import api from "@/utils/api";
+
 import { Message } from "element-ui";
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from ‘《组件路径》‘;
@@ -146,13 +146,13 @@ export default {
         // 保存修改
         submitUser() {
             if (this.form.userId == null) {
-                api.insertUser(this.form).then((data) => {
+                this.$api.UserService.insertUser(this.form).then((data) => {
                     Message.success("添加成功");
                     this.dialogFormVisible = false;
                     this.queryUserAll();
                 });
             } else {
-                api.updateUser(this.form).then((data) => {
+                this.$api.UserService.updateUser(this.form).then((data) => {
                     Message.success("修改成功");
                     this.dialogFormVisible = false;
                     this.queryUserAll();
@@ -161,7 +161,7 @@ export default {
         },
         // 获取所有用户
         queryUserAll() {
-            api.queryUserAll(this.schoolId).then((data) => {
+            this.$api.UserService.queryUserAll(this.schoolId).then((data) => {
                 this.list = data.data;
             });
         },
@@ -188,7 +188,7 @@ export default {
                 .then((_) => {
                     console.log("yes");
                     //
-                    api.deleteUser(row.userId).then((data) => {
+                    this.$api.UserService.deleteUser(row.userId).then((data) => {
                         Message.success("删除成功");
                         that.queryUserAll();
                     });
