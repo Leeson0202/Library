@@ -173,7 +173,7 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from ‘《组件路径》‘;
 
-import api from "@/utils/api";
+
 import { Message } from "element-ui";
 
 export default {
@@ -219,7 +219,7 @@ export default {
         uploadFile(file) {
             console.log(file);
             let form = { file: file.file };
-            api.fileUpload(form).then((data) => {
+            this.$api.FileService.fileUpload(form).then((data) => {
                 this.form.background = data.data;
                 this.imageUrl = data.data;
             });
@@ -285,7 +285,7 @@ export default {
                 // 新的
                 // console.log("new", this.form);
 
-                api.insertLibrary(this.form).then((data) => {
+                this.$api.LibraryService.insertLibrary(this.form).then((data) => {
                     // console.log(data);
                     if (data.code == 200) {
                         Message.success("添加成功");
@@ -294,7 +294,7 @@ export default {
                 });
             } else {
                 //更新
-                api.updateLibrary(this.form).then((data) => {
+                this.$api.LibraryService.updateLibrary(this.form).then((data) => {
                     console.log(data);
                     if (data.code == 200) {
                         Message.success("修改成功");
@@ -309,7 +309,7 @@ export default {
         rmLibrary(libraryId) {
             this.$confirm("确定删除图书馆？")
                 .then((_) => {
-                    api.deleteLibrary(libraryId).then((data) => {
+                    this.$api.LibraryService.deleteLibrary(libraryId).then((data) => {
                         this.drawer = false;
                         Message.success("删除成功");
                         this.$store.dispatch("QuerySchool");

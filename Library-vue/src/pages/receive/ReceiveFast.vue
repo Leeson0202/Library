@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import api from "@/utils/api";
+
 import { Message } from "element-ui";
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from ‘《组件路径》‘;
@@ -111,13 +111,13 @@ export default {
                 page: this.pageIdx,
                 size: this.pageSize,
             };
-            api.queryReceiveFastAll(form).then((data) => {
+            this.$api.ReservationService.queryReceiveFastAll(form).then((data) => {
                 console.log(data);
                 this.list = data.data.content;
             });
         },
         changeOpen(idx, item) {
-            api.updateReceiveFast(item).then((data) => {
+            this.$api.ReservationService.updateReceiveFast(item).then((data) => {
                 Message.success("修改成功");
             });
             console.log(item);
@@ -137,7 +137,7 @@ export default {
         handleDelete(index, row) {
             this.$confirm("确定删除？")
                 .then((_) => {
-                    api.deleteReceive(row.receiveId, row.userId).then(
+                    this.$api.ReservationService.deleteReceive(row.receiveId, row.userId).then(
                         (data) => {
                             Message.success("删除成功");
                             this.queryReceiveAll();

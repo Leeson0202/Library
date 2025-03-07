@@ -1,9 +1,9 @@
-import api from "../utils/api";
+import { AuthService, UserService, SchoolService, LibraryService, ReservationService, RoomService, RuleService, NotificationService, FileService, TableService, SeatService } from "../utils/services/index";
 export default {
     // 初始化
     Launch(context, value) {
         // 更新token
-        api.loginUpdate().then((data) => {
+        AuthService.loginUpdate().then((data) => {
             if (data == undefined || data.code == 401 || data.code == 402) {
                 window.localStorage.clear();
                 this.commit("launch");
@@ -19,20 +19,20 @@ export default {
     },
     // 获取用户信息
     QueryUserInfo(context, value) {
-        api.queryUserInfo().then((data) => {
+        UserService.queryUserInfo().then((data) => {
             context.commit("updateUserInfo", data.userInfo);
         });
     },
     // 获取学校信息
     QuerySchool(context, value) {
-        api.querySchool().then((data) => {
+        SchoolService.querySchool().then((data) => {
             context.dispatch("QuerySchoolSimple", data.data.schoolId);
             context.commit("updateSchool", data.data);
         });
     },
     // 获取学校Simple信息
     QuerySchoolSimple(context, value) {
-        api.querSchoolSimple(value).then((data) => {
+        SchoolService.querSchoolSimple(value).then((data) => {
             let root = [];
             let res = data.data.librarySimpleList;
             res.forEach((el1, idx) => {
