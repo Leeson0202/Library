@@ -13,11 +13,14 @@ import "element-ui/lib/theme-chalk/index.css";
 import plugin from "./plugins/plugin";
 // 组件
 import App from "./App.vue";
+import * as api from '@/utils/services'
 
 Vue.use(plugin); // 使用插件
 Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
+
+Vue.prototype.$api = api;
 
 new Vue({
     store,
